@@ -1,0 +1,46 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package rummikube;
+
+import java.net.URL;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+/**
+ *
+ * @author giladPe
+ */
+public class Rummikube extends Application {
+  
+    public void start(Stage primaryStage)throws Exception{  
+        primaryStage.setTitle("Rummikube");
+        URL url = getClass().getResource("view/MainMenu.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(url);
+        Parent root = (Parent)fxmlLoader.load(url.openStream());
+        //MainMenu menu = (MainMenu) fxmlLoader.getController();        
+        Scene scene = new Scene(root,800 , 600);
+        primaryStage.setScene(scene);
+        primaryStage.show();    
+   
+    }
+}
+/* public void start(Stage primaryStage)throws Exception{
+       Pane root=new Pane();
+       root.setPrefSize(800,600);
+       InputStream file =  Files.newInputStream(Paths.get("/images/MenuPic.jpg"));
+       Image img = new Image(file);
+       file.close();
+       
+       ImageView imgView =new ImageView(img);
+       root.getChildren().addAll(imgView);
+       
+       Scene scene = new Scene(root);
+       primaryStage.setScene(scene);
+       primaryStage.show();*/
