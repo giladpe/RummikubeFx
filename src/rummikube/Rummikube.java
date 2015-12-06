@@ -29,6 +29,18 @@ public class Rummikube extends Application {
         primaryStage.show();
     }
 }
+//**************************************************************************************
+
+
+
+
+
+//***************************************************************************************
+
+
+
+
+
 /* public void start(Stage primaryStage)throws Exception{
        Pane root=new Pane();
        root.setPrefSize(800,600);
