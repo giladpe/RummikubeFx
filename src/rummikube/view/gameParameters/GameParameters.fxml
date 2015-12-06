@@ -23,9 +23,12 @@
     <RowConstraints maxHeight="182.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="316.0" minHeight="1.0" prefHeight="106.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="158.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="316.0" minHeight="1.0" prefHeight="32.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="88.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="254.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
@@ -40,7 +43,7 @@
          <GridPane.margin>
             <Insets left="110.0" right="10.0" />
          </GridPane.margin></TextField>
-      <ChoiceBox fx:id="numberOfPlayers" prefHeight="30.0" prefWidth="366.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+      <ChoiceBox fx:id="numberOfPlayers" disable="true" prefHeight="30.0" prefWidth="366.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets left="140.0" right="10.0" />
          </GridPane.margin>
@@ -67,13 +70,8 @@
             <Insets left="10.0" right="10.0" />
          </GridPane.margin>
       </ChoiceBox>
-      <Label prefHeight="29.0" prefWidth="291.0" stylesheets="@../resources/menusStyle.css" text="Player's names:" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="5" GridPane.rowSpan="2">
-         <GridPane.margin>
-            <Insets left="10.0" right="10.0" />
-         </GridPane.margin>
-      </TextArea>
-      <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="12.0" prefWidth="99.0" text="Back to menu" GridPane.rowIndex="7">
+      <Label id="GamesSettings-text" alignment="CENTER" contentDisplay="CENTER" prefHeight="47.0" prefWidth="378.0" stylesheets="@../resources/menusStyle.css" text="Player's names:" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+      <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="12.0" prefWidth="99.0" text="Back to menu" GridPane.rowIndex="10">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -81,7 +79,7 @@
             <Insets left="25.0" />
          </GridPane.margin>
       </Button>
-      <Button alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="35.0" layoutY="366.0" mnemonicParsing="false" prefHeight="12.0" prefWidth="99.0" text="Start Playing" GridPane.columnIndex="3" GridPane.rowIndex="7">
+      <Button alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="35.0" layoutY="366.0" mnemonicParsing="false" prefHeight="12.0" prefWidth="99.0" text="Start Playing" GridPane.columnIndex="3" GridPane.rowIndex="10">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -89,5 +87,20 @@
             <Insets left="25.0" />
          </GridPane.margin>
       </Button>
+      <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+         <children>
+            <Label prefHeight="29.0" prefWidth="117.0" stylesheets="@../resources/menusStyle.css" text="First Player:" textAlignment="CENTER" />
+            <TextField alignment="CENTER" prefHeight="25.0" prefWidth="146.0">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </TextField>
+            <CheckBox alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="118.0" text="Is Human " textAlignment="CENTER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </CheckBox>
+         </children>
+      </HBox>
    </children>
 </GridPane>
