@@ -36,7 +36,8 @@ public class MainMenuController implements Initializable {
     
     @FXML protected void handleNewGameButtonAction(ActionEvent event) throws IOException {
         primaryStage.setTitle("Game Settings");
-        URL url = this.getClass().getResource("/../");
+        URL url = this.getClass().getResource("");
+         url= new URL(url.toString().subSequence(0, url.toString().length()-9)+"gameParameters/GameParameters.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(url);
         Parent root = (Parent)fxmlLoader.load(url.openStream());

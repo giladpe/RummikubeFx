@@ -24,7 +24,7 @@ public class GameParametersController implements Initializable {
     @FXML ChoiceBox<Integer> numberOfComputerPlayers;
     @FXML TextField gameName;
     @FXML TextArea PlayerNames;
-
+    
     /**
      * Initializes the controller class.
      */
