@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+//import rummikube.view.mainMenu.MainMenuController;
 
 /**
  *
@@ -15,17 +16,17 @@ import javafx.stage.Stage;
 public class Rummikube extends Application {
   
     @Override
-    public void start(Stage primaryStage)throws Exception{  
+    public void start(Stage primaryStage) throws Exception {  
         primaryStage.setTitle("Rummikube");
-        URL url = getClass().getResource("view/MainMenu.fxml");
+        //URL url = getClass().getResource("view/gameParameters/GameParameters.fxml");
+        URL url = getClass().getResource("view/mainMenu/MainMenu.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(url);
         Parent root = (Parent)fxmlLoader.load(url.openStream());
-        //MainMenu menu = (MainMenu) fxmlLoader.getController();        
-        Scene scene = new Scene(root,800 , 600);
+        //MainMenuController menu = (MainMenuController) fxmlLoader.getController();        
+        Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        primaryStage.show();    
-   
+        primaryStage.show();
     }
 }
 /* public void start(Stage primaryStage)throws Exception{

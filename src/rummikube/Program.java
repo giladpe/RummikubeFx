@@ -12,4 +12,3 @@ public class Program {
     }
 }
 
-//gilad ata roe et ze???
