@@ -1,11 +1,9 @@
-.root {
-    -fx-background-image: url("MenuPic1.jpg");
-
-    //-fx-background-repeat: round;   
-    -fx-background-position: center center;
-    -fx-pane-resize: both;
-  
-}
+    .root {
+        -fx-background-image: url("MenuPic1.jpg");
+        //-fx-background-repeat: round;   
+        -fx-background-position: center center;
+        -fx-pane-resize: both;
+    }
     .button {
         -fx-text-fill: white;
         -fx-font-family: "Arial Narrow";
@@ -20,13 +18,20 @@
         -fx-text-fill: #333333;
         -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
     }
+/*    .choiceBox:active {
+       choiceBox.s
+        -fx-font-size: 14px;
+        -fx-font-weight: bold;
+        -fx-text-fill: #333333;
+        -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+    }*/
     
     #GamesSettings-text {
    -fx-font-size: 32px;
    -fx-font-family: "Arial Black";
    -fx-fill: #333333;
    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
-}
+    }
     
     .button:hover {
         -fx-background-color: linear-gradient(#2A5058, #61a2b1);

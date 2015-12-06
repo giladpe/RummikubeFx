@@ -1,9 +1,10 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rummikube.view.mainMenu;
+package rummikube.view;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,8 +37,7 @@ public class MainMenuController implements Initializable {
     
     @FXML protected void handleNewGameButtonAction(ActionEvent event) throws IOException {
         primaryStage.setTitle("Game Settings");
-        URL url = this.getClass().getResource("");
-         url= new URL(url.toString().subSequence(0, url.toString().length()-9)+"gameParameters/GameParameters.fxml");
+        URL url = this.getClass().getResource("GameParameters.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(url);
         Parent root = (Parent)fxmlLoader.load(url.openStream());
