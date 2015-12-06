@@ -21,12 +21,12 @@
   <rowConstraints>
       <RowConstraints maxHeight="182.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="182.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="182.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="316.0" minHeight="1.0" prefHeight="40.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="88.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="254.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
   </rowConstraints>
@@ -56,7 +56,7 @@
          </GridPane.margin>
       </Label>
       <Text id="GamesSettings-text" strokeType="OUTSIDE" strokeWidth="0.0" text="GamesSettings" textAlignment="CENTER" wrappingWidth="385.328125" GridPane.columnIndex="1" />
-      <Button fx:id="backToMenu" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleBackToMenuButtonAction" prefHeight="12.0" prefWidth="99.0" text="Back to menu" GridPane.rowIndex="8">
+      <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleBackToMenuButtonAction" prefHeight="12.0" prefWidth="99.0" text="Back to menu" GridPane.rowIndex="8">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -64,7 +64,7 @@
             <Insets left="25.0" />
          </GridPane.margin>
       </Button>
-      <Button alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="35.0" layoutY="366.0" mnemonicParsing="false" prefHeight="12.0" prefWidth="99.0" text="Start Playing" GridPane.columnIndex="3" GridPane.rowIndex="8">
+      <Button alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="35.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleStartPlayingButton" prefHeight="12.0" prefWidth="99.0" text="Start Playing" GridPane.columnIndex="3" GridPane.rowIndex="8">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -72,9 +72,9 @@
             <Insets left="25.0" />
          </GridPane.margin>
       </Button>
-      <HBox fx:id="PlayerName1" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
+      <HBox fx:id="PlayerName1" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4">
          <children>
-            <Label alignment="CENTER" contentDisplay="TOP" prefHeight="29.0" prefWidth="117.0" stylesheets="@../resources/menusStyle.css" text="First Player:" textAlignment="CENTER">
+            <Label alignment="TOP_LEFT" prefHeight="29.0" prefWidth="117.0" stylesheets="@../resources/menusStyle.css" text="First Player:" textAlignment="CENTER">
                <padding>
                   <Insets top="10.0" />
                </padding>
@@ -87,7 +87,7 @@
                   <Insets top="10.0" />
                </HBox.margin>
             </TextField>
-            <CheckBox alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="118.0" text="Is Human " textAlignment="CENTER">
+            <CheckBox alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleCheckBoxSelection" prefHeight="20.0" prefWidth="148.0" text="Computer player" textAlignment="CENTER">
                <font>
                   <Font size="14.0" />
                </font>
@@ -100,7 +100,7 @@
             </CheckBox>
          </children>
       </HBox>
-      <HBox fx:id="PlayerName2" layoutX="176.0" layoutY="241.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+      <HBox fx:id="PlayerName2" layoutX="176.0" layoutY="241.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
          <children>
             <Label alignment="CENTER" contentDisplay="TOP" prefHeight="30.0" prefWidth="156.0" stylesheets="@../resources/menusStyle.css" text="Secound Player:" textAlignment="CENTER">
                <padding>
@@ -115,7 +115,7 @@
                   <Insets top="10.0" />
                </HBox.margin>
             </TextField>
-            <CheckBox alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="118.0" text="Is Human " textAlignment="CENTER">
+            <CheckBox alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleCheckBoxSelection" prefHeight="20.0" prefWidth="142.0" text="Computer player" textAlignment="CENTER">
                <font>
                   <Font size="14.0" />
                </font>
@@ -128,7 +128,7 @@
             </CheckBox>
          </children>
       </HBox>
-      <HBox fx:id="PlayerName3" layoutX="176.0" layoutY="298.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+      <HBox fx:id="PlayerName3" layoutX="176.0" layoutY="298.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6">
          <children>
             <Label alignment="CENTER" contentDisplay="TOP" prefHeight="29.0" prefWidth="117.0" stylesheets="@../resources/menusStyle.css" text="Third Player:" textAlignment="CENTER">
                <padding>
@@ -143,7 +143,7 @@
                   <Insets top="10.0" />
                </HBox.margin>
             </TextField>
-            <CheckBox alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="118.0" text="Is Human " textAlignment="CENTER">
+            <CheckBox alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleCheckBoxSelection" prefHeight="20.0" prefWidth="156.0" text="Computer player" textAlignment="CENTER">
                <font>
                   <Font size="14.0" />
                </font>
@@ -156,7 +156,7 @@
             </CheckBox>
          </children>
       </HBox>
-      <HBox fx:id="PlayerName4" layoutX="176.0" layoutY="298.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
+      <HBox fx:id="PlayerName4" layoutX="176.0" layoutY="298.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="7">
          <children>
             <Label alignment="CENTER" contentDisplay="TOP" prefHeight="30.0" prefWidth="128.0" stylesheets="@../resources/menusStyle.css" text="Fourth Player:" textAlignment="CENTER">
                <padding>
@@ -171,7 +171,7 @@
                   <Insets top="10.0" />
                </HBox.margin>
             </TextField>
-            <CheckBox alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="118.0" text="Is Human " textAlignment="CENTER">
+            <CheckBox alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleCheckBoxSelection" prefHeight="20.0" prefWidth="141.0" text="Computer player" textAlignment="CENTER">
                <font>
                   <Font size="14.0" />
                </font>
