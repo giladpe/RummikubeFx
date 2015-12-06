@@ -64,7 +64,7 @@
             <Insets left="25.0" />
          </GridPane.margin>
       </Button>
-      <Button alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="35.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleStartPlayingButton" prefHeight="12.0" prefWidth="99.0" text="Start Playing" GridPane.columnIndex="3" GridPane.rowIndex="8">
+      <Button alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="35.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleStartPlayingButtonAction" prefHeight="12.0" prefWidth="99.0" text="Start Playing" GridPane.columnIndex="3" GridPane.rowIndex="8">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
