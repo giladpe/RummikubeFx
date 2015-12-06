@@ -79,7 +79,7 @@
                   <Insets top="10.0" />
                </padding>
             </Label>
-            <TextField alignment="CENTER" prefHeight="25.0" prefWidth="158.0">
+            <TextField id="name" alignment="CENTER" prefHeight="25.0" prefWidth="158.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
