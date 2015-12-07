@@ -31,13 +31,24 @@ public class GameParametersController implements Initializable {
     
     @FXML ChoiceBox<Integer> numberOfPlayers;
     @FXML TextField gameName;
-    @FXML HBox PlayerName1;
-    @FXML HBox PlayerName2;
-    @FXML HBox PlayerName3;
-    @FXML HBox PlayerName4;
+    @FXML HBox configPlayer1;
+    @FXML HBox configPlayer2;
+    @FXML HBox configPlayer3;
+    @FXML HBox configPlayer4;
+    @FXML TextField playerName1;
+    @FXML TextField playerName2;
+    @FXML TextField playerName3;
+    @FXML TextField playerName4;
+    @FXML CheckBox isComputer1;
+    @FXML CheckBox isComputer2;
+    @FXML CheckBox isComputer3;
+    @FXML CheckBox isComputer4;
+    ArrayList<HBox> playersHbox=new ArrayList<>();
+    ArrayList<CheckBox> isComputerArr=new ArrayList<>();
+    ArrayList<TextField> playersNames=new ArrayList<>();
     
-    ArrayList<HBox> players;
-
+    
+    
     /**
      * Initializes the controller class.
      */
@@ -47,13 +58,19 @@ public class GameParametersController implements Initializable {
         numberOfPlayers.onActionProperty().set((EventHandler<ActionEvent>) (ActionEvent event) -> {
             handleNumberOfPlayersChoiceChange(event);
         });
-        players = new ArrayList<>();
-        players.add(PlayerName1);
-        players.add(PlayerName2);
-        players.add(PlayerName3);
-        players.add(PlayerName4);
+        
     }
-
+    void initPlayersField(){
+        
+        playersHbox.add(configPlayer1);
+        playersHbox.add(configPlayer2);
+        playersHbox.add(configPlayer3);
+        playersHbox.add(configPlayer4);
+        isComputerArr.add(configPlayer1);
+        isComputerArr.add(configPlayer2);
+        isComputerArr.add(configPlayer3);
+        isComputerArr.add(configPlayer4);
+    }
     @FXML
     protected void handleGameNameTextChange(ActionEvent event) {
         final String gameNameString = gameName.getText();
@@ -66,8 +83,8 @@ public class GameParametersController implements Initializable {
         } else {
             this.numberOfPlayers.setDisable(true);
 
-            players.stream().forEach((player) -> {
-                player.setDisable(true);
+            playersHbox.stream().forEach((player) -> {
+                //player.setDisable(true);
                 player.setVisible(false);
             });
         }
@@ -97,16 +114,16 @@ public class GameParametersController implements Initializable {
     
     @FXML
     protected void handleCheckBoxSelection(ActionEvent event) {
-        int index =  players.indexOf(((Node)event.getSource()).getParent());
+        int index =  playersHbox.indexOf(((Node)event.getSource()).getParent());
         if (((CheckBox)event.getSource()).isSelected()) {
-            players.get(index).getChildren().stream().forEach((hNode) -> {
+            playersHbox.get(index).getChildren().stream().forEach((hNode) -> {
                if (hNode.getClass() == TextField.class) {
                    ((TextField)hNode).setText(EMPTY_STRING);
                    ((TextField)hNode).setDisable(true);
                } });           
         }
         else {
-            players.get(index).getChildren().stream().forEach((hNode) -> {
+            playersHbox.get(index).getChildren().stream().forEach((hNode) -> {
             if (hNode.getClass() == TextField.class) {
                 ((TextField)hNode).setDisable(false);
             } });
@@ -119,7 +136,7 @@ public class GameParametersController implements Initializable {
     @FXML
     private void handleNumberOfPlayersChoiceChange(ActionEvent event) {
         hidePlayersFields();
-        Iterator<HBox> iterator = players.iterator();
+        Iterator<HBox> iterator = playersHbox.iterator();
         int i = 0;
         
         while (i < this.numberOfPlayers.getValue() && iterator.hasNext()) {
@@ -151,11 +168,11 @@ public class GameParametersController implements Initializable {
         
 //        int i;
 //        for (i = 0; i < this.numberOfPlayers.getValue(); i++) {
-//            this.players.get(i).setVisible(true);
+//            this.playersHbox.get(i).setVisible(true);
 //        }
 //        
 //        for(;i<4;i++){
-//            for (Node hNode : this.players.get(i).getChildren()) {
+//            for (Node hNode : this.playersHbox.get(i).getChildren()) {
 //                if(hNode.getId().equals("name")){
 //                    
 //                }
@@ -166,7 +183,7 @@ public class GameParametersController implements Initializable {
     
     @FXML
     private void hidePlayersFields() {
-        players.stream().forEach((player) -> { player.setVisible(false); });
+        playersHbox.stream().forEach((player) -> { player.setVisible(false); });
     }
 
 }

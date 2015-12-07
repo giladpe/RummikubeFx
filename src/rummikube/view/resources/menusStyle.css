@@ -1,6 +1,5 @@
     .root {
         -fx-background-image: url("MenuPic1.jpg");
-        //-fx-background-repeat: round;   
         -fx-background-position: center center;
         -fx-pane-resize: both;
     }
