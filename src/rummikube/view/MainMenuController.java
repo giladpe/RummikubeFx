@@ -24,8 +24,6 @@ import javafx.stage.Stage;
  * @author giladPe
  */
 public class MainMenuController implements Initializable {
-    private final Stage primaryStage = new Stage();
-    
     /**
      * Initializes the controller class.
      */
@@ -36,15 +34,17 @@ public class MainMenuController implements Initializable {
     
     
     @FXML protected void handleNewGameButtonAction(ActionEvent event) throws IOException {
+        Stage primaryStage=(Stage)((Node)event.getSource()).getScene().getWindow();
         primaryStage.setTitle("Game Settings");
         URL url = this.getClass().getResource("GameParameters.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(url);
         Parent root = (Parent)fxmlLoader.load(url.openStream());
         Scene scene = new Scene(root);
+        closeMainMenuScene(event);
         primaryStage.setScene(scene);
         primaryStage.show();
-        closeMainMenuScene(event);
+
     }
 //    
 //    @FXML protected void handleLoadGameButtonAction(ActionEvent event) {

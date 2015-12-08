@@ -6,6 +6,7 @@
  */
 package rummikube.view;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,12 +15,16 @@ import static javafx.collections.FXCollections.observableArrayList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -28,7 +33,7 @@ import javafx.scene.layout.HBox;
  */
 public class GameParametersController implements Initializable {
     private static final String EMPTY_STRING = "";
-    
+     private static final int NUM_OF_PLAYERS=4;
     @FXML ChoiceBox<Integer> numberOfPlayers;
     @FXML TextField gameName;
     @FXML HBox configPlayer1;
@@ -43,8 +48,8 @@ public class GameParametersController implements Initializable {
     @FXML CheckBox isComputer2;
     @FXML CheckBox isComputer3;
     @FXML CheckBox isComputer4;
-    ArrayList<HBox> playersHbox=new ArrayList<>();
-    ArrayList<CheckBox> isComputerArr=new ArrayList<>();
+    ArrayList<HBox> hBoxList=new ArrayList<>();
+    ArrayList<CheckBox> checkBoxList=new ArrayList<>();
     ArrayList<TextField> playersNames=new ArrayList<>();
     
     
@@ -54,22 +59,32 @@ public class GameParametersController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        initPlayersField();
         numberOfPlayers.setItems(observableArrayList(2, 3, 4));
-        numberOfPlayers.onActionProperty().set((EventHandler<ActionEvent>) (ActionEvent event) -> {
-            handleNumberOfPlayersChoiceChange(event);
+    //    numberOfPlayers.onActionProperty().set((EventHandler<ActionEvent>) (ActionEvent event) -> {
+     //       handleNumberOfPlayersChoiceChange(event);});
+        numberOfPlayers.onActionProperty().setValue(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+               handleNumberOfPlayersChoiceChange(event); 
+            }
         });
         
     }
-    void initPlayersField(){
+    private void initPlayersField(){
         
-        playersHbox.add(configPlayer1);
-        playersHbox.add(configPlayer2);
-        playersHbox.add(configPlayer3);
-        playersHbox.add(configPlayer4);
-        isComputerArr.add(configPlayer1);
-        isComputerArr.add(configPlayer2);
-        isComputerArr.add(configPlayer3);
-        isComputerArr.add(configPlayer4);
+        this.hBoxList.add(configPlayer1);
+        this.hBoxList.add(configPlayer2);
+        this.hBoxList.add(configPlayer3);
+        this.hBoxList.add(configPlayer4);
+        this.checkBoxList.add(isComputer1);
+        this.checkBoxList.add(isComputer2);
+        this.checkBoxList.add(isComputer3);
+        this.checkBoxList.add(isComputer4);
+        this.playersNames.add(playerName1);
+        this.playersNames.add(playerName2);
+        this.playersNames.add(playerName3);
+        this.playersNames.add(playerName4);
     }
     @FXML
     protected void handleGameNameTextChange(ActionEvent event) {
@@ -78,14 +93,12 @@ public class GameParametersController implements Initializable {
         //* starts with dont works
         if (!(gameNameString.isEmpty() || gameNameString.startsWith("\\s"))) {
             numberOfPlayers.setDisable(false);
-
-            //numberOfPlayers.setItems(observableArrayList(2,3,4));
         } else {
+            //numberOfPlayers.getSelectionModel().clearSelection();
             this.numberOfPlayers.setDisable(true);
-
-            playersHbox.stream().forEach((player) -> {
-                //player.setDisable(true);
+            hBoxList.stream().forEach((player) -> {
                 player.setVisible(false);
+                
             });
         }
     }
@@ -103,8 +116,18 @@ public class GameParametersController implements Initializable {
     }
 
     @FXML
-    protected void handleBackToMenuButtonAction(ActionEvent event) {
-
+    protected void handleBackToMenuButtonAction(ActionEvent event) throws IOException {
+        Stage primaryStage=(Stage)((Node)event.getSource()).getScene().getWindow();
+        primaryStage.setTitle("Main Menu");
+        URL url = this.getClass().getResource("MainMenu.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(url);
+        Parent root = (Parent)fxmlLoader.load(url.openStream());
+        Scene scene = new Scene(root);
+        (((Node)event.getSource()).getScene().getWindow()).hide();
+        primaryStage.setScene(scene);
+        primaryStage.show();
+         
     }
     
     @FXML
@@ -114,21 +137,16 @@ public class GameParametersController implements Initializable {
     
     @FXML
     protected void handleCheckBoxSelection(ActionEvent event) {
-        int index =  playersHbox.indexOf(((Node)event.getSource()).getParent());
+        int index =  hBoxList.indexOf(((Node)event.getSource()).getParent());
+        TextField checkBoxTextField =  this.playersNames.get(index);
+        
         if (((CheckBox)event.getSource()).isSelected()) {
-            playersHbox.get(index).getChildren().stream().forEach((hNode) -> {
-               if (hNode.getClass() == TextField.class) {
-                   ((TextField)hNode).setText(EMPTY_STRING);
-                   ((TextField)hNode).setDisable(true);
-               } });           
-        }
+            checkBoxTextField.setText(EMPTY_STRING);
+            checkBoxTextField.setDisable(true);
+        }            
         else {
-            playersHbox.get(index).getChildren().stream().forEach((hNode) -> {
-            if (hNode.getClass() == TextField.class) {
-                ((TextField)hNode).setDisable(false);
-            } });
+            checkBoxTextField.setDisable(false);
         }
-
     }
     
     
@@ -136,7 +154,7 @@ public class GameParametersController implements Initializable {
     @FXML
     private void handleNumberOfPlayersChoiceChange(ActionEvent event) {
         hidePlayersFields();
-        Iterator<HBox> iterator = playersHbox.iterator();
+        Iterator<HBox> iterator = hBoxList.iterator();
         int i = 0;
         
         while (i < this.numberOfPlayers.getValue() && iterator.hasNext()) {
@@ -156,34 +174,12 @@ public class GameParametersController implements Initializable {
                 } 
             });
             
-//            for (Node hNode : currPlayer.getChildren()) {
-//                if (hNode.getClass() == TextField.class) {
-//                    ((TextField)hNode).setText(EMPTY_STRING);
-//                }
-//                else if (hNode.getClass() == CheckBox.class) {
-//                    ((CheckBox)hNode).setSelected(false);
-//                }
-//            }
-        }
-        
-//        int i;
-//        for (i = 0; i < this.numberOfPlayers.getValue(); i++) {
-//            this.playersHbox.get(i).setVisible(true);
-//        }
-//        
-//        for(;i<4;i++){
-//            for (Node hNode : this.playersHbox.get(i).getChildren()) {
-//                if(hNode.getId().equals("name")){
-//                    
-//                }
-//            }
-//                  
-//        }
+        }        
     }
     
     @FXML
     private void hidePlayersFields() {
-        playersHbox.stream().forEach((player) -> { player.setVisible(false); });
+        hBoxList.stream().forEach((player) -> { player.setVisible(false); });
     }
 
 }
