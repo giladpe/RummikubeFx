@@ -7,13 +7,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import rummikube.Engin.Game;
 
 /**
  *
  * @author giladPe
  */
 public class Rummikube extends Application {
-  
+    private Game game; 
     @Override
     public void start(Stage primaryStage) throws Exception {  
         primaryStage.setTitle("Rummikube");
@@ -26,6 +27,7 @@ public class Rummikube extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    public Game getGame(){return game;}
 }
 
 

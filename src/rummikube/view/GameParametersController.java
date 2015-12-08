@@ -20,11 +20,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import rummikube.Engin.Game;
 
 /**
  * FXML Controller class
@@ -34,6 +36,7 @@ import javafx.stage.Stage;
 public class GameParametersController implements Initializable {
     private static final String EMPTY_STRING = "";
      private static final int NUM_OF_PLAYERS=4;
+    @FXML Button StartPlayingButton; 
     @FXML ChoiceBox<Integer> numberOfPlayers;
     @FXML TextField gameName;
     @FXML HBox configPlayer1;
@@ -51,7 +54,7 @@ public class GameParametersController implements Initializable {
     ArrayList<HBox> hBoxList=new ArrayList<>();
     ArrayList<CheckBox> checkBoxList=new ArrayList<>();
     ArrayList<TextField> playersNames=new ArrayList<>();
-    
+    Game testGame;
     
     
     /**
@@ -106,12 +109,15 @@ public class GameParametersController implements Initializable {
     @FXML
     protected void handlePlayerNameTextChange(ActionEvent event) {
         final String gameNameString = gameName.getText();
-
+        String name =((TextField)event.getSource()).getText();
         //* starts with dont works
-        if (!(gameNameString.isEmpty() || gameNameString.startsWith("\\s" ))) {
-            if (true/*|| check if not exsists*/) {
-                
-            }
+//        if (!(name.isEmpty() /*|| gameNameString.startsWith("\\s" )*/)) {
+//            if(!testGame.tryToAddHumanPlayer(name)){
+//                System.out.println("FaildToAdd");}
+//            }
+//            
+        if(isAllPlayersSet()){
+            StartPlayingButton.setDisable(false);
         }
     }
 
@@ -156,7 +162,11 @@ public class GameParametersController implements Initializable {
         hidePlayersFields();
         Iterator<HBox> iterator = hBoxList.iterator();
         int i = 0;
-        
+        boolean disableStartButton=true;
+        if(isAllPlayersSet()){
+            disableStartButton=false;
+        }
+        StartPlayingButton.setDisable(disableStartButton);
         while (i < this.numberOfPlayers.getValue() && iterator.hasNext()) {
             HBox currPlayer = iterator.next();
             currPlayer.setVisible(true);
@@ -180,6 +190,15 @@ public class GameParametersController implements Initializable {
     @FXML
     private void hidePlayersFields() {
         hBoxList.stream().forEach((player) -> { player.setVisible(false); });
+    }
+    private boolean isAllPlayersSet(){
+        int size=this.numberOfPlayers.getValue(); 
+        for (int i = 0; i < size; i++) {
+            if(this.playersNames.get(i).getText().isEmpty()&&!this.checkBoxList.get(i).isSelected()){
+                return false;
+            }
+        }
+        return true;
     }
 
 }

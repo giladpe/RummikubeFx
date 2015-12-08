@@ -64,7 +64,7 @@
             <Insets left="25.0" />
          </GridPane.margin>
       </Button>
-      <Button alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="35.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleStartPlayingButtonAction" prefHeight="12.0" prefWidth="99.0" text="Start Playing" GridPane.columnIndex="3" GridPane.rowIndex="8">
+      <Button fx:id="StartPlayingButton" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="35.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleStartPlayingButtonAction" prefHeight="12.0" prefWidth="99.0" text="Start Playing" GridPane.columnIndex="3" GridPane.rowIndex="8">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -74,12 +74,12 @@
       </Button>
       <HBox fx:id="configPlayer1" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4">
          <children>
-            <Label alignment="TOP_LEFT" prefHeight="29.0" prefWidth="117.0" stylesheets="@../resources/menusStyle.css" text="First Player:" textAlignment="CENTER">
+            <Label alignment="TOP_LEFT" prefHeight="29.0" prefWidth="117.0" text="First Player:" textAlignment="CENTER">
                <padding>
                   <Insets top="10.0" />
                </padding>
             </Label>
-            <TextField id="name" fx:id="playerName1" alignment="CENTER" prefHeight="25.0" prefWidth="158.0">
+            <TextField id="name" fx:id="playerName1" alignment="CENTER" onAction="#handlePlayerNameTextChange" onKeyReleased="#handlePlayerNameTextChange" prefHeight="25.0" prefWidth="158.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -107,7 +107,7 @@
                   <Insets top="10.0" />
                </padding>
             </Label>
-            <TextField fx:id="playerName2" alignment="CENTER" prefHeight="25.0" prefWidth="158.0">
+            <TextField fx:id="playerName2" alignment="CENTER" onAction="#handlePlayerNameTextChange" onKeyReleased="#handlePlayerNameTextChange" prefHeight="25.0" prefWidth="158.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -135,7 +135,7 @@
                   <Insets top="10.0" />
                </padding>
             </Label>
-            <TextField fx:id="playerName3" alignment="CENTER" prefHeight="25.0" prefWidth="158.0">
+            <TextField fx:id="playerName3" alignment="CENTER" onAction="#handlePlayerNameTextChange" onKeyReleased="#handlePlayerNameTextChange" prefHeight="25.0" prefWidth="158.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -163,7 +163,7 @@
                   <Insets top="10.0" />
                </padding>
             </Label>
-            <TextField fx:id="playerName4" alignment="CENTER" prefHeight="25.0" prefWidth="158.0">
+            <TextField fx:id="playerName4" alignment="CENTER" onAction="#handlePlayerNameTextChange" onKeyReleased="#handlePlayerNameTextChange" prefHeight="25.0" prefWidth="158.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
