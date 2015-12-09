@@ -123,6 +123,14 @@ public class GameParametersController implements Initializable {
             }
         });
 
+        radioButtonGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            public void changed(ObservableValue<? extends Toggle> ov,
+                    Toggle old_toggle, Toggle new_toggle) {
+                if (radioButtonGroup.getSelectedToggle() != null) {
+                    handleRadioButtonChanged();
+                }
+            }
+        });
 //        radioButtonGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() 
 //        {
 //        public void onCheckedChanged
@@ -265,10 +273,14 @@ public class GameParametersController implements Initializable {
     }
 
     private boolean isPlayerFieldSet(int index) {
-        if (playersNames.get(index).getText() != null) {
-            return (!this.playersNames.get(index).getText().isEmpty() || this.checkBoxList.get(index).isSelected());
+        String name=playersNames.get(index).getText(); 
+        if (name!= null && name.length()>0) {
+            return ( isValidTextField(name)|| this.checkBoxList.get(index).isSelected());
         }
         return false;
+    }
+    private boolean isValidTextField(String str){
+    return !(Character.isWhitespace(str.charAt(0))||str.trim().isEmpty());
     }
 
     private void initStartPlayingButton() {
@@ -281,7 +293,7 @@ public class GameParametersController implements Initializable {
 
     private boolean isGameNameSet() {
         if (gameName.getText() != null) {
-            if (!gameName.getText().isEmpty()) {
+            if (isValidTextField(gameName.getText())) {
                 return true;
             }
         }
