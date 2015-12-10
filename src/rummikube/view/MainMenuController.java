@@ -28,11 +28,11 @@ import javafx.stage.Stage;
  */
 public class MainMenuController implements Initializable {
     @FXML
-    private Button NewGame;
-    @FXML
     private Button LoadGame;
     @FXML
     private Button ExitButton;
+    @FXML
+    private Button NewGame;
     /**
      * Initializes the controller class.
      */
@@ -42,7 +42,8 @@ public class MainMenuController implements Initializable {
     } 
     
     
-    @FXML protected void handleNewGameButtonAction(ActionEvent event) throws IOException {
+    @FXML
+    protected void handleNewGameButtonAction(ActionEvent event) throws IOException {
         Stage primaryStage=(Stage)((Node)event.getSource()).getScene().getWindow();
         primaryStage.setTitle("Game Settings");
         URL url = this.getClass().getResource("GameParameters.fxml");
@@ -76,5 +77,6 @@ public class MainMenuController implements Initializable {
     private void closeMainMenuScene(ActionEvent event) {
         (((Node)event.getSource()).getScene().getWindow()).hide();
     }
+
             
 }
