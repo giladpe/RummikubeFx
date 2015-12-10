@@ -42,6 +42,13 @@ public class GameParametersController implements Initializable {
 
     private static final String EMPTY_STRING = "";
     private static final int NUM_OF_PLAYERS = 4;
+    private static final int TWO_PLAYERS = 2;
+    private static final int THREE_PLAYERS = 3;
+    private static final int FOUR_PLAYERS = 4;
+    private static final int PLAYER1 = 0;
+    private static final int PLAYER2 = 1;
+    private static final int PLAYER3 = 2;
+    private static final int PLAYER4 = 3;
     @FXML
     Button StartPlayingButton;
     //@FXML ChoiceBox<Integer> numberOfPlayers;
@@ -89,28 +96,25 @@ public class GameParametersController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        initPlayersField();       
-        for (CheckBox cb : this.checkBoxList) {
-            cb.selectedProperty().addListener(new ChangeListener<Boolean>() {
-                public void changed(ObservableValue<? extends Boolean> ov,
-                        Boolean old_val, Boolean new_val) {
-                    initStartPlayingButton();
-                }
-            });
-        }
-        for (TextField tb : this.playersNames) {
-            tb.textProperty().addListener(new ChangeListener<String>() {
-                @Override
-                public void changed(ObservableValue<? extends String> ov, String t, String t1) {
-                    initStartPlayingButton();
-                }
-            });
-        }
-
-        this.gameName.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> ov, String t, String t1) {
+        initPlayersField();
+        this.checkBoxList.stream().forEach((cb) -> {
+            cb.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> {
                 initStartPlayingButton();
+            });
+        });
+        this.playersNames.stream().forEach((tb) -> {
+            tb.textProperty().addListener((ObservableValue<? extends String> ov, String t, String t1) -> {
+                initStartPlayingButton();
+            });
+        });
+
+        this.gameName.textProperty().addListener((ObservableValue<? extends String> ov, String t, String t1) -> {
+            initStartPlayingButton();
+        });
+
+        radioButtonGroup.selectedToggleProperty().addListener((ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) -> {
+            if (radioButtonGroup.getSelectedToggle() != null) {
+                handleRadioButtonChanged();
             }
         });
 
@@ -123,31 +127,6 @@ public class GameParametersController implements Initializable {
             }
         });
 
-        radioButtonGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            public void changed(ObservableValue<? extends Toggle> ov,
-                    Toggle old_toggle, Toggle new_toggle) {
-                if (radioButtonGroup.getSelectedToggle() != null) {
-                    handleRadioButtonChanged();
-                }
-            }
-        });
-//        radioButtonGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() 
-//        {
-//        public void onCheckedChanged
-//        {
-//           handleB3Changed() {
-//           handleB3Changed(); 
-//        }});
-    }
-
-    private void handleB3Changed() {
-        resetPlayerField(3);
-        configPlayer3.setVisible(B3.isSelected());
-    }
-
-    private void handleB4Changed() {
-        configPlayer4.setVisible(B4.isSelected());
-        configPlayer3.setVisible(B4.isSelected() || B3.isSelected());
     }
 
     private void resetPlayerField(int index) {
@@ -185,7 +164,7 @@ public class GameParametersController implements Initializable {
     }
 
     @FXML
-    protected void handlePlayerNameTextChange(ActionEvent event) {      
+    protected void handlePlayerNameTextChange(ActionEvent event) {
         initStartPlayingButton();
     }
 
@@ -224,20 +203,22 @@ public class GameParametersController implements Initializable {
 
     @FXML
     private void handleRadioButtonChanged() {
-        this.hBoxList.get(0).setVisible(true);
-        this.hBoxList.get(1).setVisible(true);
-        if (getNumOfPlayerValue() == 2) {
-            resetPlayerField(2);
-            resetPlayerField(3);
+        int numberOfPlayer = getNumOfPlayerValue();
+        switch (numberOfPlayer) {
+
+            case FOUR_PLAYERS:
+                handleFourPlayersButton();
+                break;
+            case THREE_PLAYERS:
+                handleThreePlayersButton();
+                break;
+            case TWO_PLAYERS:
+            default:
+                handleTwoPlayersButton();
+                break;
+
         }
-        initPlayer3and4Field();
         initStartPlayingButton();
-
-    }
-
-    private void initPlayer3and4Field() {
-        handleB3Changed();
-        handleB4Changed();
     }
 
     @FXML
@@ -268,23 +249,22 @@ public class GameParametersController implements Initializable {
     }
 
     private int getNumOfPlayerValue() {
-        int res = Integer.parseInt(radioButtonGroup.getSelectedToggle().getUserData().toString());
-        return res;
+        return Integer.parseInt(radioButtonGroup.getSelectedToggle().getUserData().toString());   
     }
 
     private boolean isPlayerFieldSet(int index) {
-        boolean result=false;
-        String name=playersNames.get(index).getText(); 
-        if(this.checkBoxList.get(index).isSelected()){
-            result=true;
-        }
-        else if (name!= null && name.length()>0) {
-            result= ( isValidTextField(name));
+        boolean result = false;
+        String name = playersNames.get(index).getText();
+        if (this.checkBoxList.get(index).isSelected()) {
+            result = true;
+        } else if (name != null && name.length() > 0) {
+            result = (isValidTextField(name));
         }
         return result;
     }
-    private boolean isValidTextField(String str){
-    return !(str.trim().isEmpty()||Character.isWhitespace(str.charAt(0)));
+
+    private boolean isValidTextField(String str) {
+        return !(str.trim().isEmpty() || Character.isWhitespace(str.charAt(0)));
     }
 
     private void initStartPlayingButton() {
@@ -304,4 +284,28 @@ public class GameParametersController implements Initializable {
         return false;
     }
 
+    private void handleTwoPlayersButton() {
+
+        resetPlayerField(PLAYER3);
+        resetPlayerField(PLAYER4);
+        this.hBoxList.get(PLAYER1).setVisible(true);
+        this.hBoxList.get(PLAYER2).setVisible(true);
+        this.hBoxList.get(PLAYER3).setVisible(false);
+        this.hBoxList.get(PLAYER4).setVisible(false);
+    }
+
+    private void handleThreePlayersButton() {
+        resetPlayerField(PLAYER4);
+        this.hBoxList.get(PLAYER1).setVisible(true);
+        this.hBoxList.get(PLAYER2).setVisible(true);
+        this.hBoxList.get(PLAYER3).setVisible(true);
+        this.hBoxList.get(PLAYER4).setVisible(false);
+    }
+
+    private void handleFourPlayersButton() {
+        this.hBoxList.get(PLAYER1).setVisible(true);
+        this.hBoxList.get(PLAYER2).setVisible(true);
+        this.hBoxList.get(PLAYER3).setVisible(true);
+        this.hBoxList.get(PLAYER4).setVisible(true);
+    }
 }
