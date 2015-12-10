@@ -31,7 +31,7 @@
     <RowConstraints maxHeight="254.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label prefHeight="29.0" prefWidth="180.0" stylesheets="@../resources/menusStyle.css" text="Game's name:" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <Label prefHeight="29.0" prefWidth="180.0" stylesheets="@resources/menusStyle.css" text="Game's name:" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets />
          </GridPane.margin></Label>
@@ -173,7 +173,7 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER">
          <children>
-            <Label stylesheets="@../resources/menusStyle.css" text="Number of players:" textAlignment="CENTER" />
+            <Label stylesheets="@resources/menusStyle.css" text="Number of players:" textAlignment="CENTER" />
             <RadioButton fx:id="B2" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleRadioButtonChanged" text="2">
                <toggleGroup>
                   <ToggleGroup fx:id="radioButtonGroup" />
@@ -215,6 +215,6 @@
             <Insets />
          </GridPane.margin>
       </HBox>
-      <Label fx:id="errorMsg" alignment="TOP_CENTER" contentDisplay="TOP" prefHeight="20.0" prefWidth="381.0" styleClass="errorMsg" stylesheets="@resources/errorMsg.css" textAlignment="CENTER" textFill="#ee3737" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+      <Label id="errorMsg" fx:id="errorMsg" alignment="TOP_CENTER" contentDisplay="TOP" prefHeight="20.0" prefWidth="381.0" stylesheets="@resources/menusStyle.css" textAlignment="CENTER" textFill="#ee3737" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
    </children>
 </GridPane>

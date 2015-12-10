@@ -5,8 +5,6 @@
  */
 package rummikube.view;
 
-import java.net.URL;
-import java.time.Duration;
 import java.util.HashMap;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -17,9 +15,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  *
@@ -77,10 +74,10 @@ public class ScreensController extends StackPane {
             } else {
                 setOpacity(0.0);
                 getChildren().add(screensMap.get(name));
-                Timeline fadeIn = new Timeline(
-                        new KeyFrame(Duration.ZERO, new KeyValue(opacity, 0.0)),
-                        new KeyFrame(new Duration(1000), new KeyValue(opacity, 1.0)));
-                fadeIn.play();
+//                Timeline fadeIn = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(opacity, 0.0)),
+//                        new KeyFrame(new Duration(1000), new KeyValue(opacity, 1.0)));
+//                fadeIn.play();
             }
             return true;
         } else {
