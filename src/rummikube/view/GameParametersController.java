@@ -273,11 +273,15 @@ public class GameParametersController implements Initializable {
     }
 
     private boolean isPlayerFieldSet(int index) {
+        boolean result=false;
         String name=playersNames.get(index).getText(); 
-        if (name!= null && name.length()>0) {
-            return ( isValidTextField(name)|| this.checkBoxList.get(index).isSelected());
+        if(this.checkBoxList.get(index).isSelected()){
+            result=true;
         }
-        return false;
+        else if (name!= null && name.length()>0) {
+            result= ( isValidTextField(name));
+        }
+        return result;
     }
     private boolean isValidTextField(String str){
     return !(str.trim().isEmpty()||Character.isWhitespace(str.charAt(0)));
