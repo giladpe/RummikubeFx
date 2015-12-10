@@ -25,7 +25,7 @@ import rummikube.Engin.Game;
 import rummikube.Engin.Player.Player;
 import rummikube.Engin.Serie;
 import rummikube.Engin.Table;
-import rummikubpro.Engin.TilesLogic.Tile;
+import rummikube.Engin.TilesLogic.Tile;
 
 public class xml {
     
@@ -53,6 +53,7 @@ public static Rummikub getSavedGame(String filePath) throws SAXException,JAXBExc
 ////////////////////////////////////////////////////////////////////////////////
 public static void saveGame(Rummikub rummikub,String FilePath) throws SAXException,JAXBException,FileNotFoundException
 {          
+        
         URL csdURL = xml.class.getResource("/" + RESOURCES + "/" + SCHEMA_NAME);
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = schemaFactory.newSchema(csdURL);//get schema from resources folder

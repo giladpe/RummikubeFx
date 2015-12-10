@@ -16,7 +16,11 @@ import rummikube.Engin.Game;
 public class Rummikube extends Application {
     private Game game; 
     @Override
+    
     public void start(Stage primaryStage) throws Exception {  
+    
+       Controller gameControl=new Controller();
+       gameControl.runGame();
         primaryStage.setTitle("Rummikube");
         URL url = getClass().getResource("view/MainMenu.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();

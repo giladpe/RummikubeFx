@@ -6,10 +6,10 @@
 package rummikube.Engin.Player;
 import java.util.Collections;
 import java.util.ArrayList;
-import rummikubpro.Engin.TilesLogic.BelongTo;
-import rummikubpro.Engin.TilesLogic.Color;
-import rummikubpro.Engin.TilesLogic.Tile;
-import rummikubpro.Engin.TilesLogic.Value;
+import rummikube.Engin.TilesLogic.BelongTo;
+import rummikube.Engin.TilesLogic.Color;
+import rummikube.Engin.TilesLogic.Tile;
+import rummikube.Engin.TilesLogic.Value;
 
 abstract public class Player {
 

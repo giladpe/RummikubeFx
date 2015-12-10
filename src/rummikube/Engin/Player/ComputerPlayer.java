@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import rummikube.Engin.Solution;
-import rummikubpro.Engin.TilesLogic.Tile;
+import rummikube.Engin.TilesLogic.Tile;
 
 /**
  *

@@ -42,5 +42,5 @@ public class Utility {
     public static final int MinSerieSize = 3;
     public static final int Joker = 0;
     public static final String Empty="";
-    
+   public static final String COMPUTER_NAME = "^[Cc]{1}[Oo]{1}[mM]{1}[pP]{1}[0-9]"; 
 }

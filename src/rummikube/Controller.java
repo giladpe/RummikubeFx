@@ -14,6 +14,7 @@ import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.xml.bind.JAXBException;
 import org.xml.sax.SAXException;
 import rummikube.Engin.ExceptionHandler;
@@ -31,31 +32,35 @@ public class Controller {
 
     private final View ui;
     private Game game;
+
     //public static final int Zero = 0;
 ////////////////////////////////////////////////////////////////////////////////    
+
     public Controller() {
         ui = new View();
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     public void runGame() {
 
+        
         boolean errorHappend = true;
 
         while (errorHappend) {
 
             try {
                 mainMenu();
-                
+
             } catch (Exception ex) {
-                
+
                 ExceptionHandler.handleException(ex);
-                
+
                 try {
                     FileWriter fstream = new FileWriter("exception.txt", true);
                     BufferedWriter out = new BufferedWriter(fstream);
                     PrintWriter pWriter = new PrintWriter(out, true);
                     ex.printStackTrace(pWriter);
-                    } catch (Exception ie) {
+                } catch (Exception ie) {
                     throw new RuntimeException("Could not write Exception to file", ie);
                 }
                 continue;
@@ -64,6 +69,7 @@ public class Controller {
         }
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void subMenu() throws JAXBException, SAXException, FileNotFoundException {
         //sub menu msg
         int PlyerChoice = new SubMenu().getChoice(); //get input
@@ -87,8 +93,9 @@ public class Controller {
         }
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void mainMenu() throws JAXBException, SAXException, FileNotFoundException {
-        
+
         int PlyerChoice = new MainMenu().getChoice(); //get input
         //heandle input
         switch (PlyerChoice) {
@@ -108,57 +115,106 @@ public class Controller {
         }
     }
 ////////////////////////////////////////////////////////////////////////////////
-    private void initNewGame() throws JAXBException, SAXException {
 
+    private void initNewGame() throws JAXBException, SAXException {
+        //game.settings
         //boolean userWantToPlay = true;
         getSettings();
-        getPlayersInfo();
+        game.setPlayersFromSettings();
+        //getPlayersInfo();
         game.startGameMode();
         ///call start itearation////////////
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void initNewSavedGame(Rummikub rummikub, int numOfHumanPlayers, int numOfComputerPlayers) throws JAXBException, SAXException {
         //boolean userWantToPlay = true;
         setSettings(rummikub, numOfHumanPlayers, numOfComputerPlayers);
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void setSettings(Rummikub rummikub, int numOfHumanPlayers, int numOfComputerPlayers) {
 
         String gameName;
-
         Game.Settings settings = new Game.Settings();
         gameName = rummikub.getName();
         settings = new Game.Settings(gameName, numOfComputerPlayers, numOfHumanPlayers);
         this.game = new Game(settings);
+
+    }
+        private void setSettings(Rummikub rummikub, int numOfHumanPlayers, int numOfComputerPlayers,ArrayList<String> sPlayersNames) {
+        String gameName;
+        Game.Settings settings = new Game.Settings();
+        gameName = rummikub.getName();
+        settings = new Game.Settings(gameName, numOfComputerPlayers, numOfHumanPlayers,sPlayersNames);
+        this.game = new Game(settings);
+
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void getSettings() {
 
         String gameName;
-        int numPlayers, numComputers, numHumans;
+        int numOfPlayers, numComputers, numHumans;
+        ArrayList<String> playersNames = new ArrayList<String>();
         Game.Settings settings;
 
         ui.gameNameMsg();
         gameName = ui.getStringFromUser(true);
 
         ui.playersAmountMsg();
-        numPlayers = ui.getIntFromUser(Utility.MinPlayers, Utility.MaxPlayers);
+        numOfPlayers = ui.getIntFromUser(Utility.MinPlayers, Utility.MaxPlayers);
 
         ui.humansAmountMsg();
-        numHumans = ui.getIntFromUser(Utility.MinChoice, numPlayers);
+        numHumans = ui.getIntFromUser(Utility.MinChoice, numOfPlayers);
 
-        numComputers = numPlayers - numHumans;
-        settings = new Game.Settings(gameName, numComputers, numHumans);
+        numComputers = numOfPlayers - numHumans;
+        
+        playersNames = getPlayersNames(numOfPlayers,numHumans);
+        settings = new Game.Settings(gameName, numComputers, numHumans,playersNames);
         this.game = new Game(settings);
 
     }
+
+    private ArrayList<String> getPlayersNames(int numOfPlayers, int numOfHumans) {
+        ArrayList<String> playersNamesList = new ArrayList<>();
+        int numComp = numOfPlayers - numOfHumans;
+        String playerName;
+
+        for (int i = 1; i <= numComp; i++) {
+            playerName = "COMP" + i;
+            playersNamesList.add(playerName);
+        }
+        for (int i = 1; i <= numOfHumans; i++) {
+            ui.playerName(i);
+            playerName = ui.getStringFromUser(true);
+            while (!isValidPlayerName(playersNamesList, playerName)) {
+                ui.usedNameMsg();
+                playerName = ui.getStringFromUser(true);
+            }
+            playersNamesList.add(playerName);
+        }
+        //init Computer names
+
+        ui.wellcomePlayersMsg(playersNamesList.toString());
+        return playersNamesList;
+    }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void getPlayersInfo() {
 
         int numHuman = game.getNumberOfHumansPlayrs();
         int numComp = game.getNumberOfComputerPlyers();
         String playerName;
 
+        for (int i = 1; i <= numComp; i++) {
+
+            playerName = "COMP" + i;
+            game.addComputerPlayer(playerName);
+
+        }
+        
+        
         for (int i = 1; i <= numHuman; i++) {
 
             ui.playerName(i);
@@ -168,16 +224,12 @@ public class Controller {
                 playerName = ui.getStringFromUser(true);
             }
         }
-        //init Computer names
-        for (int i = 1; i <= numComp; i++) {
-
-            playerName = "COMP" + i;
-            game.addComputerPlayer(playerName);
-
-        }
         ui.wellcomePlayersMsg(game.getPlayersNames());
+        //init Computer names
+        
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void gameIterations() throws JAXBException, SAXException, FileNotFoundException {
 
         boolean userWantToPlay = true;
@@ -190,8 +242,9 @@ public class Controller {
 
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private String humanTurn() throws JAXBException, FileNotFoundException, SAXException {
-        
+
         int userChoice;
         boolean firstTurnIteration = true;
         do {
@@ -206,13 +259,15 @@ public class Controller {
         return game.endTurn();
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private String computerTurn() {
-        
+
         String turnMoves = game.pcTurn();
         ui.printPcMove(turnMoves, game.getCurrPlayerName());
         return game.endTurn();
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private boolean gameSubIteration() throws JAXBException, SAXException, FileNotFoundException {
 
         boolean userWantToPlay = true;
@@ -225,7 +280,7 @@ public class Controller {
             }
             game.incLastTurnCounter();
         }
-        if ((game.isCounterNotOver() || game.isNotLastTurn())&&userWantToPlay) {
+        if ((game.isCounterNotOver() || game.isNotLastTurn()) && userWantToPlay) {
             String endTurn;
             ui.turnMsg(game.getGameTable().toString(), playerName);
 
@@ -248,21 +303,23 @@ public class Controller {
 
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private boolean isPlayerDoneHand() {
-        
+
         if (!game.playerHasTilesInHand()) {
-            
+
             ui.printEndHandWinner(game.getWinner());
-            
+
             return true;
         }
         return false;
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void handleItrChoice(int userChoice) throws JAXBException, SAXException, FileNotFoundException {
 
         switch (userChoice) {
-            
+
             case Utility.MinChoice:
                 subMenu();
                 break;
@@ -285,25 +342,26 @@ public class Controller {
         }
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void newSerie() {
 
         int choice = 0, tileIndex;
 
         game.addNewSerie();
-   
+
         do {
-            
+
             if (game.playerHasTilesInHand()) {
-                
+
                 ui.printString(game.getPlayersHeand());
                 ui.chooseTileIndexFromHandMsg();
                 tileIndex = ui.getIntFromUser(0, game.getCurrPlayer().getHandSize() - 1);
                 game.addTileToSerie(game.getNumOfSeries() - 1, tileIndex);
                 ui.addTileMsg();
-               choice = ui.getIntFromUser(Utility.MinChoice, Utility.MaxNewSerieChoice);
-               
+                choice = ui.getIntFromUser(Utility.MinChoice, Utility.MaxNewSerieChoice);
+
             } else {
-                
+
                 choice = Utility.Done;
                 ui.emptyHandMsg();
             }
@@ -311,28 +369,30 @@ public class Controller {
 
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void addToExictSerie() {
 
         int serieIndex, serieSize, tilePosition, tileHandIndex;
-        
+
         if (game.playerHasTilesInHand()) {
-            
+
             ui.chooseTileIndexFromHandMsg();
             tileHandIndex = ui.getIntFromUser(Utility.MinChoice, game.getCurrPlayer().getHandSize() - 1);
-            
+
             ui.chooseSerieMsg();
             serieIndex = ui.getIntFromUser(Utility.MinChoice, game.getNumOfSeries() - 1);
             serieSize = game.getSerieSize(serieIndex);
-            
+
             ui.chooseTileIndexMsg();
             tilePosition = ui.getIntFromUser(0, serieSize);
             game.addTileToSerie(serieIndex, tileHandIndex, tilePosition);
-            
+
         } else {
             ui.emptyHandMsg();
         }
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void takeFromSerie() {
 
         int serieIndex, serieSize, tilePosition;
@@ -340,15 +400,16 @@ public class Controller {
         ui.chooseSerieMsg();
         serieIndex = ui.getIntFromUser(0, game.getNumOfSeries() - 1);
         serieSize = game.getSerieSize(serieIndex);
-        
+
         if (serieSize > 0) {
-            
+
             ui.chooseTileIndexMsg();
             tilePosition = ui.getIntFromUser(0, serieSize - 1);
             game.takeTileFromSerie(serieIndex, tilePosition);
         }
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void loadGameFromXml() throws JAXBException, SAXException, FileNotFoundException {
 
         int CurrPlayerToAdd = 0;
@@ -362,7 +423,7 @@ public class Controller {
         startNewGameFromXml(savedRummiKubGame);
 
         for (Players.Player player : savedRummiKubGame.getPlayers().getPlayer()) { // go overs all players we loaded
-               
+
             if (player.getType() == PlayerType.HUMAN) {
 
                 game.tryToAddHumanPlayer(player.getName());//sets the name from xml
@@ -373,53 +434,56 @@ public class Controller {
             if (player.getName().equals(savedRummiKubGame.getCurrentPlayer())) {
                 game.setCurrPlayer(CurrPlayerToAdd);
             }
-            if(!getTilesForPlayerFromXml(player, CurrPlayerToAdd)){//get tiles for current player
+            if (!getTilesForPlayerFromXml(player, CurrPlayerToAdd)) {//get tiles for current player
                 ui.printErrorInLoadedGame();// if we get here there is a problem in file
                 mainMenu();
             }
-            game.getPlayers().get(CurrPlayerToAdd).setFirstMove( !(player.isPlacedFirstSequence()) );
+            game.getPlayers().get(CurrPlayerToAdd).setFirstMove(!(player.isPlacedFirstSequence()));
             CurrPlayerToAdd++;
         }
-        if(!getBoardFromXml(savedRummiKubGame.getBoard())){//set the game table
-            
-             ui.printErrorInLoadedGame();
-             mainMenu();
+        if (!getBoardFromXml(savedRummiKubGame.getBoard())) {//set the game table
+
+            ui.printErrorInLoadedGame();
+            mainMenu();
         }
 
         if (game.isLoadedGameLegit()) {//check if all the details we got from xml is legit
-            
+
             game.initXmlGame();
             gameIterations();//start the game
             mainMenu();
-            
+
         } else {
             ui.printErrorInLoadedGame();
             mainMenu();
         }
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private boolean getBoardFromXml(Board board) {
 
-        boolean isBoardLegit=false;
-      
+        boolean isBoardLegit = false;
+
         isBoardLegit = game.setGameTableFromXml(board);//sets the game table
-        
+
         return isBoardLegit;
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private boolean getTilesForPlayerFromXml(Players.Player player, int playerIndex) {
 
         int numOfTiles = player.getTiles().getTile().size();
         boolean isTileLegit = false;
-        
+
         for (int i = 0; i < numOfTiles; i++) {
 
-             isTileLegit = game.getPlayers().get(playerIndex).setNewTileFromXml(player.getTiles().getTile().get(i).getColor().value(),
-                                                                                player.getTiles().getTile().get(i).getValue());       
+            isTileLegit = game.getPlayers().get(playerIndex).setNewTileFromXml(player.getTiles().getTile().get(i).getColor().value(),
+                    player.getTiles().getTile().get(i).getValue());
         }
         return isTileLegit;
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void saveGameToXml() throws JAXBException, SAXException, FileNotFoundException {
 
         XmlClasses.Rummikub RummikubGameToSave = new XmlClasses.Rummikub();
@@ -452,12 +516,14 @@ public class Controller {
 
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void prepreGameSettingsToSave(Rummikub rummikub, String path) throws JAXBException, SAXException, FileNotFoundException {
 
         xml.createGameToSaveForXml(game, rummikub, path);
 
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void startNewGame() throws JAXBException, SAXException, FileNotFoundException {
 
         initNewGame();
@@ -465,6 +531,7 @@ public class Controller {
         mainMenu();
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void startNewGameFromXml(Rummikub rummikub) throws JAXBException, SAXException {
 
         int numOfHumanPlayers = 0, numOfComputerPlayers = 0;
@@ -484,21 +551,22 @@ public class Controller {
         initNewSavedGame(rummikub, numOfHumanPlayers, numOfComputerPlayers);
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void editHand() {
-        
+
         int choice;
-        
+
         if (game.currPlayerHandSize() > 1) {
-            
+
             ui.orgenaizePlayerHandMsg();
             choice = ui.getIntFromUser(Utility.MinChoice, Utility.MaxEditHandChoice);
-            
+
             if (choice == 1) {//organize the player hand
-                
+
                 game.OrganizeCurrPlayerHand();
-                
+
             } else if (choice == 2) {
-                
+
                 ui.swapIndexMsg();
                 int index1 = ui.getIntFromUser(Utility.MinChoice, game.getCurrPlayer().getHandSize());
                 int index2 = ui.getIntFromUser(Utility.MinChoice, game.getCurrPlayer().getHandSize());
@@ -509,27 +577,45 @@ public class Controller {
         }
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void addTileToSerie() {
-        
+
         if (game.isThereSerieOnTable()) { //check if the table is not empty
-            
+
             ui.noSerieInTableMsg();//if so we notifty the user
-            
+
         } else {
-            
+
             addToExictSerie(); // add tile to a serie on table
         }
     }
 ////////////////////////////////////////////////////////////////////////////////
+
     private void takeTileFromSerie() {
-        
+
         if (game.isThereSerieOnTable()) {
-            
+
             ui.noSerieInTableMsg();
-            
+
         } else {
             takeFromSerie(); // takes tile from a serie on the table
         }
     }
+     public boolean isValidPlayerName(ArrayList<String> sPlayersNameList,String sPlayerName) {
+                 return  !(sPlayerName.matches(Utility.COMPUTER_NAME)||simmilarToOneName(sPlayersNameList, sPlayerName));
+        }
+
+        private static boolean simmilarToOneName(ArrayList<String> playerNames, String sPlayerName) {
+            boolean bIsFound = false;
+
+            for (int i = 0; i < playerNames.size() && !bIsFound; i++) {
+                bIsFound = playerNames.get(i).equals(sPlayerName);
+            }
+
+            return bIsFound;
+        }
+    
+    
+    
 ////////////////////////////////////////////////////////////////////////////////
 }

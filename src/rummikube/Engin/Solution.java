@@ -7,7 +7,7 @@ package rummikube.Engin;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import rummikubpro.Engin.TilesLogic.Tile;
+import rummikube.Engin.TilesLogic.Tile;
 
 /**
  *
