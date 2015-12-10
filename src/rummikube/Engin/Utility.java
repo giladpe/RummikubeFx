@@ -41,6 +41,16 @@ public class Utility {
     public static final int MaxStraightSize = 13;
     public static final int MinSerieSize = 3;
     public static final int Joker = 0;
-    public static final String Empty="";
-   public static final String COMPUTER_NAME = "^[Cc]{1}[Oo]{1}[mM]{1}[pP]{1}[0-9]"; 
+    public static final String EMPTY_STRING="";
+    public static final String COMPUTER_NAME = "^[Cc]{1}[Oo]{1}[mM]{1}[pP]{1}[0-9]"; 
+    public static final int NO_ERROR=0;
+    public static final int DUP_NAME = 1;
+    public static final int EMPTY_GAME_NAME = 2;
+    public static final int TWO_PLAYERS = 2;
+    public static final int THREE_PLAYERS = 3;
+    public static final int FOUR_PLAYERS = 4;
+    public static final int PLAYER1 = 0;
+    public static final int PLAYER2 = 1;
+    public static final int PLAYER3 = 2;
+    public static final int PLAYER4 = 3;
 }

@@ -1,0 +1,8 @@
+#errorMsg{
+    -fx-fill: #ee3737;
+    -fx-font-weight: bold;
+   // -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );  
+    //-fx-fill: firebrick
+    //  -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 ); 
+
+}

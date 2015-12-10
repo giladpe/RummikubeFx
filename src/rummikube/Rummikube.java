@@ -19,8 +19,8 @@ public class Rummikube extends Application {
     
     public void start(Stage primaryStage) throws Exception {  
     
-       Controller gameControl=new Controller();
-       gameControl.runGame();
+//       Controller gameControl=new Controller();
+//       gameControl.runGame();
         primaryStage.setTitle("Rummikube");
         URL url = getClass().getResource("view/MainMenu.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();

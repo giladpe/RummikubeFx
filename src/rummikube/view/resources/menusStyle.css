@@ -1,44 +1,47 @@
-    .root {
-        -fx-background-image: url("MenuPic1.jpg");
-        -fx-background-position: center center;
-        -fx-pane-resize: both;
-    }
-    .button {
-        -fx-text-fill: white;
-        -fx-font-family: "Arial Narrow";
-        -fx-font-weight: bold;
-        -fx-background-color: linear-gradient(#61a2b1, #2A5058);
-        -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
-    }
+.root {
+    -fx-background-image: url("MenuPic1.jpg");
+    -fx-background-position: center center;
+    -fx-pane-resize: both;
+}
 
-    .label {
-        -fx-font-size: 14px;
-        -fx-font-weight: bold;
-        -fx-text-fill: #333333;
-        -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
-    }
-    .checkBox {
-        -fx-font-size: 14px;
-        -fx-font-weight: bold;
-        -fx-text-fill: #333333;
-        //-fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
-    }
-    
-    #GamesSettings-text {
-   -fx-font-size: 32px;
-   -fx-font-family: "Arial Black";
-   -fx-fill: #333333;
-   -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
-    }
-    .invalidMsg{
-    -fx-font-size: 12px;
-   -fx-font-family: "Arial Black";
-   -fx-fill: #333333;
-   -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 ); 
-        
-    }
-    
-    
-    .button:hover {
-        -fx-background-color: linear-gradient(#2A5058, #61a2b1);
-    }
+#errorMsg{
+    -fx-fill: #ee3737;
+    -fx-font-weight: bold;
+   // -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );  
+    //-fx-fill: firebrick
+    //  -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 ); 
+
+}
+.button {
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+.label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+.checkBox {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    //-fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+
+#GamesSettings-text {
+    -fx-font-size: 32px;
+    -fx-font-family: "Arial Black";
+    -fx-fill: #333333;
+    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
+}
+
+
+
+.button:hover {
+    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}

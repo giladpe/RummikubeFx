@@ -11,12 +11,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="GamesSettings" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="root" stylesheets="@resources/menusStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rummikube.view.GameParametersController">
+<GridPane fx:id="GamesSettings" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="root" stylesheets="@resources/menusStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rummikube.view.GameParametersController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="166.0" minWidth="10.0" prefWidth="140.0" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.0" minWidth="10.0" prefWidth="188.0" />
+    <ColumnConstraints hgrow="ALWAYS" maxWidth="160.0" minWidth="10.0" prefWidth="140.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="195.0" minWidth="10.0" prefWidth="188.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="183.0" minWidth="10.0" prefWidth="183.0" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="154.0" minWidth="10.0" prefWidth="140.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="160.0" minWidth="10.0" prefWidth="140.0" />
   </columnConstraints>
   <rowConstraints>
       <RowConstraints maxHeight="182.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
@@ -171,7 +171,7 @@
             </CheckBox>
          </children>
       </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER">
          <children>
             <Label stylesheets="@../resources/menusStyle.css" text="Number of players:" textAlignment="CENTER" />
             <RadioButton fx:id="B2" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleRadioButtonChanged" text="2">
@@ -215,6 +215,6 @@
             <Insets />
          </GridPane.margin>
       </HBox>
-      <Label alignment="TOP_CENTER" contentDisplay="TOP" prefHeight="20.0" prefWidth="262.0" styleClass="invalidMsg" text="Invalid Game Name" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+      <Label fx:id="errorMsg" alignment="TOP_CENTER" contentDisplay="TOP" prefHeight="20.0" prefWidth="381.0" styleClass="errorMsg" stylesheets="@resources/errorMsg.css" textAlignment="CENTER" textFill="#ee3737" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
    </children>
 </GridPane>

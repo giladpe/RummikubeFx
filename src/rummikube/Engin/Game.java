@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import XmlClasses.Board;
 
-
 public class Game {
 
     private int lastTurnCounter = 4;
@@ -46,14 +45,15 @@ public class Game {
     public void addNewSerie() {
         gameTable.addSerie();
     }
-    public void setPlayersFromSettings(){
-        ArrayList <String> sPlayersNames=settings.getPlayerNames();
-        int numOfComputer=settings.numberOfComputerPlyers;
-        int i=0;
-        for(i=0;i<numOfComputer;i++){
+
+    public void setPlayersFromSettings() {
+        ArrayList<String> sPlayersNames = settings.getPlayerNames();
+        int numOfComputer = settings.numberOfComputerPlyers;
+        int i = 0;
+        for (i = 0; i < numOfComputer; i++) {
             addComputerPlayer(sPlayersNames.get(i));
         }
-        for(;i<sPlayersNames.size();i++){
+        for (; i < sPlayersNames.size(); i++) {
             tryToAddHumanPlayer(sPlayersNames.get(i));
         }
     }
@@ -368,7 +368,7 @@ public class Game {
             do {
                 addTile = pcTryAddTiles(ai);
                 pcMoves += addTile;
-            } while (!addTile.equals(Utility.Empty));
+            } while (!addTile.equals(Utility.EMPTY_STRING));
         }
         return pcMoves;
     }
@@ -551,13 +551,11 @@ public class Game {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////   
-
     public int getLastTurnCounter() {
         return lastTurnCounter;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////   
-
     public int getNumOfSeries() {
         return gameTable.getSerieList().size();
     }
@@ -568,7 +566,6 @@ public class Game {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////   
-
     public boolean isLastTurn() {
         return lastTurn;
     }
@@ -743,8 +740,12 @@ public class Game {
             this.playersNameString = playersNameString;
         }
 
-        public boolean isValidPlayerName(ArrayList<String> sPlayersNameList,String sPlayerName) {
-                 return  !(sPlayerName.matches(Utility.COMPUTER_NAME)||simmilarToOneName(sPlayersNameList, sPlayerName));
+        public boolean isValidPlayerName(ArrayList<String> sPlayersNameList, String sPlayerName) {
+            return !(isPlayerNameHasCompterName(sPlayerName) || simmilarToOneName(sPlayersNameList, sPlayerName));
+        }
+
+        static public boolean isValidPlayersNames(ArrayList<String> namesList) {
+            return !isPlayersNamesHasCompterName(namesList)&&hasDiffNames(namesList);
         }
 
         private static boolean simmilarToOneName(ArrayList<String> playerNames, String sPlayerName) {
@@ -756,10 +757,35 @@ public class Game {
 
             return bIsFound;
         }
-        public ArrayList<String> getPlayerNames(){
+
+        static private boolean isPlayerNameHasCompterName(String name) {
+            return name.matches(Utility.COMPUTER_NAME);
+        }
+
+        static private boolean isPlayersNamesHasCompterName(ArrayList<String> namesList) {
+            boolean hasComputerName=false;
+            for (String name : namesList) {
+                if(isPlayerNameHasCompterName(name)){
+                    hasComputerName=true;
+                }
+            }
+            return hasComputerName;
+        }
+
+        private static boolean hasDiffNames(ArrayList<String> playersNames) {
+            boolean foundSimmilar = false;
+            for (int i = 0; i < (playersNames.size() - 1) && !foundSimmilar; i++) {
+                for (int j = i + 1; j < playersNames.size()&&!foundSimmilar; j++) {
+                    foundSimmilar = playersNames.get(i).equals(playersNames.get(j));
+                }
+            }
+            return !foundSimmilar;
+        }
+
+        public ArrayList<String> getPlayerNames() {
             return playersNameString;
         }
-        
+
     }
 /////////////////////////////////////////////////////////////////////////////////////////
 }

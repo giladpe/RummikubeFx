@@ -25,6 +25,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
@@ -32,6 +33,11 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import rummikube.Engin.Game;
+import rummikube.Engin.Utility;
+import static rummikube.Engin.Utility.PLAYER1;
+import static rummikube.Engin.Utility.PLAYER2;
+import static rummikube.Engin.Utility.PLAYER3;
+import static rummikube.Engin.Utility.PLAYER4;
 
 /**
  * FXML Controller class
@@ -40,18 +46,15 @@ import rummikube.Engin.Game;
  */
 public class GameParametersController implements Initializable {
 
-    private static final String EMPTY_STRING = "";
-    private static final int NUM_OF_PLAYERS = 4;
-    private static final int TWO_PLAYERS = 2;
-    private static final int THREE_PLAYERS = 3;
-    private static final int FOUR_PLAYERS = 4;
-    private static final int PLAYER1 = 0;
-    private static final int PLAYER2 = 1;
-    private static final int PLAYER3 = 2;
-    private static final int PLAYER4 = 3;
+    private final String DUP_NAME_MSG = "Name is already exict!";
+    private final String EMPTY_GAME_NAME_MSG = "Insert name for the game!";
+    private final String NO_HUMAN_MSG = "Chose atleast one human player!";
+    private Game.Settings gameSettings;
     @FXML
     Button StartPlayingButton;
     //@FXML ChoiceBox<Integer> numberOfPlayers;
+    @FXML
+    Label errorMsg;
     @FXML
     TextField gameName;
     @FXML
@@ -81,7 +84,6 @@ public class GameParametersController implements Initializable {
     ArrayList<HBox> hBoxList = new ArrayList<>();
     ArrayList<CheckBox> checkBoxList = new ArrayList<>();
     ArrayList<TextField> playersNames = new ArrayList<>();
-    Game testGame;
     @FXML
     ToggleGroup radioButtonGroup;
     @FXML
@@ -102,9 +104,10 @@ public class GameParametersController implements Initializable {
                 initStartPlayingButton();
             });
         });
-        this.playersNames.stream().forEach((tb) -> {
-            tb.textProperty().addListener((ObservableValue<? extends String> ov, String t, String t1) -> {
+        this.playersNames.stream().forEach((nameTextField) -> {
+            nameTextField.textProperty().addListener((ObservableValue<? extends String> ov, String t, String t1) -> {
                 initStartPlayingButton();
+                //handelErrorMsg();
             });
         });
 
@@ -131,7 +134,7 @@ public class GameParametersController implements Initializable {
 
     private void resetPlayerField(int index) {
         this.checkBoxList.get(index).setSelected(false);
-        this.playersNames.get(index).setText(EMPTY_STRING);
+        this.playersNames.get(index).setText(Utility.EMPTY_STRING);
         this.playersNames.get(index).setDisable(false);
 
     }
@@ -159,6 +162,18 @@ public class GameParametersController implements Initializable {
     }
 
     @FXML
+    protected void handleStartPlayingButtonAction(ActionEvent event) {
+        String gameName = this.gameName.getText();
+        int numOfPlayers = getNumOfPlayers();
+        int numOfComputerPlayers = getNumOfComputerPlayers();
+        int numOfHumansPlayers = numOfPlayers - numOfComputerPlayers;
+        ArrayList <String> sPlayersNames=getPlayersTextFieldList();
+        addComputerNames(sPlayersNames,numOfComputerPlayers);
+        this.gameSettings = new Game.Settings(gameName, numOfComputerPlayers, numOfHumansPlayers, sPlayersNames);
+        int i=0;
+    }
+
+    @FXML
     protected void handleGameNameTextChange(ActionEvent event) {
         initStartPlayingButton();
     }
@@ -183,10 +198,7 @@ public class GameParametersController implements Initializable {
 
     }
 
-    @FXML
-    protected void handleStartPlayingButtonAction(ActionEvent event) {
-
-    }
+  
 
     @FXML
     protected void handleCheckBoxSelection(ActionEvent event) {
@@ -194,7 +206,7 @@ public class GameParametersController implements Initializable {
         TextField checkBoxTextField = this.playersNames.get(index);
 
         if (((CheckBox) event.getSource()).isSelected()) {
-            checkBoxTextField.setText(EMPTY_STRING);
+            checkBoxTextField.setText(Utility.EMPTY_STRING);
             checkBoxTextField.setDisable(true);
         } else {
             checkBoxTextField.setDisable(false);
@@ -206,13 +218,13 @@ public class GameParametersController implements Initializable {
         int numberOfPlayer = getNumOfPlayers();
         switch (numberOfPlayer) {
 
-            case FOUR_PLAYERS:
+            case Utility.FOUR_PLAYERS:
                 handleFourPlayersButton();
                 break;
-            case THREE_PLAYERS:
+            case Utility.THREE_PLAYERS:
                 handleThreePlayersButton();
                 break;
-            case TWO_PLAYERS:
+            case Utility.TWO_PLAYERS:
             default:
                 handleTwoPlayersButton();
                 break;
@@ -231,8 +243,8 @@ public class GameParametersController implements Initializable {
                 isLegalConditions = this.isPlayerFieldSet(i);
             }
         }
-        
-        return isLegalConditions && atleastOnePlayerIsHuman();
+
+        return   atleastOnePlayerIsHuman()&&isLegalConditions;
     }
 
     private boolean isNumOfPlayersSet() {
@@ -263,16 +275,29 @@ public class GameParametersController implements Initializable {
     }
 
     private boolean isAllFieldSet() {
-        return isNumOfPlayersSet() && isAllPlayersSet() && isGameNameSet();
+        return isNumOfPlayersSet() && isGameNameSet() && isDiffNames() &&isAllPlayersSet();
     }
 
     private boolean isGameNameSet() {
+        if (isCurrMsgSameAs(EMPTY_GAME_NAME_MSG)) {
+            clearMsg();
+        }
         if (gameName.getText() != null) {
             if (isValidTextField(gameName.getText())) {
                 return true;
             }
         }
+        this.errorMsg.setText(this.EMPTY_GAME_NAME_MSG);
         return false;
+    }
+
+    private boolean isCurrMsgSameAs(String msg) {
+        return this.errorMsg.getText().equals(msg);
+
+    }
+
+    private void clearMsg() {
+        errorMsg.setText(Utility.EMPTY_STRING);
     }
 
     private void handleTwoPlayersButton() {
@@ -302,11 +327,81 @@ public class GameParametersController implements Initializable {
 
     private boolean atleastOnePlayerIsHuman() {
         boolean foundHuman = false;
-
+        if (isCurrMsgSameAs(NO_HUMAN_MSG)) {
+            clearMsg();
+        }
         for (int i = 0; i < getNumOfPlayers() && !foundHuman; i++) {
             foundHuman = !this.checkBoxList.get(i).isSelected();
         }
-
+        if (!foundHuman) {
+            this.errorMsg.setText(NO_HUMAN_MSG);
+        }
         return foundHuman;
     }
+
+    private ArrayList<String> getPlayersTextFieldList() {
+        ArrayList<String> sPlayersNames = new ArrayList<String>();
+        for (TextField fName : this.playersNames) {
+            String sName = fName.getText();
+            if (this.isValidTextField(sName)) {
+                sPlayersNames.add(fName.getText());
+            }
+        }
+        return sPlayersNames;
+    }
+
+    boolean isDiffNames() {
+        
+        boolean isDiffNames = Game.Settings.isValidPlayersNames(getPlayersTextFieldList());
+        if (isCurrMsgSameAs(DUP_NAME_MSG)) {
+            clearMsg();
+        }
+        if (!isDiffNames) {
+            this.errorMsg.setText(DUP_NAME_MSG);
+        }
+        return isDiffNames;
+    }
+
+//    private void handelErrorMsg() {
+//        String stringMsg;
+//        
+//            case Utility.EMPTY_GAME_NAME:
+//                stringMsg = EMPTY_GAME_NAME_MSG;
+//                break;
+//            case Utility.NO_ERROR:
+//            default:
+//                stringMsg = Utility.EMPTY_STRING;
+//                break;
+//        }
+//        this.errorMsg.setText(stringMsg);
+//    }
+    private int hasError() {
+        int hasError = Utility.NO_ERROR;
+        if (!isDiffNames()) {
+            hasError = Utility.DUP_NAME;
+        } else if (!isValidTextField(this.gameName.getText())) {
+            hasError = Utility.EMPTY_GAME_NAME;
+        }
+        return hasError;
+
+    }
+
+    private int getNumOfComputerPlayers() {
+        int numOfComputerPlayers=0;
+        for (CheckBox cb : this.checkBoxList) {
+            if(cb.isSelected()){
+            numOfComputerPlayers++;
+            }
+        }
+        return numOfComputerPlayers;
+    }
+
+    private void addComputerNames(ArrayList<String> sPlayersNames,int numOfComputerPlayers) {
+       String computerName="";
+        for (int i = 1; i <= numOfComputerPlayers; i++) {
+            computerName = "COMP" + i;
+            sPlayersNames.add(computerName);
+        }
+    }
+
 }

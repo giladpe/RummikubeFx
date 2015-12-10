@@ -119,7 +119,7 @@ public class Controller {
     private void initNewGame() throws JAXBException, SAXException {
         //game.settings
         //boolean userWantToPlay = true;
-        getSettings();
+        this.game = new Game(getSettings());
         game.setPlayersFromSettings();
         //getPlayersInfo();
         game.startGameMode();
@@ -152,7 +152,7 @@ public class Controller {
     }
 ////////////////////////////////////////////////////////////////////////////////
 
-    private void getSettings() {
+    private Game.Settings getSettings() {
 
         String gameName;
         int numOfPlayers, numComputers, numHumans;
@@ -171,8 +171,8 @@ public class Controller {
         numComputers = numOfPlayers - numHumans;
         
         playersNames = getPlayersNames(numOfPlayers,numHumans);
-        settings = new Game.Settings(gameName, numComputers, numHumans,playersNames);
-        this.game = new Game(settings);
+        return settings = new Game.Settings(gameName, numComputers, numHumans,playersNames);
+        
 
     }
 
