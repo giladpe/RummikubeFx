@@ -280,7 +280,7 @@ public class GameParametersController implements Initializable {
         return false;
     }
     private boolean isValidTextField(String str){
-    return (!str.trim().isEmpty()&&!Character.isWhitespace(str.charAt(0)));
+    return !(str.trim().isEmpty()||Character.isWhitespace(str.charAt(0)));
     }
 
     private void initStartPlayingButton() {

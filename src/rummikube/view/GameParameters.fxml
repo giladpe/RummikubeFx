@@ -215,5 +215,6 @@
             <Insets />
          </GridPane.margin>
       </HBox>
+      <Label alignment="TOP_CENTER" contentDisplay="TOP" prefHeight="20.0" prefWidth="262.0" styleClass="invalidMsg" text="Invalid Game Name" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
    </children>
 </GridPane>
