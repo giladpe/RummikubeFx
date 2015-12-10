@@ -203,7 +203,7 @@ public class GameParametersController implements Initializable {
 
     @FXML
     private void handleRadioButtonChanged() {
-        int numberOfPlayer = getNumOfPlayerValue();
+        int numberOfPlayer = getNumOfPlayers();
         switch (numberOfPlayer) {
 
             case FOUR_PLAYERS:
@@ -222,34 +222,25 @@ public class GameParametersController implements Initializable {
     }
 
     @FXML
-    private void hidePlayersFields() {
-        hBoxList.stream().forEach((player) -> {
-            player.setVisible(false);
-        });
-    }
-
     private boolean isAllPlayersSet() {
-        int size;
-        boolean result = true;
-        if (isNumOfPlayerSet()) {
-            size = getNumOfPlayerValue();
-            for (int i = 0; i < size && result; i++) {
-                if (!this.isPlayerFieldSet(i)) {
-                    result = false;
-                }
+        int numOfPlayers;
+        boolean isLegalConditions = isNumOfPlayersSet();
+        if (isLegalConditions) {
+            numOfPlayers = getNumOfPlayers();
+            for (int i = 0; i < numOfPlayers && isLegalConditions; i++) {
+                isLegalConditions = this.isPlayerFieldSet(i);
             }
-        } else {
-            result = false;
         }
-        return result;
+        
+        return isLegalConditions && atleastOnePlayerIsHuman();
     }
 
-    private boolean isNumOfPlayerSet() {
+    private boolean isNumOfPlayersSet() {
         return this.radioButtonGroup.getSelectedToggle() != null;
     }
 
-    private int getNumOfPlayerValue() {
-        return Integer.parseInt(radioButtonGroup.getSelectedToggle().getUserData().toString());   
+    private int getNumOfPlayers() {
+        return Integer.parseInt(radioButtonGroup.getSelectedToggle().getUserData().toString());
     }
 
     private boolean isPlayerFieldSet(int index) {
@@ -272,7 +263,7 @@ public class GameParametersController implements Initializable {
     }
 
     private boolean isAllFieldSet() {
-        return isNumOfPlayerSet() && isAllPlayersSet() & isGameNameSet();
+        return isNumOfPlayersSet() && isAllPlayersSet() && isGameNameSet();
     }
 
     private boolean isGameNameSet() {
@@ -307,5 +298,15 @@ public class GameParametersController implements Initializable {
         this.hBoxList.get(PLAYER2).setVisible(true);
         this.hBoxList.get(PLAYER3).setVisible(true);
         this.hBoxList.get(PLAYER4).setVisible(true);
+    }
+
+    private boolean atleastOnePlayerIsHuman() {
+        boolean foundHuman = false;
+
+        for (int i = 0; i < getNumOfPlayers() && !foundHuman; i++) {
+            foundHuman = !this.checkBoxList.get(i).isSelected();
+        }
+
+        return foundHuman;
     }
 }
