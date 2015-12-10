@@ -6,6 +6,7 @@
  */
 package rummikube.view;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,6 +17,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -24,6 +27,12 @@ import javafx.stage.Stage;
  * @author giladPe
  */
 public class MainMenuController implements Initializable {
+    @FXML
+    private Button NewGame;
+    @FXML
+    private Button LoadGame;
+    @FXML
+    private Button ExitButton;
     /**
      * Initializes the controller class.
      */
@@ -46,11 +55,20 @@ public class MainMenuController implements Initializable {
         primaryStage.show();
 
     }
-//    
-//    @FXML protected void handleLoadGameButtonAction(ActionEvent event) {
-//        
-//    }
-//    
+    
+    @FXML protected void handleLoadGameButtonAction(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        File file = fileChooser.showOpenDialog(((Button)event.getSource()).getContextMenu()); 
+        
+        // now i got the file => need to check it if legal
+        // then need to init the game from the file
+        // then start the game
+//        if (file != null) {
+//            openFile(file);
+//        }
+    }
+    
     @FXML protected void handleExitButtonAction(ActionEvent event) {
         closeMainMenuScene(event);
     }
