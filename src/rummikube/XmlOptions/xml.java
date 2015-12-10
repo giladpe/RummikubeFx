@@ -127,7 +127,7 @@ public static void createPlayerForXml(Players xmlPlayers,Player player){
    Players.Player.Tiles tiles= new Players.Player.Tiles();//prepere deck for player to save
    
    xmlPlayer.setName(player.getName());//sets the player name 
-   xmlPlayer.setPlacedFirstSequence(player.isFirstMove());
+   xmlPlayer.setPlacedFirstSequence(!player.isFirstMove());
    if(player.isPlayerHuman()){
        
        xmlPlayer.setType(PlayerType.HUMAN);//sets the player type
