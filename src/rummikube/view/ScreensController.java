@@ -55,29 +55,23 @@ public class ScreensController extends StackPane {
         if (screensMap.get(name) != null) {
             final DoubleProperty opacity = opacityProperty();
             if (!getChildren().isEmpty()) {
-                Timeline fade = new Timeline(
-                        new KeyFrame(Duration.ZERO, new KeyValue(opacity, 1.0)),
-                        new KeyFrame(new Duration(1000), new EventHandler<ActionEvent>() {
-
-                            @Override
-                            public void handle(ActionEvent event) {
-                                getChildren().remove(0);
-                                getChildren().add(0, screensMap.get(name));
-                                Timeline fadeIn = new Timeline(
-                                        new KeyFrame(Duration.ZERO, new KeyValue(opacity, 0.0)),
-                                        new KeyFrame(new Duration(800), new KeyValue(opacity, 1.0)));
-                                fadeIn.play();
-                            }
-
-                        }, new KeyValue(opacity, 0.0)));
+                Timeline fade = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(opacity, 1.0)),
+                                new KeyFrame(new Duration(1000), (ActionEvent event) -> {
+                            getChildren().remove(0);
+                            getChildren().add(0, screensMap.get(name));
+                            Timeline fadeIn = new Timeline(
+                                    new KeyFrame(Duration.ZERO, new KeyValue(opacity, 0.0)),
+                                    new KeyFrame(new Duration(800), new KeyValue(opacity, 1.0)));
+                            fadeIn.play();
+                }, new KeyValue(opacity, 0.0)));
                 fade.play();
             } else {
                 setOpacity(0.0);
                 getChildren().add(screensMap.get(name));
-//                Timeline fadeIn = new Timeline(
-//                        new KeyFrame(Duration.ZERO, new KeyValue(opacity, 0.0)),
-//                        new KeyFrame(new Duration(1000), new KeyValue(opacity, 1.0)));
-//                fadeIn.play();
+                Timeline fadeIn = new Timeline(
+                        new KeyFrame(Duration.ZERO, new KeyValue(opacity, 0.0)),
+                        new KeyFrame(new Duration(1000), new KeyValue(opacity, 1.0)));
+                fadeIn.play();
             }
             return true;
         } else {

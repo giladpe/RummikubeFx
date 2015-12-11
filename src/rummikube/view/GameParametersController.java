@@ -9,13 +9,10 @@ package rummikube.view;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import static javafx.collections.FXCollections.observableArrayList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,7 +21,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -362,6 +358,28 @@ public class GameParametersController implements Initializable {
         return isDiffNames;
     }
 
+    private int getNumOfComputerPlayers() {
+        int numOfComputerPlayers=0;
+        for (CheckBox cb : this.checkBoxList) {
+            if(cb.isSelected()){
+            numOfComputerPlayers++;
+            }
+        }
+        return numOfComputerPlayers;
+    }
+
+   
+    private void addComputerNames(ArrayList<String> sPlayersNames,int numOfComputerPlayers) {
+       String computerName;
+        for (int i = 1; i <= numOfComputerPlayers; i++) {
+            computerName = "COMP" + i;
+            sPlayersNames.add(computerName);
+        }
+    }
+
+}
+
+
 //    private void handelErrorMsg() {
 //        String stringMsg;
 //        
@@ -375,33 +393,13 @@ public class GameParametersController implements Initializable {
 //        }
 //        this.errorMsg.setText(stringMsg);
 //    }
-    private int hasError() {
-        int hasError = Utility.NO_ERROR;
-        if (!isDiffNames()) {
-            hasError = Utility.DUP_NAME;
-        } else if (!isValidTextField(this.gameName.getText())) {
-            hasError = Utility.EMPTY_GAME_NAME;
-        }
-        return hasError;
-
-    }
-
-    private int getNumOfComputerPlayers() {
-        int numOfComputerPlayers=0;
-        for (CheckBox cb : this.checkBoxList) {
-            if(cb.isSelected()){
-            numOfComputerPlayers++;
-            }
-        }
-        return numOfComputerPlayers;
-    }
-
-    private void addComputerNames(ArrayList<String> sPlayersNames,int numOfComputerPlayers) {
-       String computerName="";
-        for (int i = 1; i <= numOfComputerPlayers; i++) {
-            computerName = "COMP" + i;
-            sPlayersNames.add(computerName);
-        }
-    }
-
-}
+//    private int hasError() {
+//        int hasError = Utility.NO_ERROR;
+//        if (!isDiffNames()) {
+//            hasError = Utility.DUP_NAME;
+//        } else if (!isValidTextField(this.gameName.getText())) {
+//            hasError = Utility.EMPTY_GAME_NAME;
+//        }
+//        return hasError;
+//
+//    }
