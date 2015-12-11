@@ -11,7 +11,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="GamesSettings" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="root" stylesheets="@resources/menusStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rummikube.view.GameParametersController">
+<GridPane fx:id="GamesSettings" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="root" stylesheets="@resources/menusStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rummikub.view.GameParametersController">
   <columnConstraints>
     <ColumnConstraints hgrow="ALWAYS" maxWidth="160.0" minWidth="10.0" prefWidth="140.0" />
       <ColumnConstraints hgrow="ALWAYS" maxWidth="195.0" minWidth="10.0" prefWidth="188.0" />
