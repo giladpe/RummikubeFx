@@ -196,20 +196,6 @@ public class GameParametersController implements Initializable ,ControlledScreen
         this.myController.setScreen(ScreensFramework.MAINMENU_SCREEN_ID);
         resetScreen();
     }
-    
-//        @FXML
-//    protected void handleBackToMenuButtonAction(ActionEvent event) throws IOException {
-//        Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//        primaryStage.setTitle("Main Menu");
-//        URL url = this.getClass().getResource("MainMenu.fxml");
-//        FXMLLoader fxmlLoader = new FXMLLoader();
-//        fxmlLoader.setLocation(url);
-//        Parent root = (Parent) fxmlLoader.load(url.openStream());
-//        Scene scene = new Scene(root);
-//        (((Node) event.getSource()).getScene().getWindow()).hide();
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//    }
 
     @FXML
     protected void handleCheckBoxSelection(ActionEvent event) {
@@ -312,7 +298,6 @@ public class GameParametersController implements Initializable ,ControlledScreen
     }
 
     private void handleTwoPlayersButton() {
-
         resetPlayerField(PLAYER3);
         resetPlayerField(PLAYER4);
         this.hBoxList.get(PLAYER1).setVisible(true);
@@ -335,6 +320,8 @@ public class GameParametersController implements Initializable ,ControlledScreen
         this.hBoxList.get(PLAYER3).setVisible(true);
         this.hBoxList.get(PLAYER4).setVisible(true);
     }
+    
+    
 
     private boolean atleastOnePlayerIsHuman() {
         boolean foundHuman = false;
@@ -351,13 +338,12 @@ public class GameParametersController implements Initializable ,ControlledScreen
     }
 
     private ArrayList<String> getPlayersTextFieldList() {
-        ArrayList<String> sPlayersNames = new ArrayList<String>();
-        for (TextField fName : this.playersNames) {
+        ArrayList<String> sPlayersNames = new ArrayList<>();
+        this.playersNames.stream().forEach((fName) -> {
             String sName = fName.getText();
             if (this.isValidTextField(sName)) {
                 sPlayersNames.add(fName.getText());
-            }
-        }
+            } });
         return sPlayersNames;
     }
 
@@ -391,26 +377,32 @@ public class GameParametersController implements Initializable ,ControlledScreen
     @Override
     public void resetScreen() {
         this.errorMsg.setText(Utility.EMPTY_STRING);
-        //this.hBoxList.forEach(null);
-        
         resetFeilds(this.playersNames, (Consumer) (Object playerName) -> {((TextField)playerName).setText(Utility.EMPTY_STRING);});
         resetFeilds(this.radioButtonGroup.getToggles(), (Consumer)(Object rButton) -> {((RadioButton)rButton).setSelected(false);});
         resetFeilds(this.checkBoxList, (Consumer)(Object cBox) -> {((CheckBox)cBox).setSelected(false);});
         resetFeilds(this.hBoxList, (Consumer)(Object hBox) -> {((HBox)hBox).setVisible(false);});
         this.gameName.setText(Utility.EMPTY_STRING);
         
-//        this.errorMsg.setText(Utility.EMPTY_STRING);
-//        //this.hBoxList.forEach(null);
-//        this.playersNames.forEach((playerName)-> {playerName.setText(Utility.EMPTY_STRING);});
-//        this.radioButtonGroup.getToggles().forEach((rButton) -> {rButton.setSelected(false);});
-//        this.checkBoxList.stream().forEach((cBox) -> { cBox.setSelected(false);});
-//        this.gameName.setText(Utility.EMPTY_STRING);
+
     }
 
     private void resetFeilds (Iterable collectionToReset, Consumer Action) {
         collectionToReset.forEach(Action);
     }
 }
+
+
+//    @Override
+//    public void resetScreen() {
+//        this.errorMsg.setText(Utility.EMPTY_STRING);
+//        //this.hBoxList.forEach(null);
+//        this.playersNames.forEach((playerName)-> {playerName.setText(Utility.EMPTY_STRING);});
+//        this.radioButtonGroup.getToggles().forEach((rButton) -> {rButton.setSelected(false);});
+//        this.checkBoxList.stream().forEach((cBox) -> { cBox.setSelected(false);});
+//        this.gameName.setText(Utility.EMPTY_STRING);
+//    }
+
+
 
 //    private void handelErrorMsg() {
 //        String stringMsg;
@@ -434,4 +426,19 @@ public class GameParametersController implements Initializable ,ControlledScreen
 //        }
 //        return hasError;
 //
+//    }
+
+
+//        @FXML
+//    protected void handleBackToMenuButtonAction(ActionEvent event) throws IOException {
+//        Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//        primaryStage.setTitle("Main Menu");
+//        URL url = this.getClass().getResource("MainMenu.fxml");
+//        FXMLLoader fxmlLoader = new FXMLLoader();
+//        fxmlLoader.setLocation(url);
+//        Parent root = (Parent) fxmlLoader.load(url.openStream());
+//        Scene scene = new Scene(root);
+//        (((Node) event.getSource()).getScene().getWindow()).hide();
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
 //    }
