@@ -19,13 +19,14 @@ import javafx.stage.FileChooser;
  *
  * @author Arthur
  */
-public class SaveGameMenuController implements Initializable {
+public class SaveGameMenuController implements Initializable,ControlledScreen {
     @FXML
     private Button save;
     @FXML
     private Button saveAs;
     @FXML
     private Button backToGame;
+    private ScreensController myController;
 
     /**
      * Initializes the controller class.
@@ -48,5 +49,10 @@ public class SaveGameMenuController implements Initializable {
         fileChooser.setTitle("Open Resource File");
         File file = fileChooser.showSaveDialog(((Button)event.getSource()).getContextMenu()); 
         // not sure what to do with it or how exacly it works
+    }
+    
+    @Override
+    public void setScreenParent(ScreensController parentScreen) {
+        myController = parentScreen;
     }
 }

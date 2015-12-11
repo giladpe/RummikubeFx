@@ -56,7 +56,7 @@ public class ScreensController extends StackPane {
             final DoubleProperty opacity = opacityProperty();
             if (!getChildren().isEmpty()) {
                 Timeline fade = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(opacity, 1.0)),
-                                new KeyFrame(new Duration(1000), (ActionEvent event) -> {
+                               new KeyFrame(new Duration(1000), (ActionEvent event) -> {
                             getChildren().remove(0);
                             getChildren().add(0, screensMap.get(name));
                             Timeline fadeIn = new Timeline(
@@ -82,6 +82,7 @@ public class ScreensController extends StackPane {
         }
 
     }
+    
 
     public boolean unloadScreen(String name) {
         if (screensMap.remove(name) == null) {

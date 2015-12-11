@@ -7,9 +7,8 @@ package rummikube.view;
 
 /**
  *
- * @author giladPe
+ * @author Arthur
  */
-public interface ControlledScreen {
-    public void setScreenParent(ScreensController parentScreen);
-    
+public interface ResetableScreen {
+    public void resetScreen();
 }

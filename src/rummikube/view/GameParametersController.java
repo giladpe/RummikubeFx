@@ -6,10 +6,14 @@
  */
 package rummikube.view;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -28,23 +32,23 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javax.xml.bind.JAXBException;
+import org.xml.sax.SAXException;
 import rummikube.Engin.Game;
 import rummikube.Engin.Utility;
 import static rummikube.Engin.Utility.PLAYER1;
 import static rummikube.Engin.Utility.PLAYER2;
 import static rummikube.Engin.Utility.PLAYER3;
 import static rummikube.Engin.Utility.PLAYER4;
+import rummikube.Controller;
 
-/**
- * FXML Controller class
- *
- * @author giladPe
- */
-public class GameParametersController implements Initializable {
+public class GameParametersController implements Initializable ,ControlledScreen,ResetableScreen {
 
     private final String DUP_NAME_MSG = "Name is already exict!";
     private final String EMPTY_GAME_NAME_MSG = "Insert name for the game!";
     private final String NO_HUMAN_MSG = "Chose atleast one human player!";
+
+    
     private Game.Settings gameSettings;
     @FXML
     Button StartPlayingButton;
@@ -88,6 +92,7 @@ public class GameParametersController implements Initializable {
     RadioButton B3;
     @FXML
     RadioButton B4;
+    ScreensController myController;
 
     /**
      * Initializes the controller class.
@@ -159,14 +164,20 @@ public class GameParametersController implements Initializable {
 
     @FXML
     protected void handleStartPlayingButtonAction(ActionEvent event) {
+
         String gameName = this.gameName.getText();
         int numOfPlayers = getNumOfPlayers();
         int numOfComputerPlayers = getNumOfComputerPlayers();
         int numOfHumansPlayers = numOfPlayers - numOfComputerPlayers;
-        ArrayList <String> sPlayersNames=getPlayersTextFieldList();
-        addComputerNames(sPlayersNames,numOfComputerPlayers);
+        ArrayList<String> sPlayersNames = getPlayersTextFieldList();
         this.gameSettings = new Game.Settings(gameName, numOfComputerPlayers, numOfHumansPlayers, sPlayersNames);
-        int i=0;
+        Controller test = new Controller();
+        try {
+            test.startNewGameWithSettings(gameSettings);
+        } catch (JAXBException | SAXException | FileNotFoundException ex) {
+            Logger.getLogger(GameParametersController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     @FXML
@@ -180,21 +191,24 @@ public class GameParametersController implements Initializable {
     }
 
     @FXML
-    protected void handleBackToMenuButtonAction(ActionEvent event) throws IOException {
-        Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        primaryStage.setTitle("Main Menu");
-        URL url = this.getClass().getResource("MainMenu.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(url);
-        Parent root = (Parent) fxmlLoader.load(url.openStream());
-        Scene scene = new Scene(root);
-        (((Node) event.getSource()).getScene().getWindow()).hide();
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
+    protected void handleBackToMenuButtonAction(ActionEvent event){
+        this.myController.setScreen(ScreensFramework.MAINMENU_SCREEN_ID);
+        resetScreen();
     }
-
-  
+    
+//        @FXML
+//    protected void handleBackToMenuButtonAction(ActionEvent event) throws IOException {
+//        Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//        primaryStage.setTitle("Main Menu");
+//        URL url = this.getClass().getResource("MainMenu.fxml");
+//        FXMLLoader fxmlLoader = new FXMLLoader();
+//        fxmlLoader.setLocation(url);
+//        Parent root = (Parent) fxmlLoader.load(url.openStream());
+//        Scene scene = new Scene(root);
+//        (((Node) event.getSource()).getScene().getWindow()).hide();
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
+//    }
 
     @FXML
     protected void handleCheckBoxSelection(ActionEvent event) {
@@ -240,7 +254,7 @@ public class GameParametersController implements Initializable {
             }
         }
 
-        return   atleastOnePlayerIsHuman()&&isLegalConditions;
+        return atleastOnePlayerIsHuman() && isLegalConditions;
     }
 
     private boolean isNumOfPlayersSet() {
@@ -271,7 +285,7 @@ public class GameParametersController implements Initializable {
     }
 
     private boolean isAllFieldSet() {
-        return isNumOfPlayersSet() && isGameNameSet() && isDiffNames() &&isAllPlayersSet();
+        return isNumOfPlayersSet() && isGameNameSet() && isDiffNames() && isAllPlayersSet();
     }
 
     private boolean isGameNameSet() {
@@ -347,7 +361,7 @@ public class GameParametersController implements Initializable {
     }
 
     boolean isDiffNames() {
-        
+
         boolean isDiffNames = Game.Settings.isValidPlayersNames(getPlayersTextFieldList());
         if (isCurrMsgSameAs(DUP_NAME_MSG)) {
             clearMsg();
@@ -359,26 +373,43 @@ public class GameParametersController implements Initializable {
     }
 
     private int getNumOfComputerPlayers() {
-        int numOfComputerPlayers=0;
+        int numOfComputerPlayers = 0;
         for (CheckBox cb : this.checkBoxList) {
-            if(cb.isSelected()){
-            numOfComputerPlayers++;
+            if (cb.isSelected()) {
+                numOfComputerPlayers++;
             }
         }
         return numOfComputerPlayers;
     }
 
-   
-    private void addComputerNames(ArrayList<String> sPlayersNames,int numOfComputerPlayers) {
-       String computerName;
-        for (int i = 1; i <= numOfComputerPlayers; i++) {
-            computerName = "COMP" + i;
-            sPlayersNames.add(computerName);
-        }
+    @Override
+    public void setScreenParent(ScreensController parentScreen) {
+        myController = parentScreen;
     }
 
-}
+    @Override
+    public void resetScreen() {
+        this.errorMsg.setText(Utility.EMPTY_STRING);
+        //this.hBoxList.forEach(null);
+        
+        resetFeilds(this.playersNames, (Consumer) (Object playerName) -> {((TextField)playerName).setText(Utility.EMPTY_STRING);});
+        resetFeilds(this.radioButtonGroup.getToggles(), (Consumer)(Object rButton) -> {((RadioButton)rButton).setSelected(false);});
+        resetFeilds(this.checkBoxList, (Consumer)(Object cBox) -> {((CheckBox)cBox).setSelected(false);});
+        resetFeilds(this.hBoxList, (Consumer)(Object hBox) -> {((HBox)hBox).setVisible(false);});
+        this.gameName.setText(Utility.EMPTY_STRING);
+        
+//        this.errorMsg.setText(Utility.EMPTY_STRING);
+//        //this.hBoxList.forEach(null);
+//        this.playersNames.forEach((playerName)-> {playerName.setText(Utility.EMPTY_STRING);});
+//        this.radioButtonGroup.getToggles().forEach((rButton) -> {rButton.setSelected(false);});
+//        this.checkBoxList.stream().forEach((cBox) -> { cBox.setSelected(false);});
+//        this.gameName.setText(Utility.EMPTY_STRING);
+    }
 
+    private void resetFeilds (Iterable collectionToReset, Consumer Action) {
+        collectionToReset.forEach(Action);
+    }
+}
 
 //    private void handelErrorMsg() {
 //        String stringMsg;

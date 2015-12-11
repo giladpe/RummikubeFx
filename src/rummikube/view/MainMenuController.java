@@ -26,13 +26,11 @@ import javafx.stage.Stage;
  *
  * @author giladPe
  */
-public class MainMenuController implements Initializable {
-    @FXML
-    private Button LoadGame;
-    @FXML
-    private Button ExitButton;
-    @FXML
-    private Button NewGame;
+public class MainMenuController implements Initializable, ControlledScreen {
+    @FXML private Button LoadGame;
+    @FXML private Button ExitButton;
+    @FXML private Button NewGame;
+    private ScreensController myController;
     /**
      * Initializes the controller class.
      */
@@ -41,21 +39,25 @@ public class MainMenuController implements Initializable {
         // TODO
     } 
     
-    
-    @FXML
-    protected void handleNewGameButtonAction(ActionEvent event) throws IOException {
-        Stage primaryStage=(Stage)((Node)event.getSource()).getScene().getWindow();
-        primaryStage.setTitle("Game Settings");
-        URL url = this.getClass().getResource("GameParameters.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(url);
-        Parent root = (Parent)fxmlLoader.load(url.openStream());
-        Scene scene = new Scene(root);
-        closeMainMenuScene(event);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
+    @FXML protected void handleNewGameButtonAction(ActionEvent event) {
+        this.myController.setScreen(ScreensFramework.GAME_PARAMETERS_SCREEN_ID);
     }
+
+//    @FXML
+//    protected void handleNewGameButtonAction(ActionEvent event) throws IOException {
+//        Stage primaryStage=(Stage)((Node)event.getSource()).getScene().getWindow();
+//        primaryStage.setTitle("Game Settings");
+//        URL url = this.getClass().getResource("GameParameters.fxml");
+//        FXMLLoader fxmlLoader = new FXMLLoader();
+//        fxmlLoader.setLocation(url);
+//        Parent root = (Parent)fxmlLoader.load(url.openStream());
+//        Scene scene = new Scene(root);
+//        closeMainMenuScene(event);
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
+//
+//    }
+//    
     
     @FXML protected void handleLoadGameButtonAction(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -74,9 +76,13 @@ public class MainMenuController implements Initializable {
         closeMainMenuScene(event);
     }
     
+    @Override
+    public void setScreenParent(ScreensController parentScreen) {
+        myController = parentScreen;
+    }
+
     private void closeMainMenuScene(ActionEvent event) {
         (((Node)event.getSource()).getScene().getWindow()).hide();
     }
-
-            
+        
 }

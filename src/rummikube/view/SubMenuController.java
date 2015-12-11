@@ -19,7 +19,7 @@ import javafx.stage.FileChooser;
  *
  * @author giladPe
  */
-public class SubMenuController implements Initializable {
+public class SubMenuController implements Initializable,ControlledScreen {
     @FXML
     private Button SaveGame;
     @FXML
@@ -30,6 +30,7 @@ public class SubMenuController implements Initializable {
     private Button ResumeGame;
     @FXML
     private Button ExitButton;
+    private ScreensController myController;
 
     /**
      * Initializes the controller class.
@@ -69,4 +70,8 @@ public class SubMenuController implements Initializable {
     private void handleExitButtonAction(ActionEvent event) {
     }
     
+    @Override
+    public void setScreenParent(ScreensController parentScreen) {
+        myController = parentScreen;
+    }
 }

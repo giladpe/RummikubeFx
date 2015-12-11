@@ -36,7 +36,9 @@ public class Game {
         this.gameTable = new Table();
         gameDeck = new GameDeck();
         currPlayer = (int) (Math.random() * settings.numberOfPlayers);//generate random player to start
+        
     }
+    
 
     /**
      * ************************************************************************************
@@ -50,11 +52,11 @@ public class Game {
         ArrayList<String> sPlayersNames = settings.getPlayerNames();
         int numOfComputer = settings.numberOfComputerPlyers;
         int i = 0;
-        for (i = 0; i < numOfComputer; i++) {
-            addComputerPlayer(sPlayersNames.get(i));
-        }
         for (; i < sPlayersNames.size(); i++) {
             tryToAddHumanPlayer(sPlayersNames.get(i));
+        }
+        for (i=1;i<=numOfComputer;i++){
+            addComputerPlayer("COMP"+i);
         }
     }
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -162,7 +164,7 @@ public class Game {
     }
 /////////////////////////////////////////////////////////////////////////////////////////
 
-    public void startGameMode() {
+    public void addStartTilesToPlayers() {
 
         for (int i = 0; i < 14; i++) {
 

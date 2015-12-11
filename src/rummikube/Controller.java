@@ -35,7 +35,6 @@ public class Controller {
 
     //public static final int Zero = 0;
 ////////////////////////////////////////////////////////////////////////////////    
-
     public Controller() {
         ui = new View();
     }
@@ -43,7 +42,6 @@ public class Controller {
 
     public void runGame() {
 
-        
         boolean errorHappend = true;
 
         while (errorHappend) {
@@ -122,7 +120,17 @@ public class Controller {
         this.game = new Game(getSettings());
         game.setPlayersFromSettings();
         //getPlayersInfo();
-        game.startGameMode();
+        game.addStartTilesToPlayers();
+        ///call start itearation////////////
+    }
+
+    public void initNewGame(Game.Settings settings) throws JAXBException, SAXException {
+        //game.settings
+        //boolean userWantToPlay = true;
+        this.game = new Game(settings);
+        game.setPlayersFromSettings();
+        //getPlayersInfo();
+        game.addStartTilesToPlayers();
         ///call start itearation////////////
     }
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,11 +150,12 @@ public class Controller {
         this.game = new Game(settings);
 
     }
-        private void setSettings(Rummikub rummikub, int numOfHumanPlayers, int numOfComputerPlayers,ArrayList<String> sPlayersNames) {
+
+    private void setSettings(Rummikub rummikub, int numOfHumanPlayers, int numOfComputerPlayers, ArrayList<String> sPlayersNames) {
         String gameName;
         Game.Settings settings = new Game.Settings();
         gameName = rummikub.getName();
-        settings = new Game.Settings(gameName, numOfComputerPlayers, numOfHumanPlayers,sPlayersNames);
+        settings = new Game.Settings(gameName, numOfComputerPlayers, numOfHumanPlayers, sPlayersNames);
         this.game = new Game(settings);
 
     }
@@ -169,10 +178,9 @@ public class Controller {
         numHumans = ui.getIntFromUser(Utility.MinChoice, numOfPlayers);
 
         numComputers = numOfPlayers - numHumans;
-        
-        playersNames = getPlayersNames(numOfPlayers,numHumans);
-        return settings = new Game.Settings(gameName, numComputers, numHumans,playersNames);
-        
+
+        playersNames = getPlayersNames(numOfPlayers, numHumans);
+        return settings = new Game.Settings(gameName, numComputers, numHumans, playersNames);
 
     }
 
@@ -181,10 +189,10 @@ public class Controller {
         int numComp = numOfPlayers - numOfHumans;
         String playerName;
 
-        for (int i = 1; i <= numComp; i++) {
-            playerName = "COMP" + i;
-            playersNamesList.add(playerName);
-        }
+//        for (int i = 1; i <= numComp; i++) {
+//            playerName = "COMP" + i;
+//            playersNamesList.add(playerName);
+//        }
         for (int i = 1; i <= numOfHumans; i++) {
             ui.playerName(i);
             playerName = ui.getStringFromUser(true);
@@ -213,8 +221,7 @@ public class Controller {
             game.addComputerPlayer(playerName);
 
         }
-        
-        
+
         for (int i = 1; i <= numHuman; i++) {
 
             ui.playerName(i);
@@ -226,7 +233,7 @@ public class Controller {
         }
         ui.wellcomePlayersMsg(game.getPlayersNames());
         //init Computer names
-        
+
     }
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -530,6 +537,12 @@ public class Controller {
         gameIterations();
         mainMenu();
     }
+
+    public void startNewGameWithSettings(Game.Settings settings)throws JAXBException, SAXException, FileNotFoundException {
+        initNewGame(settings);
+        gameIterations();
+        mainMenu();
+    }
 ////////////////////////////////////////////////////////////////////////////////
 
     private void startNewGameFromXml(Rummikub rummikub) throws JAXBException, SAXException {
@@ -601,21 +614,20 @@ public class Controller {
             takeFromSerie(); // takes tile from a serie on the table
         }
     }
-     public boolean isValidPlayerName(ArrayList<String> sPlayersNameList,String sPlayerName) {
-                 return  !(sPlayerName.matches(Utility.COMPUTER_NAME)||simmilarToOneName(sPlayersNameList, sPlayerName));
+
+    public boolean isValidPlayerName(ArrayList<String> sPlayersNameList, String sPlayerName) {
+        return !(sPlayerName.matches(Utility.COMPUTER_NAME) || simmilarToOneName(sPlayersNameList, sPlayerName));
+    }
+
+    private static boolean simmilarToOneName(ArrayList<String> playerNames, String sPlayerName) {
+        boolean bIsFound = false;
+
+        for (int i = 0; i < playerNames.size() && !bIsFound; i++) {
+            bIsFound = playerNames.get(i).equals(sPlayerName);
         }
 
-        private static boolean simmilarToOneName(ArrayList<String> playerNames, String sPlayerName) {
-            boolean bIsFound = false;
+        return bIsFound;
+    }
 
-            for (int i = 0; i < playerNames.size() && !bIsFound; i++) {
-                bIsFound = playerNames.get(i).equals(sPlayerName);
-            }
-
-            return bIsFound;
-        }
-    
-    
-    
 ////////////////////////////////////////////////////////////////////////////////
 }
