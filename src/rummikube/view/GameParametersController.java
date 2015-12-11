@@ -32,6 +32,7 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javax.xml.bind.JAXBException;
 import org.xml.sax.SAXException;
 import rummikube.Engin.Game;
@@ -191,7 +192,7 @@ public class GameParametersController implements Initializable ,ControlledScreen
     }
 
     @FXML
-    protected void handleBackToMenuButtonAction(ActionEvent event){
+    protected void handleBackToMenuButtonAction(ActionEvent event) {
         this.myController.setScreen(ScreensFramework.MAINMENU_SCREEN_ID);
         resetScreen();
     }
