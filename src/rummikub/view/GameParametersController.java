@@ -14,6 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -303,8 +306,8 @@ public class GameParametersController implements Initializable, ControlledScreen
         return numOfComputerPlayers;
     }
 
-    private void resetFeilds (Iterable collectionToReset, Consumer Action) {
-        collectionToReset.forEach(Action);
+    private void resetFeilds (Iterable collectionToReset, Consumer action) {
+        collectionToReset.forEach(action);
     }
     
     //Public methods:
