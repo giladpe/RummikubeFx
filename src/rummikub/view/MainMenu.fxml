@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" snapToPixel="false" styleClass="root" stylesheets="@resources/menusStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rummikub.view.MainMenuController">
+<GridPane minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" snapToPixel="false" styleClass="menu" stylesheets="@resources/menusStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rummikub.view.MainMenuController">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -26,29 +26,30 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <VBox prefHeight="200.0" prefWidth="100.0" spacing="17.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
-         <children>
-            <Button fx:id="NewGame" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleNewGameButtonAction" prefHeight="25.0" prefWidth="220.0" text="New Game" textAlignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <Button fx:id="LoadGame" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLoadGameButtonAction" prefHeight="25.0" prefWidth="220.0" text="Load Game" textAlignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <Button fx:id="ExitButton" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="41.0" mnemonicParsing="false" onAction="#handleExitButtonAction" prefHeight="25.0" prefWidth="220.0" text="Exit" textAlignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-         </children>
-      </VBox>
       <ImageView fitHeight="117.0" fitWidth="527.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
          <image>
             <Image url="@resources/Rummikub_logo.png" />
          </image>
       </ImageView>
+      <Button fx:id="NewGame" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleNewGameButtonAction" prefHeight="52.0" prefWidth="141.0" text="Single Player " textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="NewGame1" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#handleNewGameButtonAction" prefHeight="52.0" prefWidth="141.0" text="Multi Players" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="LoadGame" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleLoadGameButtonAction" prefHeight="52.0" prefWidth="141.0" text="Load Game" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="ExitButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleExitButtonAction" prefHeight="52.0" prefWidth="141.0" text="Exit" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
    </children>
 </GridPane>
