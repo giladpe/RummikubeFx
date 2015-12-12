@@ -52,6 +52,7 @@ public class ScreensController extends StackPane {
     //Private methods:
     private KeyFrame makeKeyFrameEffect(final String name) {
         KeyFrame keyFrameEffect = new KeyFrame(this.durationOfEffect, (ActionEvent event) -> {
+            
             getChildren().remove(FIRST_CHILD_LOCATION);
             getChildren().add(FIRST_CHILD_LOCATION, gameScreens.get(name));
             this.fadeInEffect.play();

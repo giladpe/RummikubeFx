@@ -6,6 +6,8 @@ package rummikub;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import rummikub.view.ScreensController;
 
@@ -37,7 +39,7 @@ public class Rummikub extends Application {
        //screensController.loadScreen(PLAY_SCREEN_ID, PLAY_FXML); 
        screensController.loadScreen(SAVE_GAME_SCREEN_ID, SAVE_GAME_FXML); 
        screensController.setScreen(MAINMENU_SCREEN_ID); 
-       Group root = new Group(); 
+       StackPane root = new StackPane(); 
        root.getChildren().addAll(screensController); 
        Scene scene = new Scene(root); 
        primaryStage.setScene(scene); 
