@@ -587,7 +587,6 @@ public class Controller {
     private void addTileToSerie() {
 
         if (game.isThereSerieOnTable()) { //check if the table is not empty
-
             ui.noSerieInTableMsg();//if so we notifty the user
 
         } else {

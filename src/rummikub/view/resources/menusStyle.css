@@ -13,13 +13,34 @@
 }
 
 .button {
-    -fx-pref-width: 141;
-    -fx-pref-height: 52; 
+   // -fx-pref-width: 141;
+    //-fx-pref-height: 52; 
     -fx-text-fill: black;
     -fx-font-family: Georgia;
     -fx-font-weight: bold;
     -fx-background-color: linear-gradient(#ebd6ba, #a9957d);
     -fx-background-image: url("TileMenuButton.png");
+    -fx-background-size:100% 100%;
+    -fx-background-position: center;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+#orgenaize{
+    -fx-text-fill: black;
+    -fx-font-family: Georgia;
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(#ebd6ba, #a9957d);
+    -fx-background-image: url("Orgenaize.png");
+    -fx-background-size:100% 100%;
+    -fx-background-position: center;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+#orgenaize:hover{
+
+    -fx-text-fill: black;
+    -fx-font-family: Georgia;
+    -fx-font-weight: bold;
+   // -fx-background-color: linear-gradient(#ebd6ba, #a9957d);
+    -fx-background-image: url("OrgenaizeHover.png");
     -fx-background-size:100% 100%;
     -fx-background-position: center;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
