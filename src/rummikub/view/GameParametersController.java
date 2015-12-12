@@ -177,12 +177,6 @@ public class GameParametersController implements Initializable, ControlledScreen
         this.playersNames.add(playerName2);
         this.playersNames.add(playerName3);
         this.playersNames.add(playerName4);
-        this.B2.setToggleGroup(radioButtonGroup);
-        this.B3.setToggleGroup(radioButtonGroup);
-        this.B4.setToggleGroup(radioButtonGroup);
-        this.B2.setUserData(RADIO_BUTTON_VAL_2);
-        this.B3.setUserData(RADIO_BUTTON_VAL_3);
-        this.B4.setUserData(RADIO_BUTTON_VAL_4);
     }
     
     private boolean isNumOfPlayersSet() {
@@ -190,7 +184,7 @@ public class GameParametersController implements Initializable, ControlledScreen
     }
 
     private int getNumOfPlayers() {
-        return Integer.parseInt(radioButtonGroup.getSelectedToggle().getUserData().toString());
+        return Integer.parseInt(((RadioButton)radioButtonGroup.getSelectedToggle()).getText());
     }
 
     private boolean isPlayerFieldSet(int index) {

@@ -36,9 +36,8 @@ public class Game {
         this.gameTable = new Table();
         gameDeck = new GameDeck();
         currPlayer = (int) (Math.random() * settings.numberOfPlayers);//generate random player to start
-        
+
     }
-    
 
     /**
      * ************************************************************************************
@@ -55,8 +54,8 @@ public class Game {
         for (; i < sPlayersNames.size(); i++) {
             tryToAddHumanPlayer(sPlayersNames.get(i));
         }
-        for (i=1;i<=numOfComputer;i++){
-            addComputerPlayer("COMP"+i);
+        for (i = 1; i <= numOfComputer; i++) {
+            addComputerPlayer();
         }
     }
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -96,9 +95,12 @@ public class Game {
     }
 /////////////////////////////////////////////////////////////////////////////////////////
 
-    public void addComputerPlayer(String playerName) {
+    public void addComputerPlayer(String name) {
+        players.add(new ComputerPlayer(name));
+    }
 
-        players.add(new ComputerPlayer(playerName));
+    public void addComputerPlayer() {
+        players.add(new ComputerPlayer());
     }
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -309,7 +311,7 @@ public class Game {
 
         ArrayList<ArrayList<Tile>> serieList;
         String pcMoves = "";
-        boolean addSeries = false;
+
         serieList = ai.getAllSerieInHand();
 
         if (ai.isFirstMove()) {
@@ -747,7 +749,7 @@ public class Game {
         }
 
         static public boolean isValidPlayersNames(ArrayList<String> namesList) {
-            return !isPlayersNamesHasCompterName(namesList)&&hasDiffNames(namesList);
+            return !isPlayersNamesHasCompterName(namesList) && hasDiffNames(namesList);
         }
 
         private static boolean simmilarToOneName(ArrayList<String> playerNames, String sPlayerName) {
@@ -765,10 +767,10 @@ public class Game {
         }
 
         static private boolean isPlayersNamesHasCompterName(ArrayList<String> namesList) {
-            boolean hasComputerName=false;
+            boolean hasComputerName = false;
             for (String name : namesList) {
-                if(isPlayerNameHasCompterName(name)){
-                    hasComputerName=true;
+                if (isPlayerNameHasCompterName(name)) {
+                    hasComputerName = true;
                 }
             }
             return hasComputerName;
@@ -777,7 +779,7 @@ public class Game {
         private static boolean hasDiffNames(ArrayList<String> playersNames) {
             boolean foundSimmilar = false;
             for (int i = 0; i < (playersNames.size() - 1) && !foundSimmilar; i++) {
-                for (int j = i + 1; j < playersNames.size()&&!foundSimmilar; j++) {
+                for (int j = i + 1; j < playersNames.size() && !foundSimmilar; j++) {
                     foundSimmilar = playersNames.get(i).equals(playersNames.get(j));
                 }
             }

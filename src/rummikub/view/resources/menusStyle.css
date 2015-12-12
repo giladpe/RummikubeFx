@@ -5,10 +5,13 @@
 }
 
 .button {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-font-family: "Arial Narrow";
     -fx-font-weight: bold;
-    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-background-color: linear-gradient(#ebd6ba, #a9957d);
+    //-fx-background-image: url("TileMenuButton.png");
+    //-fx-background-attachment: fixed;
+    //-fx-background-position: center;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 
@@ -45,5 +48,9 @@
 }
 
 .button:hover {
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+    .button:hover {
+   
+   -fx-border-top-color: #edcba8;
+   -fx-background-color: linear-gradient(#452204, #a9957d);
+   -fx-text-fill: white;
 }

@@ -166,7 +166,6 @@ public class Controller {
         String gameName;
         int numOfPlayers, numComputers, numHumans;
         ArrayList<String> playersNames = new ArrayList<String>();
-        Game.Settings settings;
 
         ui.gameNameMsg();
         gameName = ui.getStringFromUser(true);
@@ -180,19 +179,14 @@ public class Controller {
         numComputers = numOfPlayers - numHumans;
 
         playersNames = getPlayersNames(numOfPlayers, numHumans);
-        return settings = new Game.Settings(gameName, numComputers, numHumans, playersNames);
+        return  new Game.Settings(gameName, numComputers, numHumans, playersNames);
 
     }
 
     private ArrayList<String> getPlayersNames(int numOfPlayers, int numOfHumans) {
         ArrayList<String> playersNamesList = new ArrayList<>();
-        int numComp = numOfPlayers - numOfHumans;
         String playerName;
 
-//        for (int i = 1; i <= numComp; i++) {
-//            playerName = "COMP" + i;
-//            playersNamesList.add(playerName);
-//        }
         for (int i = 1; i <= numOfHumans; i++) {
             ui.playerName(i);
             playerName = ui.getStringFromUser(true);
@@ -202,39 +196,37 @@ public class Controller {
             }
             playersNamesList.add(playerName);
         }
-        //init Computer names
+       
 
         ui.wellcomePlayersMsg(playersNamesList.toString());
         return playersNamesList;
     }
 ////////////////////////////////////////////////////////////////////////////////
 
-    private void getPlayersInfo() {
-
-        int numHuman = game.getNumberOfHumansPlayrs();
-        int numComp = game.getNumberOfComputerPlyers();
-        String playerName;
-
-        for (int i = 1; i <= numComp; i++) {
-
-            playerName = "COMP" + i;
-            game.addComputerPlayer(playerName);
-
-        }
-
-        for (int i = 1; i <= numHuman; i++) {
-
-            ui.playerName(i);
-            playerName = ui.getStringFromUser(true);
-            while (!game.tryToAddHumanPlayer(playerName)) {
-                ui.usedNameMsg();
-                playerName = ui.getStringFromUser(true);
-            }
-        }
-        ui.wellcomePlayersMsg(game.getPlayersNames());
-        //init Computer names
-
-    }
+//    private void getPlayersInfo() {
+//
+//        int numHuman = game.getNumberOfHumansPlayrs();
+//        int numComp = game.getNumberOfComputerPlyers();
+//        String playerName;
+//
+//        for (int i = 1; i <= numComp; i++) {
+//
+//            game.addComputerPlayer();
+//        }
+//
+//        for (int i = 1; i <= numHuman; i++) {
+//
+//            ui.playerName(i);
+//            playerName = ui.getStringFromUser(true);
+//            while (!game.tryToAddHumanPlayer(playerName)) {
+//                ui.usedNameMsg();
+//                playerName = ui.getStringFromUser(true);
+//            }
+//        }
+//        ui.wellcomePlayersMsg(game.getPlayersNames());
+//        //init Computer names
+//
+//    }
 ////////////////////////////////////////////////////////////////////////////////
 
     private void gameIterations() throws JAXBException, SAXException, FileNotFoundException {
@@ -437,6 +429,7 @@ public class Controller {
 
             } else {
                 game.addComputerPlayer(player.getName());
+                
             }
             if (player.getName().equals(savedRummiKubGame.getCurrentPlayer())) {
                 game.setCurrPlayer(CurrPlayerToAdd);

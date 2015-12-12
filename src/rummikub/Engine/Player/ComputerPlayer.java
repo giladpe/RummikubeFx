@@ -17,6 +17,17 @@ import rummikub.Engine.TilesLogic.Tile;
  */
 public class ComputerPlayer extends Player {
 
+    private static int computerCount=1;
+    private static final String COMP="COMP";
+    private static final String COMPUTER="Computer";
+    
+    public ComputerPlayer() {
+        super(COMP+computerCount);
+        super.setPlayerType(COMPUTER);
+        computerCount++;
+    }
+    
+    ////for xml computer player loader
     public ComputerPlayer(String name) {
         super(name);
         super.setPlayerType("Computer");
