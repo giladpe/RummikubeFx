@@ -53,3 +53,9 @@
    -fx-background-color: linear-gradient(#452204, #a9957d);
    -fx-text-fill: white;
 }
+
+#hand{
+    -fx-background-image: url("PlayerHand.png");
+    -fx-background-position: center ;
+    -fx-pane-resize: both;
+}
