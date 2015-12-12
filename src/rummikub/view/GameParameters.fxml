@@ -11,7 +11,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="GamesSettings" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="root" stylesheets="@resources/menusStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rummikub.view.GameParametersController">
+<GridPane fx:id="GamesSettings" alignment="CENTER" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" snapToPixel="false" styleClass="root" stylesheets="@resources/menusStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rummikub.view.GameParametersController">
   <columnConstraints>
     <ColumnConstraints hgrow="ALWAYS" maxWidth="160.0" minWidth="10.0" prefWidth="140.0" />
       <ColumnConstraints hgrow="ALWAYS" maxWidth="195.0" minWidth="10.0" prefWidth="188.0" />
@@ -174,7 +174,7 @@
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER">
          <children>
             <Label stylesheets="@resources/menusStyle.css" text="Number of players:" textAlignment="CENTER" />
-            <RadioButton fx:id="B2" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleRadioButtonChanged" text="2" toggleGroup="$radioButtonGroup" >
+            <RadioButton fx:id="B2" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleRadioButtonChanged" text="2" toggleGroup="$radioButtonGroup">
                <toggleGroup>
                   <ToggleGroup fx:id="radioButtonGroup" />
                </toggleGroup>
@@ -185,7 +185,7 @@
                   <Insets />
                </HBox.margin>
             </RadioButton>
-            <RadioButton fx:id="B3" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRadioButtonChanged" text="3" toggleGroup="$radioButtonGroup" >
+            <RadioButton fx:id="B3" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRadioButtonChanged" text="3" toggleGroup="$radioButtonGroup">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -196,7 +196,7 @@
                   <Insets />
                </HBox.margin>
             </RadioButton>
-            <RadioButton fx:id="B4" contentDisplay="CENTER" layoutX="44.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRadioButtonChanged" text="4" toggleGroup="$radioButtonGroup" >
+            <RadioButton fx:id="B4" contentDisplay="CENTER" layoutX="44.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRadioButtonChanged" text="4" toggleGroup="$radioButtonGroup">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
