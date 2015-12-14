@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rummikub.view;
+package rummikub.view.viewObjects;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;

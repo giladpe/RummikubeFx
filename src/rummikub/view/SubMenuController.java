@@ -31,6 +31,8 @@ public class SubMenuController implements Initializable,ControlledScreen {
     private Button resumeGame;
     @FXML
     private Button exitToMainMenu;
+    @FXML
+    private Button playerQuit;
     private ScreensController myController;
 
     /**
@@ -43,6 +45,12 @@ public class SubMenuController implements Initializable,ControlledScreen {
     @FXML
     private void handleSaveGameButtonAction(ActionEvent event) {
         this.myController.setScreen(Rummikub.SAVE_GAME_SCREEN_ID,ScreensController.NOT_RESETABLE);
+    }
+    
+    //TODO: 
+    @FXML
+    private void handlePlayerQuitButtonAction(ActionEvent event) {
+        
     }
 
     //TODO: restart the logic of the game and the screen

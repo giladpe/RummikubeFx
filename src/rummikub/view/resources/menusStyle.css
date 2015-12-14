@@ -79,12 +79,13 @@
     -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
 }
 
-
-
 #hand{
     -fx-background-image: url("PlayerHand.png");
     -fx-background-position: center ;
     -fx-background-size:100% 100%;
      -fx-background-repeat: no-repeat;
-    
+}
+
+#wizdrawHand{
+    -fx-font-size: 24px;
 }

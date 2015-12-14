@@ -3,6 +3,7 @@
  */
 package rummikub.view;
 
+import java.io.IOException;
 import java.util.HashMap;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -100,7 +101,7 @@ public class ScreensController extends StackPane {
     public ControlledScreen getControllerScreen(String name){
         return screensController.get(name);
     }
-    public void setScreen(final String name,ResetableScreen resetableScreen) {
+    public void setScreen(final String name, ResetableScreen resetableScreen) {
         
         if (!getChildren().isEmpty()) {
             Timeline fade = new Timeline(this.fadeFrameValue, makeKeyFrameEffect(name,resetableScreen));

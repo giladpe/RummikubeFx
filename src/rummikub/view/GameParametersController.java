@@ -33,6 +33,8 @@ import rummikub.Controller;
 
 public class GameParametersController implements Initializable, ControlledScreen, ResetableScreen {
 
+
+
     // Constants:
     private final String DUP_NAME_MSG = "Name is already exict!";
     private final String EMPTY_GAME_NAME_MSG = "Insert name for the game!";
@@ -142,16 +144,20 @@ public class GameParametersController implements Initializable, ControlledScreen
         int numOfComputerPlayers = getNumOfComputerPlayers();
         int numOfHumansPlayers = numOfPlayers - numOfComputerPlayers;
         ArrayList<String> sPlayersNames = getPlayersTextFieldList();
+        PlayScreenController gameScreen = (PlayScreenController)this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
         
         this.gameSettings = new Game.Settings(gameNameString, numOfComputerPlayers, numOfHumansPlayers, sPlayersNames);
-        
-        //A: gillad dont forget to remove it please:
-        Controller test = new Controller();
-        try {
-            test.startNewGameWithSettings(gameSettings);
-        } catch (JAXBException | SAXException | FileNotFoundException ex) {
-            Logger.getLogger(GameParametersController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        gameScreen.createNewGame(gameSettings);
+        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,gameScreen);
+        resetScreen();
+
+//        //A: gillad dont forget to remove it please:
+//        Controller test = new Controller();
+//        try {
+//            test.startNewGameWithSettings(gameSettings);
+//        } catch (JAXBException | SAXException | FileNotFoundException ex) {
+//            Logger.getLogger(GameParametersController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
     
     // Private methods:
@@ -348,6 +354,10 @@ public class GameParametersController implements Initializable, ControlledScreen
                 handleRadioButtonChanged();
             }
         });
+    }
+    
+    public Game.Settings getGameSettings() {
+        return gameSettings;
     }
 }
 
