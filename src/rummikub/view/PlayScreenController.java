@@ -6,13 +6,18 @@
 package rummikub.view;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.TextAlignment;
 import rummikub.Engine.Game;
+import rummikub.Engine.Player.Player;
 import rummikub.Rummikub;
 
 /**
@@ -32,6 +37,16 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     @FXML
     private Button wizdrawCard;
 
+    @FXML
+    private Label player1;
+    @FXML
+    private Label player2;
+    @FXML
+    private Label player3;
+    @FXML
+    private Label player4;
+    
+    private ArrayList<Label> playersLabels = new ArrayList<>(4);
     private ScreensController myController;
     private Game gameLogic;
    
@@ -56,24 +71,51 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
+        initPlayers();
+
+        
         //not good - what about loading file?????
         //Game.Settings gameSetting = ((GameParametersController)myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID)).getGameSettings();
         //this.gameLogic = new Game(gameSetting);
     }    
     
+    private void initPlayers() {
+        this.playersLabels.add(player1);
+        this.playersLabels.add(player2);
+        this.playersLabels.add(player3);
+        this.playersLabels.add(player4);
+    }
+    
+    
     public void createNewGame(Game.Settings gameSetting) {
         this.gameLogic = new Game(gameSetting);
+        this.gameLogic.setPlayersFromSettings();
+        this.gameLogic.addStartTilesToPlayers();
     }
 
     //TODO:
     @Override
     public void resetScreen() {
-        int i=0;
-        i++;
     }
 
     @Override
     public void setScreenParent(ScreensController parentScreen) {
         this.myController = parentScreen;
+    }
+
+    private void show() {
+        for (Player player : this.gameLogic.getPlayers()) {
+            setLabel(player,this.gameLogic.getPlayers().indexOf(player));
+        }
+    }
+
+    private void setLabel(Player player, int index) {
+        Label currentPlayer = this.playersLabels.get(index);
+        currentPlayer.setText(player.getName());
+        currentPlayer.setVisible(true);
+        currentPlayer.setAlignment(Pos.BOTTOM_CENTER);
+        currentPlayer.setTextAlignment(TextAlignment.JUSTIFY);
+        currentPlayer.setGraphic(ImageUtils.getImageView("kate.jpg"));
+        
     }
 }

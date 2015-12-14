@@ -148,6 +148,7 @@ public class GameParametersController implements Initializable, ControlledScreen
         
         this.gameSettings = new Game.Settings(gameNameString, numOfComputerPlayers, numOfHumansPlayers, sPlayersNames);
         gameScreen.createNewGame(gameSettings);
+        gameScreen.show();
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,gameScreen);
         resetScreen();
 

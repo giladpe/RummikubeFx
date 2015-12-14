@@ -24,22 +24,22 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Label">
+            <Label visible="false">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Label" GridPane.rowIndex="1">
+            <Label visible="false" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <Label layoutX="20.0" layoutY="27.0" text="Label" GridPane.columnIndex="1">
+            <Label layoutX="20.0" layoutY="27.0" visible="false" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <Label layoutX="20.0" layoutY="46.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label layoutX="20.0" layoutY="46.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
