@@ -24,22 +24,22 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label visible="false">
+            <Label fx:id="player1" visible="false">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <Label visible="false" GridPane.rowIndex="1">
+            <Label fx:id="player2" visible="false" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <Label layoutX="20.0" layoutY="27.0" visible="false" GridPane.columnIndex="1">
+            <Label fx:id="player3" layoutX="20.0" layoutY="27.0" visible="false" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <Label layoutX="20.0" layoutY="46.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label fx:id="player4" layoutX="20.0" layoutY="46.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>

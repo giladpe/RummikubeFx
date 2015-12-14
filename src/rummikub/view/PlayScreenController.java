@@ -103,10 +103,10 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         this.myController = parentScreen;
     }
 
-    private void show() {
-        for (Player player : this.gameLogic.getPlayers()) {
-            setLabel(player,this.gameLogic.getPlayers().indexOf(player));
-        }
+    public void show() {
+        this.gameLogic.getPlayers().stream().forEach((player) -> {
+            setLabel(player, this.gameLogic.getPlayers().indexOf(player));
+        });
     }
 
     private void setLabel(Player player, int index) {
@@ -115,7 +115,11 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         currentPlayer.setVisible(true);
         currentPlayer.setAlignment(Pos.BOTTOM_CENTER);
         currentPlayer.setTextAlignment(TextAlignment.JUSTIFY);
-        currentPlayer.setGraphic(ImageUtils.getImageView("kate.jpg"));
-        
+        if(player.isPlayerHuman()) {
+            currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.HUMAN_PLAYER_LOGO));
+        }
+        else {
+            currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.COMPUTER_PLAYER_LOGO));
+        }
     }
 }
