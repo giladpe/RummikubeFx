@@ -310,7 +310,10 @@ public class GameParametersController implements Initializable, ControlledScreen
     @Override
     public void resetScreen() {
         this.errorMsg.setText(Utility.EMPTY_STRING);
-        resetFeilds(this.playersNames, (Consumer) (Object playerName) -> {((TextField)playerName).setText(Utility.EMPTY_STRING);});
+        resetFeilds(this.playersNames, (Consumer) (Object playerName) -> {
+            ((TextField)playerName).setText(Utility.EMPTY_STRING);
+            ((TextField)playerName).setDisable(false);
+        });
         resetFeilds(this.radioButtonGroup.getToggles(), (Consumer)(Object rButton) -> {((RadioButton)rButton).setSelected(false);});
         resetFeilds(this.checkBoxList, (Consumer)(Object cBox) -> {((CheckBox)cBox).setSelected(false);});
         resetFeilds(this.hBoxList, (Consumer)(Object hBox) -> {((HBox)hBox).setVisible(false);});
