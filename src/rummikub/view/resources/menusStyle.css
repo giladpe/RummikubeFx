@@ -83,7 +83,7 @@
     -fx-background-image: url("PlayerHand.png");
     -fx-background-position: center ;
     -fx-background-size:100% 100%;
-     -fx-background-repeat: no-repeat;
+    -fx-background-repeat: no-repeat;
 }
 
 #wizdrawHand{

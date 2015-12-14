@@ -17,13 +17,17 @@ public class ImageUtils {
     public static final String RESOURCES_FOLDER = "/rummikub/view/resources/";
     public static final String HUMAN_PLAYER_LOGO = "HumanLogo.png";
     public static final String COMPUTER_PLAYER_LOGO = "ComputerLogo.png";
+    public static final String TILE_LOGO = "tile.png";
+
 
 
     //public static final String IMAGE_FOLDER = RESOURCES_FOLDER + "images/";
     
     public static Image getImage (String imageName){
         InputStream imageInputStream = ImageUtils.class.getResourceAsStream(RESOURCES_FOLDER + imageName);
-        return new Image(imageInputStream,35,35,true,true);
+        //return new Image(imageInputStream,35,35,true,true);
+        return new Image(imageInputStream);
+
         
     }
     

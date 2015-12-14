@@ -39,8 +39,8 @@ import javafx.util.Duration;
 
         public void addChild(Node node, int index) {
             AnimatedTile ac = new AnimatedTile();
-            ac.setWidth(gap);
-            ac.heightProperty().bind(this.heightProperty());
+            //ac.setWidth(gap);
+            //ac.heightProperty().bind(this.heightProperty());
             getChildren().addAll(index, Arrays.asList(ac, node));
         }
     }

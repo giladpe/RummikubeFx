@@ -20,6 +20,7 @@ import rummikub.Engine.Game;
 import rummikub.Engine.Player.Player;
 import rummikub.Engine.TilesLogic.Tile;
 import rummikub.Rummikub;
+import rummikub.view.viewObjects.AnimatedTile;
 
 /**
  * FXML Controller class
@@ -71,7 +72,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.handFirstRow.setSpacing(10);
+        this.handFirstRow.setSpacing(5);
         initPlayers();
 
         
@@ -128,7 +129,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private void showPlayerHand(Player player) {
         for (Tile currTile : player.getHand()) {
-            //this.handFirstRow.getChildren().add( );
+            this.handFirstRow.getChildren().add(new AnimatedTile(currTile));
         }
     }
 }
