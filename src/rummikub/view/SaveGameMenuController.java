@@ -38,12 +38,12 @@ public class SaveGameMenuController implements Initializable,ControlledScreen {
     }    
     
     @FXML protected void handleBackToPrevMenuButtonAction(ActionEvent event) {
-        this.myController.setScreen(Rummikub.SUBMENU_SCREEN_ID);
+        this.myController.setScreen(Rummikub.SUBMENU_SCREEN_ID,ScreensController.NOT_RESETABLE);
     }
     
     //TODO: save the running game and back to the play screen
     @FXML protected void handleSaveGameButtonAction(ActionEvent event) {
-        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID);
+        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,ScreensController.NOT_RESETABLE);
     }
     
     //TODO: save as the running game and back to the play screen

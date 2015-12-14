@@ -38,7 +38,7 @@ public class Rummikub extends Application {
        screensController.loadScreen(GAME_PARAMETERS_SCREEN_ID, GAME_PARAMETERS_FXML);
        //screensController.loadScreen(PLAY_SCREEN_ID, PLAY_FXML); 
        screensController.loadScreen(SAVE_GAME_SCREEN_ID, SAVE_GAME_FXML); 
-       screensController.setScreen(MAINMENU_SCREEN_ID); 
+       screensController.setScreen(MAINMENU_SCREEN_ID,ScreensController.NOT_RESETABLE); 
        StackPane root = new StackPane(); 
        root.getChildren().addAll(screensController); 
        Scene scene = new Scene(root); 

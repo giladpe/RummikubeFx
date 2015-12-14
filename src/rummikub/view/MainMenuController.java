@@ -25,12 +25,13 @@ public class MainMenuController implements Initializable, ControlledScreen {
     
     //Private members:
     private ScreensController myController;
-
+    //private GameParametersController gameParmetersController;
     //FXML Protected methods:
 
     @FXML 
     protected void handleNewGameButtonAction(ActionEvent event) {
-        this.myController.setScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID);
+        //((GameParametersController)this.myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID)).resetScreen();
+        this.myController.setScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID,ScreensController.NOT_RESETABLE);
     }
     
     @FXML 

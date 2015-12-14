@@ -25,7 +25,7 @@ public class ScreensController extends StackPane {
     private static final double ZERO_VALUE = 0.0;
     private static final double EFFECT_VALUE = 1.5;    
     private static final int FIRST_CHILD_LOCATION = 0;
-
+    public static final  ResetableScreen NOT_RESETABLE=null;
     //Private members:
     private final KeyFrame fadeFrameValue;
     private final KeyFrame fadeInFrameEffect1;
@@ -35,7 +35,7 @@ public class ScreensController extends StackPane {
     private final Timeline fadeInEffect;
     private final Duration durationOfEffect;
     private final HashMap<String, Node> gameScreens = new HashMap<>();
-
+    private final HashMap<String, ControlledScreen> screensController = new HashMap<>();
     //Constractor:
     public ScreensController() {
         super();
@@ -50,9 +50,11 @@ public class ScreensController extends StackPane {
     }
 
     //Private methods:
-    private KeyFrame makeKeyFrameEffect(final String name) {
+    private KeyFrame makeKeyFrameEffect(final String name,ResetableScreen resetableScreen) {
         KeyFrame keyFrameEffect = new KeyFrame(this.durationOfEffect, (ActionEvent event) -> {
-            
+            if (resetableScreen!=null){
+                resetableScreen.resetScreen();
+            }
             getChildren().remove(FIRST_CHILD_LOCATION);
             getChildren().add(FIRST_CHILD_LOCATION, gameScreens.get(name));
             this.fadeInEffect.play();
@@ -77,7 +79,9 @@ public class ScreensController extends StackPane {
     public void addScreen(String name, Node screen) {
         this.gameScreens.put(name, screen);
     }
-
+    public void addScreenController(String name, ControlledScreen controller) {
+        this.screensController.put(name, controller);
+    }
     public Node getScreen(String name) {
         return this.gameScreens.get(name);
     }
@@ -88,15 +92,18 @@ public class ScreensController extends StackPane {
             Parent loadedScreen = (Parent) fxmlLoader.load();
             ControlledScreen myScreen = ((ControlledScreen) fxmlLoader.getController());
             myScreen.setScreenParent(this);
+            addScreenController(name,myScreen);
             addScreen(name, loadedScreen);
         } 
         catch (Exception e) {}
     }
-
-    public void setScreen(final String name) {
+    public ControlledScreen getControllerScreen(String name){
+        return screensController.get(name);
+    }
+    public void setScreen(final String name,ResetableScreen resetableScreen) {
         
         if (!getChildren().isEmpty()) {
-            Timeline fade = new Timeline(this.fadeFrameValue, makeKeyFrameEffect(name));
+            Timeline fade = new Timeline(this.fadeFrameValue, makeKeyFrameEffect(name,resetableScreen));
             fade.play();
         } 
         else {
@@ -118,6 +125,8 @@ public class ScreensController extends StackPane {
 //            this.fadeInEffect.play();
 //        }
 //    }
+
+
 }
 //************************Test Zone*****************************//
 //OLD COPPY OF THE CLASS (COPPY FROM INTERNET):

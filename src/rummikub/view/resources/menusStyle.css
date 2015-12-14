@@ -13,8 +13,6 @@
 }
 
 .button {
-   // -fx-pref-width: 141;
-    //-fx-pref-height: 52; 
     -fx-text-fill: black;
     -fx-font-family: Georgia;
     -fx-font-weight: bold;
@@ -23,6 +21,15 @@
     -fx-background-size:100% 100%;
     -fx-background-position: center;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+.button:hover {
+    -fx-background-image: url("TileMenuButtonHover.png");
+    -fx-background-size:100% 100%;
+    -fx-background-position: center;
+    -fx-border-top-color: #edcba8;
+    -fx-background-color: linear-gradient(#452204, #a9957d);
+    -fx-text-fill: white;
+    -fx-font-family: Georgia;
 }
 #orgenaize{
     -fx-text-fill: black;
@@ -39,7 +46,6 @@
     -fx-text-fill: black;
     -fx-font-family: Georgia;
     -fx-font-weight: bold;
-   // -fx-background-color: linear-gradient(#ebd6ba, #a9957d);
     -fx-background-image: url("OrgenaizeHover.png");
     -fx-background-size:100% 100%;
     -fx-background-position: center;
@@ -56,7 +62,6 @@
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-text-fill: #333333;
-    //-fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
 }
 
 #GamesSettings-text {
@@ -67,32 +72,19 @@
 }
 
 #errorMsg{
-    //-fx-fill: #ee3737;
     -fx-font-family: Georgia;
     -fx-font-size: 16px;
     -fx-text-fill: #ff0000;
     -fx-font-weight: bold;
     -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
-   // -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );  
-    //-fx-fill: firebrick
-    //  -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 ); 
-
 }
 
-    .button:hover {
-    -fx-background-image: url("TileMenuButtonHover.png");
-    -fx-background-size:100% 100%;
-    -fx-background-position: center;
-   -fx-border-top-color: #edcba8;
-   -fx-background-color: linear-gradient(#452204, #a9957d);
-   -fx-text-fill: white;
-   -fx-font-family: Georgia;
-}
+
 
 #hand{
     -fx-background-image: url("PlayerHand.png");
     -fx-background-position: center ;
     -fx-background-size:100% 100%;
      -fx-background-repeat: no-repeat;
-    //-fx-pane-resize: both;
+    
 }

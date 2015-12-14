@@ -83,8 +83,8 @@ public class GameParametersController implements Initializable, ControlledScreen
 
     @FXML
     protected void handleBackToMenuButtonAction(ActionEvent event) {
-        this.myController.setScreen(Rummikub.MAINMENU_SCREEN_ID);
-        resetScreen();
+        this.myController.setScreen(Rummikub.MAINMENU_SCREEN_ID,this);
+        //resetScreen();
     }
 
     @FXML
