@@ -12,6 +12,7 @@ import javafx.animation.Timeline;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -21,6 +22,8 @@ import rummikub.Engine.TilesLogic.Tile;
  *
  * @author Arthur
  */
+
+
 public class AnimatedTile extends Rectangle {
 
     Timeline timeline = new Timeline();

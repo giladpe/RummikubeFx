@@ -14,7 +14,7 @@ import javafx.scene.image.ImageView;
  * @author Arthur
  */
 public class ImageUtils {
-    public static final String RESOURCES_FOLDER = "/resources/";
+    public static final String RESOURCES_FOLDER = "/rummikub/view/resources/";
     public static final String HUMAN_PLAYER_LOGO = "HumanLogo.png";
     public static final String COMPUTER_PLAYER_LOGO = "ComputerLogo.png";
 
@@ -23,7 +23,8 @@ public class ImageUtils {
     
     public static Image getImage (String imageName){
         InputStream imageInputStream = ImageUtils.class.getResourceAsStream(RESOURCES_FOLDER + imageName);
-        return new Image(imageInputStream);
+        return new Image(imageInputStream,35,35,true,true);
+        
     }
     
     public static ImageView getImageView (String imageName){
