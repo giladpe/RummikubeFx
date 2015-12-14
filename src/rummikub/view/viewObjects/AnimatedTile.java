@@ -15,6 +15,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import rummikub.Engine.TilesLogic.Tile;
 
 /**
  *
@@ -29,6 +30,37 @@ public class AnimatedTile extends Rectangle {
     public AnimatedTile() {
         super();
         setFill(Color.TRANSPARENT);
+        setOnDragEntered(this::onDragEnter);
+        setOnDragExited(this::onDragLeave);
+
+        setOnDragOver((DragEvent event) -> {
+            event.acceptTransferModes(TransferMode.ANY);
+            event.consume();
+        });
+
+        setOnDragDropped((event) -> {
+            AnimatedFlowPane parent = ((AnimatedFlowPane)event.getSource());
+            Dragboard db = event.getDragboard();
+//                Paint paint = (Paint)db.getContent(OBJCET_DATA_FORMAT);
+            int index = parent.getChildren().indexOf(this);
+            parent.addChild(new Rectangle(40, 80, Color.FIREBRICK), index);
+            event.setDropCompleted(true);
+            event.consume();
+        });
+    }
+    
+    public AnimatedTile(Tile currTile) {
+        super();
+        setFill(Color.TRANSPARENT);
+        
+        
+
+        
+        
+        
+        
+        
+        
         setOnDragEntered(this::onDragEnter);
         setOnDragExited(this::onDragLeave);
 

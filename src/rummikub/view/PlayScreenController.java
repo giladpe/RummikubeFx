@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.TextAlignment;
 import rummikub.Engine.Game;
 import rummikub.Engine.Player.Player;
+import rummikub.Engine.TilesLogic.Tile;
 import rummikub.Rummikub;
 
 /**
@@ -70,7 +71,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+        this.handFirstRow.setSpacing(10);
         initPlayers();
 
         
@@ -107,6 +108,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         this.gameLogic.getPlayers().stream().forEach((player) -> {
             setLabel(player, this.gameLogic.getPlayers().indexOf(player));
         });
+        showPlayerHand(this.gameLogic.getCurrPlayer());
     }
 
     private void setLabel(Player player, int index) {
@@ -115,11 +117,18 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         currentPlayer.setVisible(true);
         currentPlayer.setAlignment(Pos.BOTTOM_CENTER);
         currentPlayer.setTextAlignment(TextAlignment.JUSTIFY);
+        
         if(player.isPlayerHuman()) {
             currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.HUMAN_PLAYER_LOGO));
         }
         else {
             currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.COMPUTER_PLAYER_LOGO));
+        }
+    }
+
+    private void showPlayerHand(Player player) {
+        for (Tile currTile : player.getHand()) {
+            //this.handFirstRow.getChildren().add( );
         }
     }
 }
