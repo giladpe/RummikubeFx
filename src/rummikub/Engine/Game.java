@@ -26,7 +26,7 @@ public class Game {
     private GameDeck gameDeck;
     private String lastSavedPath;
     public Settings settings;
-    private Object game;
+    //private Object game;
 
 /////////////////////////////////Constractor////////////////////////////////////////////
     public Game(Settings settings) {
@@ -146,20 +146,17 @@ public class Game {
                 retVal = "Withdraw 3 tiles ";
             }
             retVal += "Invalid move!";
+        } else if (getTurnScore() < 30 && getCurrPlayer().isFirstMove()) {
+
+            restoreHandAndTable();
+            retVal += "First move most to be 30+ value ";
+            withdrawTile();
+
         } else {
-            if (getTurnScore() < 30 && getCurrPlayer().isFirstMove()) {
 
-                restoreHandAndTable();
-                retVal += "First move most to be 30+ value ";
-                withdrawTile();
-
-            } else {
-
-                getCurrPlayer().setNotFirstMove();
-                getCurrPlayer().addScore(getTurnScore());
-                retVal += "Great!";
-
-            }
+            getCurrPlayer().setNotFirstMove();
+            getCurrPlayer().addScore(getTurnScore());
+            retVal += "Great!";
 
         }
         return retVal;
@@ -716,6 +713,10 @@ public class Game {
         }
         return true;
     }
+
+//    void public playerLeave() {
+//  ////////////////////////////////////
+//    }
 ///////////////////////////////// Inner class////////////////////////////////////////////
 
     public static class Settings {
@@ -727,6 +728,9 @@ public class Game {
         ArrayList<String> playersNameString;
 
         public Settings() {
+        }
+        void setNumberOfPlayers(int numberOfPlayers){
+        
         }
 
         public Settings(String gameName, int numberOfComputerPlyers, int numberOfHumansPlayrs) {

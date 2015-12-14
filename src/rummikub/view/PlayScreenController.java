@@ -17,7 +17,7 @@ import javafx.scene.layout.HBox;
  *
  * @author Arthur
  */
-public class PlayScreenController implements Initializable {
+public class PlayScreenController implements Initializable, ResetableScreen,ControlledScreen {
 @FXML HBox handFirstRow;
     /**
      * Initializes the controller class.
@@ -26,5 +26,15 @@ public class PlayScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
     }    
+
+    @Override
+    public void resetScreen() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setScreenParent(ScreensController parentScreen) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
