@@ -85,17 +85,40 @@
     -fx-background-size:100% 100%;
     -fx-background-repeat: no-repeat;
 }
+#stand{
+    -fx-background-image: url("PlayerHand.png");
+    -fx-background-position: center ;
+    -fx-background-size:100% 100%;
+    -fx-background-repeat: no-repeat;
+}
 
 #wizdrawHand{
     -fx-font-size: 24px;
 }
-#tile {
-    -fx-font-size: 10px;
-    -fx-font-weight: bold;
+.tile {
+    -fx-background-image: url("tile.png");
+    -fx-background-size:100% 100%;
+    -fx-background-position: center;
     -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
     -fx-alignment: CENTER;
-    -fx-text-alignment: justify; 
-    -fx-pref-tile-height: 40;
+    -fx-text-alignment:center;
+    -fx-pref-tile-height: 35;
     -fx-pref-tile-width: 28;
-   
+}
+.tile:hover {
+    -fx-font-size: 18px;
+}
+.tileText {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+    -fx-alignment: CENTER;
+    -fx-text-alignment:center;
+
+}
+.tileText:hover {
+    -fx-font-size: 18px;    
+    
+      
 }

@@ -14,13 +14,17 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import rummikub.gameLogic.model.gameobjects.Tile;
 import rummikub.gameLogic.model.logic.GameLogic;
 import rummikub.gameLogic.model.logic.Settings;
 import rummikub.gameLogic.model.player.Player;
 import rummikub.Rummikub;
+import rummikub.gameLogic.model.gameobjects.Board;
+import rummikub.gameLogic.model.logic.PlayersMove;
 import rummikub.view.viewObjects.AnimatedTile;
 
 /**
@@ -35,7 +39,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     @FXML
     private Button orgenaizeHand;
     @FXML
-    private HBox handFirstRow;
+    private FlowPane handTile;
     @FXML
     private Button endTrun;
     @FXML
@@ -53,6 +57,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private ArrayList<Label> playersLabels = new ArrayList<>(4);
     private ScreensController myController;
     private GameLogic rummikubLogic=new GameLogic();
+    private PlayersMove currentPlayerMove;
 
     @FXML
     private void handleMenuButtonAction(ActionEvent event) {
@@ -68,8 +73,28 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
 
     @FXML
-    private void handleWizdrawCardAction(ActionEvent event) {
-//        ArrayList<Tile> playerHand;
+    private void handleWithdrawCardAction(ActionEvent event) {
+        this.currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
+        this.rummikubLogic.playSingleTurn(currentPlayerMove);
+
+        this.handTile.getChildren().clear();
+        this.showPlayerHand(this.rummikubLogic.getCurrentPlayer());
+        
+        
+        if(rummikubLogic.getHeap().isEmptyHeap()) {
+            ((Button)event.getSource()).setFont(new Font(14));
+            ((Button)event.getSource()).setText("Empy Deck");
+            ((Button)event.getSource()).setDisable(true);
+        }
+        
+        
+        if(rummikubLogic.isGameOver() || rummikubLogic.isOnlyOnePlayerLeft()) {
+            //it means the game is over..... what we do now
+        }
+        
+        //this.handFirstRow.getChildren().add(new AnimatedTile(playerHand.get(playerHand.size()-1)));
+
+//        ArrayList<Tile> playerHand=this.rummikubLogic.getCurrentPlayer().getListPlayerTiles();
 //        if (this.gameLogic.withdrawCard()) {
 //            playerHand = this.gameLogic.getCurrPlayer().getHand();
 //            this.handFirstRow.getChildren().add(new AnimatedTile(playerHand.get(playerHand.size()-1)));
@@ -79,7 +104,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.handFirstRow.setSpacing(5);
+        //this.hand.setSpacing(5);
         initPlayers();
 
         //not good - what about loading file?????
@@ -98,6 +123,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         this.rummikubLogic.setGameSettings(gameSetting);
         this.rummikubLogic.setGameOriginalInputedSettings(rummikubLogic.getGameSettings());
         this.rummikubLogic.initGameFromUserSettings();
+        initCurrentPlayerMove();
     }
 
     //TODO:
@@ -134,7 +160,22 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private void showPlayerHand(Player player) {
         for (Tile currTile : player.getListPlayerTiles()) {
-            this.handFirstRow.getChildren().add(new AnimatedTile(currTile));
+            this.handTile.getChildren().add(new AnimatedTile(currTile));
         }
+    }
+
+    private void initCurrentPlayerMove() {
+        
+        //init variables in the statrt of the turn
+        Board printableBoard = new Board(new ArrayList<>(rummikubLogic.getGameBoard().getListOfSerie()));
+        boolean isFirstMoveDone = rummikubLogic.getCurrentPlayer().isFirstMoveDone();
+        Player printablePlayer = rummikubLogic.getCurrentPlayer().clonePlayer();
+        this.currentPlayerMove = new PlayersMove(printablePlayer.getListPlayerTiles(), printableBoard, isFirstMoveDone);
+        
+        //need it for java fx?
+        //ArrayList<Player> printablePlayersList = new ArrayList<>(rummikubLogic.getPlayers());
+        //printablePlayersList.remove(rummikubLogic.getCurrentPlayer());
+        //printablePlayersList.add(printablePlayer);
+
     }
 }

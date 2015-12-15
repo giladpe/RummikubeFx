@@ -67,6 +67,10 @@ public class GameLogic {
         return gameBoard;
     }
     
+    public Heap getHeap() {
+        return gameHeap;
+    }
+    
     // Private Methods
     private boolean isAtleastOnePlayerMoved() {
         boolean isAtleastOneMoved = false;

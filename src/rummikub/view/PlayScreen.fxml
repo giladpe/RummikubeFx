@@ -16,8 +16,8 @@
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="340.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="330.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="110.0" prefWidth="110.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="110.0" prefWidth="110.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="110.0" prefWidth="110.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="110.0" prefWidth="110.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -52,9 +52,9 @@
    <bottom>
       <GridPane prefHeight="120.0" prefWidth="800.0" BorderPane.alignment="CENTER">
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="386.0" minWidth="10.0" prefWidth="35.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="529.0" minWidth="10.0" prefWidth="521.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="386.0" minWidth="10.0" prefWidth="35.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="110.0" prefWidth="110.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="521.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="110.0" prefWidth="110.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -68,14 +68,11 @@
                 <RowConstraints maxHeight="55.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="68.0" minHeight="10.0" prefHeight="65.0" vgrow="SOMETIMES" />
               </rowConstraints>
+               <padding>
+                  <Insets bottom="17.0" left="15.0" right="15.0" top="10.0" />
+               </padding>
                <children>
-                  <HBox fx:id="handFirstRow" prefHeight="42.0" prefWidth="529.0">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <GridPane.margin>
-                        <Insets left="10.0" top="10.0" />
-                     </GridPane.margin></HBox>
+                  <FlowPane id="handTile" fx:id="handTile" prefHeight="120.0" prefWidth="575.0" GridPane.rowSpan="2" />
                </children>
             </GridPane>
             <Button fx:id="endTrun" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleEndTrunAction" prefHeight="41.0" prefWidth="85.0" text="End Turn" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
@@ -83,7 +80,7 @@
                   <Insets />
                </GridPane.margin>
             </Button>
-            <Button id="wizdrawHand" fx:id="wizdrawCard" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleWizdrawCardAction" prefHeight="41.0" prefWidth="85.0" text="+" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Button id="wizdrawHand" fx:id="wizdrawCard" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleWithdrawCardAction" prefHeight="41.0" prefWidth="85.0" text="+" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
    </bottom>

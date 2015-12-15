@@ -11,6 +11,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -44,12 +45,13 @@ public class AnimatedTile extends Label {
     public AnimatedTile() {
         super();
         //setFill(Color.TRANSPARENT);
-        setGraphic(ImageUtils.getImageView(ImageUtils.TILE_LOGO));
+        getStyleClass().add("tile");
+        //setGraphic(ImageUtils.getImageView(ImageUtils.TILE_LOGO));
         setAlignment(Pos.CENTER);
         setTextAlignment(TextAlignment.JUSTIFY);
         setOnDragEntered(this::onDragEnter);
         setOnDragExited(this::onDragLeave);
-
+        
         setOnDragOver((DragEvent event) -> {
             event.acceptTransferModes(TransferMode.ANY);
             event.consume();
@@ -72,17 +74,15 @@ public class AnimatedTile extends Label {
         //setFill(Color.TRANSPARENT);
 
         //setGraphic(ImageUtils.getImageView(ImageUtils.TILE_LOGO));
+        getStyleClass().add("tile");
         setId("tile");
-        String style ="-fx-text-fill: "+currTile.getTileColor().getAnsiColor()+"; -fx-font-size: 14px";
+        String style ="-fx-text-fill: "+currTile.getTileColor().getAnsiColor();
         setStyle(style);
-        setBackground(new Background(new BackgroundImage(ImageUtils.getImage(ImageUtils.TILE_LOGO), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-       setAlignment(Pos.CENTER);
-        
-        setTextAlignment(TextAlignment.JUSTIFY);
+        //setBackground(new Background(new BackgroundImage(ImageUtils.getImage(ImageUtils.TILE_LOGO), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
         setPrefSize(28, 35);
-        setTextFill(Paint.valueOf(currTile.getTileColor().getAnsiColor()));
+        
         setText(currTile.getEnumTileNumber().toString());
-
+        setContentDisplay(ContentDisplay.TOP);
         
 
         setOnDragEntered(this::onDragEnter);

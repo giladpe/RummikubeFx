@@ -25,9 +25,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
+import javax.swing.text.Utilities;
 import javax.xml.bind.JAXBException;
 import rummikub.gameLogic.model.logic.Settings;
 import org.xml.sax.SAXException;
+import rummikub.gameLogic.view.ioui.Utils;
 
 
 public class GameParametersController implements Initializable, ControlledScreen, ResetableScreen {
@@ -334,7 +336,10 @@ public class GameParametersController implements Initializable, ControlledScreen
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+                
         initPlayersField();
+        checkBoxList.get(TWO_PLAYERS).setSelected(true);
         this.checkBoxList.stream().forEach((cb) -> {
             cb.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> {
                 initStartPlayingButton();});
@@ -360,6 +365,7 @@ public class GameParametersController implements Initializable, ControlledScreen
                 handleRadioButtonChanged();
             }
         });
+        
     }
     
     public Settings getGameSettings() {
