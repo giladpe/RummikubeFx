@@ -8,7 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import rummikub.Engine.Game;
+import rummikub.gameLogic.model.logic.GameLogic;
 //import rummikube.view.MainMenuController;
 
 /**
@@ -16,7 +16,7 @@ import rummikub.Engine.Game;
  * @author giladPe
  */
 public class Rummikube_OLD_VERSEION extends Application {
-    private Game game; 
+    private  GameLogic gameLogic; 
     @Override
     
     public void start(Stage primaryStage) throws Exception {  
@@ -33,7 +33,7 @@ public class Rummikube_OLD_VERSEION extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    public Game getGame(){return game;}
+    public GameLogic getGame(){return gameLogic;}
 }
 
 

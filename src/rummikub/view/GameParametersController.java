@@ -26,23 +26,29 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javax.xml.bind.JAXBException;
+import rummikub.gameLogic.model.logic.Settings;
 import org.xml.sax.SAXException;
-import rummikub.Engine.Game;
-import rummikub.Engine.Utility;
-import rummikub.Controller;
+
 
 public class GameParametersController implements Initializable, ControlledScreen, ResetableScreen {
 
 
 
     // Constants:
+    public static final int TWO_PLAYERS = 2;
+    public static final int THREE_PLAYERS = 3;
+    public static final int FOUR_PLAYERS = 4;
+    public static final int PLAYER1 = 0;
+    public static final int PLAYER2 = 1;
+    public static final int PLAYER3 = 2;
+    public static final int PLAYER4 = 3;
     private final String DUP_NAME_MSG = "Name is already exict!";
     private final String EMPTY_GAME_NAME_MSG = "Insert name for the game!";
     private final String NO_HUMAN_MSG = "Chose atleast one human player!";
     private final String RADIO_BUTTON_VAL_2 = "2"; 
     private final String RADIO_BUTTON_VAL_3 = "3";  
     private final String RADIO_BUTTON_VAL_4 = "4";  
-
+    private final String EMPTY_STRING="";
     // FXML private members:
     @FXML private Button StartPlayingButton;
     @FXML private Label errorMsg;
@@ -69,7 +75,7 @@ public class GameParametersController implements Initializable, ControlledScreen
     private final ArrayList<HBox> hBoxList = new ArrayList<>();
     private final ArrayList<CheckBox> checkBoxList = new ArrayList<>();
     private final ArrayList<TextField> playersNames = new ArrayList<>();
-    private Game.Settings gameSettings;
+    private Settings gameSettings;
 
     //FXML Protected methods:
     
@@ -95,7 +101,7 @@ public class GameParametersController implements Initializable, ControlledScreen
         TextField checkBoxTextField = this.playersNames.get(index);
 
         if (((CheckBox) event.getSource()).isSelected()) {
-            checkBoxTextField.setText(Utility.EMPTY_STRING);
+            checkBoxTextField.setText(EMPTY_STRING);
             checkBoxTextField.setDisable(true);
         } else {
             checkBoxTextField.setDisable(false);
@@ -107,13 +113,13 @@ public class GameParametersController implements Initializable, ControlledScreen
         int numberOfPlayer = getNumOfPlayers();
         switch (numberOfPlayer) {
 
-            case Utility.FOUR_PLAYERS:
+            case FOUR_PLAYERS:
                 handleFourPlayersButton();
                 break;
-            case Utility.THREE_PLAYERS:
+            case THREE_PLAYERS:
                 handleThreePlayersButton();
                 break;
-            case Utility.TWO_PLAYERS:
+            case TWO_PLAYERS:
             default:
                 handleTwoPlayersButton();
                 break;
@@ -142,11 +148,10 @@ public class GameParametersController implements Initializable, ControlledScreen
         String gameNameString = this.gameName.getText();
         int numOfPlayers = getNumOfPlayers();
         int numOfComputerPlayers = getNumOfComputerPlayers();
-        int numOfHumansPlayers = numOfPlayers - numOfComputerPlayers;
         ArrayList<String> sPlayersNames = getPlayersTextFieldList();
         PlayScreenController gameScreen = (PlayScreenController)this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
         
-        this.gameSettings = new Game.Settings(gameNameString, numOfComputerPlayers, numOfHumansPlayers, sPlayersNames);
+        this.gameSettings = new Settings(gameNameString,numOfPlayers, numOfComputerPlayers, sPlayersNames);
         gameScreen.createNewGame(gameSettings);
         gameScreen.show();
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,gameScreen);
@@ -164,7 +169,7 @@ public class GameParametersController implements Initializable, ControlledScreen
     // Private methods:
     private void resetPlayerField(int index) {
         this.checkBoxList.get(index).setSelected(false);
-        this.playersNames.get(index).setText(Utility.EMPTY_STRING);
+        this.playersNames.get(index).setText(EMPTY_STRING);
         this.playersNames.get(index).setDisable(false);
     }
 
@@ -233,22 +238,22 @@ public class GameParametersController implements Initializable, ControlledScreen
     }
 
     private void clearMsg() {
-        errorMsg.setText(Utility.EMPTY_STRING);
+        errorMsg.setText(EMPTY_STRING);
     }
 
     private void handleTwoPlayersButton() {
-        resetPlayerField(Utility.PLAYER3);
-        resetPlayerField(Utility.PLAYER4);
-        setVisableFildsAfterRadioButtonSelection(Utility.TWO_PLAYERS);
+        resetPlayerField(PLAYER3);
+        resetPlayerField(PLAYER4);
+        setVisableFildsAfterRadioButtonSelection(TWO_PLAYERS);
     }
 
     private void handleThreePlayersButton() {
-        resetPlayerField(Utility.PLAYER4);
-        setVisableFildsAfterRadioButtonSelection(Utility.THREE_PLAYERS);
+        resetPlayerField(PLAYER4);
+        setVisableFildsAfterRadioButtonSelection(THREE_PLAYERS);
     }
 
     private void handleFourPlayersButton() {
-        setVisableFildsAfterRadioButtonSelection(Utility.FOUR_PLAYERS);
+        setVisableFildsAfterRadioButtonSelection(FOUR_PLAYERS);
     }
     
     private void setVisableFildsAfterRadioButtonSelection(int numOfFildsToSetVisable) {
@@ -286,8 +291,8 @@ public class GameParametersController implements Initializable, ControlledScreen
     }
 
     boolean isDiffNames() {
-
-        boolean isDiffNames = Game.Settings.isValidPlayersNames(getPlayersTextFieldList());
+        //////////////////need to check if there is methode 
+        boolean isDiffNames = Settings.isValidPlayersNames(getPlayersTextFieldList());
         if (isCurrMsgSameAs(DUP_NAME_MSG)) {
             clearMsg();
         }
@@ -316,15 +321,15 @@ public class GameParametersController implements Initializable, ControlledScreen
 
     @Override
     public void resetScreen() {
-        this.errorMsg.setText(Utility.EMPTY_STRING);
+        this.errorMsg.setText(EMPTY_STRING);
         resetFeilds(this.playersNames, (Consumer) (Object playerName) -> {
-            ((TextField)playerName).setText(Utility.EMPTY_STRING);
+            ((TextField)playerName).setText(EMPTY_STRING);
             ((TextField)playerName).setDisable(false);
         }); 
         resetFeilds(this.radioButtonGroup.getToggles(), (Consumer)(Object rButton) -> {((RadioButton)rButton).setSelected(false);});
         resetFeilds(this.checkBoxList, (Consumer)(Object cBox) -> {((CheckBox)cBox).setSelected(false);});
         resetFeilds(this.hBoxList, (Consumer)(Object hBox) -> {((HBox)hBox).setVisible(false);});
-        this.gameName.setText(Utility.EMPTY_STRING);
+        this.gameName.setText(EMPTY_STRING);
     }
     
     @Override
@@ -357,7 +362,7 @@ public class GameParametersController implements Initializable, ControlledScreen
         });
     }
     
-    public Game.Settings getGameSettings() {
+    public Settings getGameSettings() {
         return gameSettings;
     }
 }

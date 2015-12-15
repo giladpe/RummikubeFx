@@ -28,7 +28,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
-import rummikub.Engine.TilesLogic.Tile;
+import rummikub.gameLogic.model.gameobjects.Tile;
 import rummikub.view.ImageUtils;
 
 /**
@@ -73,15 +73,15 @@ public class AnimatedTile extends Label {
 
         //setGraphic(ImageUtils.getImageView(ImageUtils.TILE_LOGO));
         setId("tile");
-        String style ="-fx-text-fill: "+currTile.printColor()+"; -fx-font-size: 14px";
+        String style ="-fx-text-fill: "+currTile.getTileColor().getAnsiColor()+"; -fx-font-size: 14px";
         setStyle(style);
         setBackground(new Background(new BackgroundImage(ImageUtils.getImage(ImageUtils.TILE_LOGO), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
        setAlignment(Pos.CENTER);
         
         setTextAlignment(TextAlignment.JUSTIFY);
         setPrefSize(28, 35);
-        setTextFill(Paint.valueOf(currTile.printColor()));
-        setText(currTile.getTileStringVal());
+        setTextFill(Paint.valueOf(currTile.getTileColor().getAnsiColor()));
+        setText(currTile.getEnumTileNumber().toString());
 
         
 

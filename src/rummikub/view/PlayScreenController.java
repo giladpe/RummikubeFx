@@ -16,9 +16,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.TextAlignment;
-import rummikub.Engine.Game;
-import rummikub.Engine.Player.Player;
-import rummikub.Engine.TilesLogic.Tile;
+import rummikub.gameLogic.model.gameobjects.Tile;
+import rummikub.gameLogic.model.logic.GameLogic;
+import rummikub.gameLogic.model.logic.Settings;
+import rummikub.gameLogic.model.player.Player;
 import rummikub.Rummikub;
 import rummikub.view.viewObjects.AnimatedTile;
 
@@ -51,7 +52,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private ArrayList<Label> playersLabels = new ArrayList<>(4);
     private ScreensController myController;
-    private Game gameLogic;
+    private GameLogic rummikubLogic=new GameLogic();
 
     @FXML
     private void handleMenuButtonAction(ActionEvent event) {
@@ -68,11 +69,11 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     @FXML
     private void handleWizdrawCardAction(ActionEvent event) {
-        ArrayList<Tile> playerHand;
-        if (this.gameLogic.withdrawCard()) {
-            playerHand = this.gameLogic.getCurrPlayer().getHand();
-            this.handFirstRow.getChildren().add(new AnimatedTile(playerHand.get(playerHand.size()-1)));
-        }
+//        ArrayList<Tile> playerHand;
+//        if (this.gameLogic.withdrawCard()) {
+//            playerHand = this.gameLogic.getCurrPlayer().getHand();
+//            this.handFirstRow.getChildren().add(new AnimatedTile(playerHand.get(playerHand.size()-1)));
+//        }
         
     }
 
@@ -93,10 +94,10 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         this.playersLabels.add(player4);
     }
 
-    public void createNewGame(Game.Settings gameSetting) {
-        this.gameLogic = new Game(gameSetting);
-        this.gameLogic.setPlayersFromSettings();
-        this.gameLogic.addStartTilesToPlayers();
+    public void createNewGame(Settings gameSetting) {
+        this.rummikubLogic.setGameSettings(gameSetting);
+        this.rummikubLogic.setGameOriginalInputedSettings(rummikubLogic.getGameSettings());
+        this.rummikubLogic.initGameFromUserSettings();
     }
 
     //TODO:
@@ -110,10 +111,10 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
 
     public void show() {
-        this.gameLogic.getPlayers().stream().forEach((player) -> {
-            setLabel(player, this.gameLogic.getPlayers().indexOf(player));
+        this.rummikubLogic.getPlayers().stream().forEach((player) -> {
+            setLabel(player, this.rummikubLogic.getPlayers().indexOf(player));
         });
-        showPlayerHand(this.gameLogic.getCurrPlayer());
+        showPlayerHand(this.rummikubLogic.getCurrentPlayer());
     }
 
     private void setLabel(Player player, int index) {
@@ -132,7 +133,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
 
     private void showPlayerHand(Player player) {
-        for (Tile currTile : player.getHand()) {
+        for (Tile currTile : player.getListPlayerTiles()) {
             this.handFirstRow.getChildren().add(new AnimatedTile(currTile));
         }
     }
