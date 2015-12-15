@@ -92,8 +92,9 @@
     -fx-background-repeat: no-repeat;
 }
 
-#wizdrawHand{
+withdrawCard{
     -fx-font-size: 24px;
+    -fx-font-weight: bold;
 }
 .tile {
     -fx-background-image: url("tile.png");
@@ -102,15 +103,14 @@
     -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
     -fx-alignment:TOP_CENTER;
     -fx-text-alignment:center;
-    -fx-pref-tile-height: 35;
-    -fx-pref-tile-width: 28;
+    -fx-pref-tile-height: 40;
+    -fx-pref-tile-width: 30;
 
 }
 .tile:hover {
     -fx-font-size: 18px;
 }
 .tileText {
-    -fx-padding: 3;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
@@ -120,5 +120,4 @@
 .tileText:hover {
     -fx-font-size: 18px;  
  
-      
 }

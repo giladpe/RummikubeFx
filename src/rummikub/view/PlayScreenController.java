@@ -15,7 +15,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import rummikub.gameLogic.model.gameobjects.Tile;
@@ -44,7 +43,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     @FXML
     private Button endTrun;
     @FXML
-    private Button wizdrawCard;
+    private Button withdrawCard;
 
     @FXML
     private Label player1;
@@ -54,7 +53,6 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private Label player3;
     @FXML
     private Label player4;
-
     private ArrayList<Label> playersLabels = new ArrayList<>(4);
     private ScreensController myController;
     private GameLogic rummikubLogic=new GameLogic();
@@ -80,8 +78,6 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
         this.handTile.getChildren().clear();
         this.showPlayerHand(this.rummikubLogic.getCurrentPlayer());
-        
-        
         if(rummikubLogic.getHeap().isEmptyHeap()) {
             ((Button)event.getSource()).setFont(new Font(14));
             ((Button)event.getSource()).setText("Empy Deck");
@@ -107,7 +103,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     public void initialize(URL url, ResourceBundle rb) {
         //this.hand.setSpacing(5);
         initPlayers();
-
+        
         //not good - what about loading file?????
         //Game.Settings gameSetting = ((GameParametersController)myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID)).getGameSettings();
         //this.gameLogic = new Game(gameSetting);

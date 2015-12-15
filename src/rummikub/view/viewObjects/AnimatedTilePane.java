@@ -17,6 +17,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -24,6 +25,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -36,25 +38,25 @@ import rummikub.gameLogic.model.gameobjects.Tile;
  *
  * @author giladPe
  */
-public class AnimatedTilePane extends Pane {
+public class AnimatedTilePane extends HBox {
 
     Label tileLabel;
-    String color = "";
+    
+    
 
     public AnimatedTilePane(Tile currTile) {
         super();
-        color = currTile.getTileColor().getAnsiColor();
         tileLabel = new Label();
         getStyleClass().add("tile");
-        //setId("tile");
-        String style = "-fx-text-fill: " + color;
-        setMinSize(28, 35);
-        setMaxSize(28, 35);
+        String style = "-fx-text-fill: " +  currTile.getTileColor().getAnsiColor();;
+        setMinSize(30, 40);
+        setMaxSize(30, 40);
         tileLabel.getStyleClass().add("tileText");
         tileLabel.setText(currTile.getEnumTileNumber().toString());
         tileLabel.setStyle(style);
         getChildren().add(tileLabel);
-
+        setAlignment(Pos.TOP_CENTER);
+        setPadding(new Insets(2,0 , 0,0));
         this.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -80,16 +82,13 @@ public class AnimatedTilePane extends Pane {
     //mouse
     private void onMouseEnter() {
         System.out.println("Enter,");
-
+        tileLabel.setFont( new Font( 24 ));
         
-        tileLabel.setFont(new Font("Arial", 18));
     }
 
     private void onMouseExit() {
         System.out.println("Exit,");
-
-        String style = "-fx-text-fill: " + color + "; -fx-font-size: 14px;";
-        tileLabel.getStyleClass().add(style);
+tileLabel.setFont( new Font( 14 ));
     }
 
 }
