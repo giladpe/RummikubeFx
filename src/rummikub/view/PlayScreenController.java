@@ -28,6 +28,7 @@ import rummikub.view.viewObjects.AnimatedTile;
  * @author Arthur
  */
 public class PlayScreenController implements Initializable, ResetableScreen, ControlledScreen {
+
     @FXML
     private Button menu;
     @FXML
@@ -47,15 +48,14 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private Label player3;
     @FXML
     private Label player4;
-    
+
     private ArrayList<Label> playersLabels = new ArrayList<>(4);
     private ScreensController myController;
     private Game gameLogic;
-   
 
     @FXML
     private void handleMenuButtonAction(ActionEvent event) {
-        this.myController.setScreen(Rummikub.SUBMENU_SCREEN_ID,ScreensController.NOT_RESETABLE);
+        this.myController.setScreen(Rummikub.SUBMENU_SCREEN_ID, ScreensController.NOT_RESETABLE);
     }
 
     @FXML
@@ -68,27 +68,31 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     @FXML
     private void handleWizdrawCardAction(ActionEvent event) {
+        ArrayList<Tile> playerHand;
+        if (this.gameLogic.withdrawCard()) {
+            playerHand = this.gameLogic.getCurrPlayer().getHand();
+            this.handFirstRow.getChildren().add(new AnimatedTile(playerHand.get(playerHand.size()-1)));
+        }
+        
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.handFirstRow.setSpacing(5);
         initPlayers();
 
-        
         //not good - what about loading file?????
         //Game.Settings gameSetting = ((GameParametersController)myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID)).getGameSettings();
         //this.gameLogic = new Game(gameSetting);
-    }    
-    
+    }
+
     private void initPlayers() {
         this.playersLabels.add(player1);
         this.playersLabels.add(player2);
         this.playersLabels.add(player3);
         this.playersLabels.add(player4);
     }
-    
-    
+
     public void createNewGame(Game.Settings gameSetting) {
         this.gameLogic = new Game(gameSetting);
         this.gameLogic.setPlayersFromSettings();
@@ -118,13 +122,13 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         currentPlayer.setVisible(true);
         currentPlayer.setAlignment(Pos.BOTTOM_CENTER);
         currentPlayer.setTextAlignment(TextAlignment.JUSTIFY);
-        
-        if(player.isPlayerHuman()) {
-            currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.HUMAN_PLAYER_LOGO));
-        }
-        else {
-            currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.COMPUTER_PLAYER_LOGO));
-        }
+
+//        if(player.isPlayerHuman()) {
+//            currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.HUMAN_PLAYER_LOGO));
+//        }
+//        else {
+//            currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.COMPUTER_PLAYER_LOGO));
+//        }
     }
 
     private void showPlayerHand(Player player) {

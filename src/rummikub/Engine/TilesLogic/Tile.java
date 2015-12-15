@@ -49,6 +49,9 @@ public class Tile implements Comparable<Tile> {
     public void setBelongTo(BelongTo belongTo) {
         this.belongTo = belongTo;
     }
+    public String printColor(){
+        return this.getColor().print();
+    }
 ////////////////////////////////////////////////////////////////////////////////
     public String toString() {
         
@@ -63,6 +66,9 @@ public class Tile implements Comparable<Tile> {
             retVal = this.color.print() + "[" + this.value.toInt() + "] " + Color.BLACK.print();
         }
         return retVal;
+    }
+    public String getTileStringVal(){
+        return String.valueOf(this.getValue());
     }
 ////////////////////////////////////////////////////////////////////////////////
     public Value getEnumValue() {

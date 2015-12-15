@@ -89,3 +89,13 @@
 #wizdrawHand{
     -fx-font-size: 24px;
 }
+#tile {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+    -fx-alignment: CENTER;
+    -fx-text-alignment: justify; 
+    -fx-pref-tile-height: 40;
+    -fx-pref-tile-width: 28;
+   
+}

@@ -118,6 +118,11 @@ public class Game {
      * *********************************************************************************
      */
 ////////////////////////////////Iteration functions///////////////////////////////////
+    public boolean withdrawCard() {
+        restoreHandAndTable();
+        return withdrawTile();
+    }
+
     public String endTurn() {
 
         int withdraw = 0;
@@ -718,7 +723,6 @@ public class Game {
 //  ////////////////////////////////////
 //    }
 ///////////////////////////////// Inner class////////////////////////////////////////////
-
     public static class Settings {
 
         String gameName;
@@ -729,8 +733,9 @@ public class Game {
 
         public Settings() {
         }
-        void setNumberOfPlayers(int numberOfPlayers){
-        
+
+        void setNumberOfPlayers(int numberOfPlayers) {
+
         }
 
         public Settings(String gameName, int numberOfComputerPlyers, int numberOfHumansPlayrs) {

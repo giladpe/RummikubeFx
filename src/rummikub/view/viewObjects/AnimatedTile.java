@@ -23,6 +23,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -34,8 +35,6 @@ import rummikub.view.ImageUtils;
  *
  * @author Arthur
  */
-
-
 public class AnimatedTile extends Label {
 
     Timeline timeline = new Timeline();
@@ -57,7 +56,7 @@ public class AnimatedTile extends Label {
         });
 
         setOnDragDropped((event) -> {
-            AnimatedFlowPane parent = ((AnimatedFlowPane)event.getSource());
+            AnimatedFlowPane parent = ((AnimatedFlowPane) event.getSource());
             Dragboard db = event.getDragboard();
 //                Paint paint = (Paint)db.getContent(OBJCET_DATA_FORMAT);
             int index = parent.getChildren().indexOf(this);
@@ -65,29 +64,27 @@ public class AnimatedTile extends Label {
             event.setDropCompleted(true);
             event.consume();
         });
-        
 
     }
-    
+
     public AnimatedTile(Tile currTile) {
         super();
         //setFill(Color.TRANSPARENT);
-        
+
         //setGraphic(ImageUtils.getImageView(ImageUtils.TILE_LOGO));
-        setAlignment(Pos.CENTER);
-        setTextAlignment(TextAlignment.JUSTIFY);
-        setPrefSize(28, 40);
-
-        setText(currTile.toString());
-        setFont(new Font(10));
+        setId("tile");
+        String style ="-fx-text-fill: "+currTile.printColor()+"; -fx-font-size: 14px";
+        setStyle(style);
         setBackground(new Background(new BackgroundImage(ImageUtils.getImage(ImageUtils.TILE_LOGO), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+       setAlignment(Pos.CENTER);
         
-        
-        
+        setTextAlignment(TextAlignment.JUSTIFY);
+        setPrefSize(28, 35);
+        setTextFill(Paint.valueOf(currTile.printColor()));
+        setText(currTile.getTileStringVal());
 
         
-        
-        
+
         setOnDragEntered(this::onDragEnter);
         setOnDragExited(this::onDragLeave);
 
@@ -97,11 +94,11 @@ public class AnimatedTile extends Label {
         });
 
         setOnDragDropped((event) -> {
-            AnimatedFlowPane parent = ((AnimatedFlowPane)event.getSource());
+            AnimatedFlowPane parent = ((AnimatedFlowPane) event.getSource());
             Dragboard db = event.getDragboard();
 //                Paint paint = (Paint)db.getContent(OBJCET_DATA_FORMAT);
             int index = parent.getChildren().indexOf(this);
-            parent.addChild(new Rectangle(40, 80, Color.FIREBRICK), index);
+ //           parent.addChild(new Rectangle(40, 80, Color.FIREBRICK), index);
             event.setDropCompleted(true);
             event.consume();
         });
@@ -148,5 +145,3 @@ public class AnimatedTile extends Label {
         timeline.play();
     }
 }
-
-

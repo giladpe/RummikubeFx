@@ -11,7 +11,7 @@ package rummikub.Engine.TilesLogic;
  */
 public enum Color {
     
-   RED(500,"\u001B[31m"), BLUE(400,"\u001B[34m"), YELLOW(300,"\u001B[33m"), BLACK(200,"\u001B[30m");//,RESET(0,"\u001B[31m");
+   RED(500,"#ff0022"), BLUE(400,"#4400ff"), YELLOW(300,"#ffff00"), BLACK(200,"#0a0a09");//,RESET(0,"\u001B[31m");
    
    int colorCode;
    String printColor;
