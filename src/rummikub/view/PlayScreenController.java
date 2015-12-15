@@ -26,6 +26,7 @@ import rummikub.Rummikub;
 import rummikub.gameLogic.model.gameobjects.Board;
 import rummikub.gameLogic.model.logic.PlayersMove;
 import rummikub.view.viewObjects.AnimatedTile;
+import rummikub.view.viewObjects.AnimatedTilePane;
 
 /**
  * FXML Controller class
@@ -160,7 +161,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private void showPlayerHand(Player player) {
         for (Tile currTile : player.getListPlayerTiles()) {
-            this.handTile.getChildren().add(new AnimatedTile(currTile));
+            this.handTile.getChildren().add(new AnimatedTilePane(currTile));
         }
     }
 

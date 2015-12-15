@@ -37,7 +37,7 @@
          <GridPane.margin>
             <Insets />
          </GridPane.margin></Label>
-      <TextField fx:id="gameName" onAction="#handleGameNameTextChange" prefHeight="25.0" prefWidth="286.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+      <TextField fx:id="gameName" onAction="#handleGameNameTextChange" prefHeight="25.0" prefWidth="286.0" text="name" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
          <opaqueInsets>
             <Insets left="10.0" right="10.0" />
          </opaqueInsets>
@@ -61,7 +61,7 @@
             <Insets left="25.0" />
          </GridPane.margin>
       </Button>
-      <HBox fx:id="configPlayer1" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4">
+      <HBox fx:id="configPlayer1" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4">
          <children>
             <Label alignment="TOP_LEFT" pickOnBounds="false" prefWidth="120.0" styleClass="lable" text="First Player:" textAlignment="CENTER">
                <HBox.margin>
@@ -89,7 +89,7 @@
             </CheckBox>
          </children>
       </HBox>
-      <HBox fx:id="configPlayer2" alignment="CENTER_LEFT" layoutX="176.0" layoutY="241.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
+      <HBox fx:id="configPlayer2" alignment="CENTER_LEFT" layoutX="176.0" layoutY="241.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
          <children>
             <Label alignment="TOP_LEFT" pickOnBounds="false" prefWidth="120.0" styleClass="lable" text="Secound Player:" textAlignment="CENTER">
                <HBox.margin>
@@ -176,7 +176,7 @@
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER">
          <children>
             <Label stylesheets="@resources/menusStyle.css" text="Number of players:" textAlignment="CENTER" />
-            <RadioButton fx:id="B2" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleRadioButtonChanged" text="2" toggleGroup="$radioButtonGroup">
+            <RadioButton fx:id="B2" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleRadioButtonChanged" selected="true" text="2" toggleGroup="$radioButtonGroup">
                <toggleGroup>
                   <ToggleGroup fx:id="radioButtonGroup" />
                </toggleGroup>

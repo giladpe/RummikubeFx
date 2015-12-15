@@ -339,7 +339,7 @@ public class GameParametersController implements Initializable, ControlledScreen
         
                 
         initPlayersField();
-        checkBoxList.get(TWO_PLAYERS).setSelected(true);
+        
         this.checkBoxList.stream().forEach((cb) -> {
             cb.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> {
                 initStartPlayingButton();});
