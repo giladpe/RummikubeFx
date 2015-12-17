@@ -38,11 +38,6 @@
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="loadGame" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleLoadGameButtonAction" prefHeight="60.0" prefWidth="160.0" text="Load Game" textAlignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
             <Button fx:id="resumeGame" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleResumeGameButtonAction" prefHeight="60.0" prefWidth="160.0" text="Resume Game" textAlignment="CENTER">
                <font>
                   <Font size="15.0" />

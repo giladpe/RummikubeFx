@@ -39,8 +39,9 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
     private final static String FAIL_LOADING_FILE_MSG = "Error was not able to load file!"; 
     @FXML
     protected void handleNewGameButtonAction(ActionEvent event) {
-        //((GameParametersController)this.myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID)).resetScreen();
-        this.myController.setScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID, ScreensController.NOT_RESETABLE);
+    GameParametersController gameSeettingsScene;
+        gameSeettingsScene = (GameParametersController)this.myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID);
+        this.myController.setScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID, gameSeettingsScene);
         resetScreen();
     }
 

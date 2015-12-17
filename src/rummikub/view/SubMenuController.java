@@ -26,8 +26,6 @@ public class SubMenuController implements Initializable,ControlledScreen {
     @FXML
     private Button restartGame;
     @FXML
-    private Button loadGame;
-    @FXML
     private Button resumeGame;
     @FXML
     private Button exitToMainMenu;
@@ -61,19 +59,6 @@ public class SubMenuController implements Initializable,ControlledScreen {
     }
 
     //TODO: after loading the file we need to start a game with that file
-    @FXML
-    private void handleLoadGameButtonAction(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-        File file = fileChooser.showOpenDialog(((Button)event.getSource()).getContextMenu()); 
-        
-        // now i got the file => need to check it if legal
-        // then need to init the game from the file
-        // then start the game
-//        if (file != null) {
-//            openFile(file);
-//        }
-    }
 
     @FXML
     private void handleResumeGameButtonAction(ActionEvent event) {
