@@ -192,6 +192,7 @@ public class GameParametersController implements Initializable, ControlledScreen
         return result;
     }
 
+    /////////adding error msg !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     private boolean isValidTextField(String str) {
         return !(str.trim().isEmpty() || Character.isWhitespace(str.charAt(0)));
     }

@@ -24,22 +24,25 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label fx:id="player1" visible="false">
+            <Label id="nameF" fx:id="player1" alignment="CENTER" contentDisplay="CENTER" styleClass="nameF" visible="false">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <Label fx:id="player2" visible="false" GridPane.rowIndex="1">
+            <Label id="nameF" fx:id="player2" alignment="CENTER" contentDisplay="CENTER" styleClass="nameF" visible="false" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <Label fx:id="player3" layoutX="20.0" layoutY="27.0" visible="false" GridPane.columnIndex="1">
+            <Label id="nameF" fx:id="player3" contentDisplay="CENTER" layoutX="20.0" layoutY="27.0" styleClass="nameF" visible="false" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
             </Label>
-            <Label fx:id="player4" layoutX="20.0" layoutY="46.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label id="nameF" fx:id="player4" layoutX="20.0" layoutY="46.0" styleClass="nameF" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
