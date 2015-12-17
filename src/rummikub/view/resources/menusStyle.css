@@ -122,12 +122,7 @@
     -fx-background-size:100% 100%;
     -fx-background-repeat: no-repeat;
 }
-#stand{
-    -fx-background-image: url("PlayerHand.png");
-    -fx-background-position: center ;
-    -fx-background-size:100% 100%;
-    -fx-background-repeat: no-repeat;
-}
+
 
 withdrawCard{
     -fx-font-size: 24px;
