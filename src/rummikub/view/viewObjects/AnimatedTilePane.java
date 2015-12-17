@@ -25,6 +25,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -48,27 +49,34 @@ public class AnimatedTilePane extends HBox {
         super();
         tileLabel = new Label();
         getStyleClass().add("tile");
-        String style = "-fx-text-fill: " +  currTile.getTileColor().getAnsiColor();;
+        String style = "-fx-text-fill: " +  currTile.getTileColor().getAnsiColor();
         setMinSize(30, 40);
         setMaxSize(30, 40);
         tileLabel.getStyleClass().add("tileText");
         tileLabel.setText(currTile.getEnumTileNumber().toString());
         tileLabel.setStyle(style);
-        getChildren().add(tileLabel);
+        tileLabel.setFont(new Font(50));
         setAlignment(Pos.TOP_CENTER);
         setPadding(new Insets(2,0 , 0,0));
+        
+       //this.Seton
         this.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                onMouseEnter();
+                //onMouseEnter();
+                //Font f = new Font( 50 );
+
             }
         });
-        this.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                onMouseExit();
-            }
-        });
+//        this.setOnMouseExited(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent event) {
+//                //onMouseExit();
+//                tileLabel.setFont( new Font( 14 ));
+                        tileLabel.setFont( new Font( 20));
+
+//            }
+//        });
 
 //        this.onMouseExitedProperty().addListener(new ChangeListener<EventHandler<? super MouseEvent>>() {
 //            @Override
@@ -77,18 +85,20 @@ public class AnimatedTilePane extends HBox {
 //            }
 //        });
 //                       ((AnimatedTilePane)event.getSource()).onMouseEnter();
+        
+        getChildren().add(tileLabel);
     }
 
     //mouse
     private void onMouseEnter() {
-        System.out.println("Enter,");
-        tileLabel.setFont( new Font( 24 ));
-        
+        //System.out.println("Enter,");
+        //tileLabel.setFont( new Font( 24 ));
+        ((Label)(this.getChildren().get(0))).setFont(new Font( 24 ));
     }
 
     private void onMouseExit() {
-        System.out.println("Exit,");
-tileLabel.setFont( new Font( 14 ));
+        //System.out.println("Exit,");
+        //tileLabel.setFont( new Font( 14 ));
+        ((Label)(this.getChildren().get(0))).setFont(new Font( 14 ));
     }
-
 }
