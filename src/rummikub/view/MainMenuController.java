@@ -18,7 +18,7 @@ import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 import rummikub.gameLogic.model.logic.GameLogic;
 import rummikub.gameLogic.view.ioui.JaxBXmlParser;
-import rummikub.gameLogic.view.ioui.Utils;
+
 
 public class MainMenuController implements Initializable, ControlledScreen, ResetableScreen {
 
@@ -36,7 +36,7 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
     //private GameParametersController gameParmetersController;
     //FXML Protected methods:
     private String EMPTY_STRING = "";
-
+    private final static String FAIL_LOADING_FILE_MSG = "Error was not able to load file!"; 
     @FXML
     protected void handleNewGameButtonAction(ActionEvent event) {
         //((GameParametersController)this.myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID)).resetScreen();
@@ -108,7 +108,7 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
             succedLoadingFile = false;
         } finally {
             if (!succedLoadingFile) {
-                errorMsg.setText(Utils.Constants.ErrorMessages.FAIL_LOADING_FILE_MSG);
+                errorMsg.setText(FAIL_LOADING_FILE_MSG);
             }
         }
     }

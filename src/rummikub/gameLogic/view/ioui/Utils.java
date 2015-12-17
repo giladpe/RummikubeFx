@@ -80,8 +80,8 @@ public class Utils {
             static final String ILEGAL_TILE_INSERTED_NOT_IN_RIGHT_ORDER = "Ilegal move: sequence have to be in right order";
             static final String ILEGAL_CANT_TUCH_BOARD_IN_FIRST_MOVE = "Ilegal move: first move have to be from player hand only";
             static final String ILEGAL_LOAD_GAME_XML_PATH = "ilegal path for xml file";
-            public final static String FAIL_LOADING_FILE_MSG = "error loading a xml file"; 
-            static final String ERROR_SAVING_FILE = "error saving a xml file"; 
+            public final static String FAIL_LOADING_FILE_MSG = "Error was not able to load file!"; 
+            static final String ERROR_SAVING_FILE = "Error game was not saved!"; 
             static final String EMPTY_BOARD = "The board is empty, use tiles in your hand.";
         }
     }
