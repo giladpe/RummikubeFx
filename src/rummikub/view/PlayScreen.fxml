@@ -24,17 +24,17 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label id="nameF" fx:id="player1" alignment="CENTER" contentDisplay="CENTER" styleClass="nameF" visible="false">
+            <Label id="nameF" fx:id="player1" styleClass="nameF" visible="false">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <Label id="nameF" fx:id="player2" alignment="CENTER" contentDisplay="CENTER" styleClass="nameF" visible="false" GridPane.rowIndex="1">
+            <Label id="nameF" fx:id="player2" styleClass="nameF" visible="false" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <Label id="nameF" fx:id="player3" contentDisplay="CENTER" layoutX="20.0" layoutY="27.0" styleClass="nameF" visible="false" GridPane.columnIndex="1">
+            <Label id="nameF" fx:id="player3" layoutX="20.0" layoutY="27.0" styleClass="nameF" visible="false" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>

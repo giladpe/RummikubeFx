@@ -24,7 +24,6 @@ import rummikub.gameLogic.model.player.Player;
 import rummikub.Rummikub;
 import rummikub.gameLogic.model.gameobjects.Board;
 import rummikub.gameLogic.model.logic.PlayersMove;
-import rummikub.view.viewObjects.AnimatedTile;
 import rummikub.view.viewObjects.AnimatedTilePane;
 
 /**
@@ -75,6 +74,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     @FXML
     private void handleWithdrawCardAction(ActionEvent event) {
+        
+        ///when loading file error in this line !!!
         this.currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
         this.rummikubLogic.playSingleTurn(currentPlayerMove);
 
@@ -144,17 +145,17 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private void setLabel(Player player, int index) {
         Label currentPlayer = this.playersLabels.get(index);
-        currentPlayer.setText(" "+player.getName()+" ");
+        currentPlayer.setText(" "+player.getName()+"  ");
         currentPlayer.setVisible(true);
         currentPlayer.setAlignment(Pos.CENTER);
         currentPlayer.setTextAlignment(TextAlignment.JUSTIFY);
 
-//        if(player.getIsHuman()) {
-//            currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.HUMAN_PLAYER_LOGO));
-//        }
-//        else {
-//            currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.COMPUTER_PLAYER_LOGO));
-//        }
+        if(player.getIsHuman()) {
+            currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.HUMAN_PLAYER_LOGO));
+        }
+        else {
+            currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.COMPUTER_PLAYER_LOGO));
+        }
     }
 
     private void showPlayerHand(Player player) {
