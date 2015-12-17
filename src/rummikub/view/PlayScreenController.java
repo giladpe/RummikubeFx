@@ -144,12 +144,12 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private void setLabel(Player player, int index) {
         Label currentPlayer = this.playersLabels.get(index);
-        currentPlayer.setText(player.getName());
+        currentPlayer.setText(" "+player.getName()+" ");
         currentPlayer.setVisible(true);
-        currentPlayer.setAlignment(Pos.BOTTOM_CENTER);
+        currentPlayer.setAlignment(Pos.CENTER);
         currentPlayer.setTextAlignment(TextAlignment.JUSTIFY);
 
-//        if(player.isPlayerHuman()) {
+//        if(player.getIsHuman()) {
 //            currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.HUMAN_PLAYER_LOGO));
 //        }
 //        else {

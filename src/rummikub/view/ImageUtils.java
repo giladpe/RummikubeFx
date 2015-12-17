@@ -25,8 +25,8 @@ public class ImageUtils {
     
     public static Image getImage (String imageName){
         InputStream imageInputStream = ImageUtils.class.getResourceAsStream(RESOURCES_FOLDER + imageName);
-        //return new Image(imageInputStream,35,35,true,true);
-        return new Image(imageInputStream);
+        return new Image(imageInputStream,35,35,true,true);
+        //return new Image(imageInputStream);
 
         
     }
