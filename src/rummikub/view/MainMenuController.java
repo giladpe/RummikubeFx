@@ -58,6 +58,7 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
         File file = fileChooser.showOpenDialog(((Button) event.getSource()).getContextMenu());
         if (file != null) {
             loadGame(file);
+         //   initCurrentPlayerMove()
         }
         // now i got the file => need to check it if legal
         // then need to init the game from the file
@@ -100,6 +101,7 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
                 gameScreen.setRummikubLogic(rummikubLogic);
                 gameScreen.show();
                 this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, gameScreen);
+                gameScreen.initCurrentPlayerMove();
                 resetScreen();
 //                playGame();
 //                roundResualt();

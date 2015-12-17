@@ -76,6 +76,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private void handleWithdrawCardAction(ActionEvent event) {
         
         ///when loading file error in this line !!!
+        
         this.currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
         this.rummikubLogic.playSingleTurn(currentPlayerMove);
 
@@ -164,7 +165,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         }
     }
 
-    private void initCurrentPlayerMove() {
+    public void initCurrentPlayerMove() {
         
         //init variables in the statrt of the turn
         Board printableBoard = new Board(new ArrayList<>(rummikubLogic.getGameBoard().getListOfSerie()));

@@ -66,7 +66,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <GridPane id="hand" prefHeight="121.0" prefWidth="529.0" GridPane.columnIndex="1">
+            <GridPane prefHeight="121.0" prefWidth="529.0" GridPane.columnIndex="1">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
@@ -74,11 +74,14 @@
                 <RowConstraints maxHeight="55.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="68.0" minHeight="10.0" prefHeight="65.0" vgrow="SOMETIMES" />
               </rowConstraints>
-               <padding>
-                  <Insets bottom="17.0" left="15.0" right="15.0" top="10.0" />
-               </padding>
                <children>
-                  <FlowPane id="handTile" fx:id="handTile" prefHeight="120.0" prefWidth="575.0" GridPane.rowSpan="2" />
+                  <FlowPane id="hand" fx:id="handTile" prefHeight="120.0" prefWidth="575.0" styleClass="hand" GridPane.rowSpan="2">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="15.0" top="10.0" />
+                     </padding></FlowPane>
                </children>
             </GridPane>
             <Button fx:id="endTrun" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleEndTrunAction" prefHeight="41.0" prefWidth="85.0" text="End Turn" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
