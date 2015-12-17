@@ -78,6 +78,12 @@
     -fx-font-weight: bold;
     -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
 }
+#msg{
+    -fx-font-family: Georgia;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
+}
 
 #hand{
     -fx-background-image: url("PlayerHand.png");
