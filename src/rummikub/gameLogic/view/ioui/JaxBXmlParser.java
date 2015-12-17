@@ -485,19 +485,62 @@ public class JaxBXmlParser {
             return false;
         }
     }
+    public static boolean loadSettingsFromXml(File source) throws SAXException, IOException{
+        //get the Schema from the XSD file
+        URL csdURL = JaxBXmlParser.class.getResource(RESOURCES + "rummikub.xsd");
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema = schemaFactory.newSchema(csdURL);
+
+        // Get the file chosen from here
+    
+        try {
+            JAXBContext context = JAXBContext.newInstance(Rummikub.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+
+            //attach the Schema to the unmarshaller so it will use it to run validations
+            //on the content of the XML
+            unmarshaller.setSchema(schema);
+
+            Rummikub rummikub = (Rummikub) unmarshaller.unmarshal(source); //unmarshal(xmlInputStream);
+            
+            if(!checkGenerateValidation(rummikub)){
+                throw new JAXBException("");
+            }
+            
+            // Copy properties
+            board = copyGenratedBoardToBoard(rummikub.getBoard());
+            int sum = getSumOfPointsInBoard(board);
+            boolean isValidBoard = (board.validateBoard() || sum == 0) && (sum >= 30 || sum == 0);
+            
+            if(isValidBoard){
+                playerArray = copyGeneratedPlayersToPlayers(rummikub.getPlayers(), sum);
+                currPlayer = getCurrPlayerFromGeneratedPlayers(rummikub.getPlayers(), rummikub.getCurrentPlayer(), sum);
+                currPlayer = playerArray.get(playerArray.indexOf(currPlayer));
+                gameName = rummikub.getName();
+            }
+            else{
+                return false;
+            }
+            
+            return true;
+        }
+        catch (JAXBException exception){
+            return false;
+        }
+    }
   
     public static boolean saveSettingsToXml(ArrayList<Player> playerArray, 
                                           rummikub.gameLogic.model.gameobjects.Board board, 
                                           String gameName, 
                                           String currPlayerName) throws SAXException, JAXBException, IOException{
         // Not first save in game
-        if(lastPathSaved != null){
+        //if(lastPathSaved != null){
             return saveSettinngToXmlInSpecificFile(lastPathSaved, playerArray, board, gameName, currPlayerName);  
-        }
+        //}
         // First save in game - use save as
-        else{
-            return saveAsSettingsToXml(playerArray, board, gameName, currPlayerName);
-        }
+//        else{
+//            return saveAsSettingsToXml(playerArray, board, gameName, currPlayerName);
+//        }
     }
 
     public static boolean saveAsSettingsToXml(ArrayList<Player> playerArray, 
@@ -506,6 +549,17 @@ public class JaxBXmlParser {
                                           String currPlayerName) throws JAXBException, FileNotFoundException, IOException, SAXException{
         String strPathGameFileName = InputOutputParser.getPathToSaveXmlFile();
         
+        if(lastPathSaved == null){
+           lastPathSaved = strPathGameFileName;
+        }
+        
+        return saveSettinngToXmlInSpecificFile(strPathGameFileName, playerArray, board, gameName, currPlayerName);
+  }
+        public static boolean saveAsSettingsToXml(String strPathGameFileName,ArrayList<Player> playerArray, 
+                                          rummikub.gameLogic.model.gameobjects.Board board, 
+                                          String gameName, 
+                                          String currPlayerName) throws JAXBException, FileNotFoundException, IOException, SAXException{
+
         if(lastPathSaved == null){
            lastPathSaved = strPathGameFileName;
         }

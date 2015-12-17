@@ -25,16 +25,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
-import javax.swing.text.Utilities;
-import javax.xml.bind.JAXBException;
 import rummikub.gameLogic.model.logic.Settings;
-import org.xml.sax.SAXException;
-import rummikub.gameLogic.view.ioui.Utils;
-
 
 public class GameParametersController implements Initializable, ControlledScreen, ResetableScreen {
-
-
 
     // Constants:
     public static final int TWO_PLAYERS = 2;
@@ -47,9 +40,6 @@ public class GameParametersController implements Initializable, ControlledScreen
     private final String DUP_NAME_MSG = "Name is already exict!";
     private final String EMPTY_GAME_NAME_MSG = "Insert name for the game!";
     private final String NO_HUMAN_MSG = "Chose atleast one human player!";
-    private final String RADIO_BUTTON_VAL_2 = "2"; 
-    private final String RADIO_BUTTON_VAL_3 = "3";  
-    private final String RADIO_BUTTON_VAL_4 = "4";  
     private final String EMPTY_STRING="";
     // FXML private members:
     @FXML private Button StartPlayingButton;
@@ -152,20 +142,13 @@ public class GameParametersController implements Initializable, ControlledScreen
         int numOfComputerPlayers = getNumOfComputerPlayers();
         ArrayList<String> sPlayersNames = getPlayersTextFieldList();
         PlayScreenController gameScreen = (PlayScreenController)this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
-        
         this.gameSettings = new Settings(gameNameString,numOfPlayers, numOfComputerPlayers, sPlayersNames);
         gameScreen.createNewGame(gameSettings);
         gameScreen.show();
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,gameScreen);
-        resetScreen();
+//       resetScreen();
 
-//        //A: gillad dont forget to remove it please:
-//        Controller test = new Controller();
-//        try {
-//            test.startNewGameWithSettings(gameSettings);
-//        } catch (JAXBException | SAXException | FileNotFoundException ex) {
-//            Logger.getLogger(GameParametersController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+
     }
     
     // Private methods:
@@ -244,6 +227,8 @@ public class GameParametersController implements Initializable, ControlledScreen
     }
 
     private void handleTwoPlayersButton() {
+        resetPlayerField(PLAYER1);
+        resetPlayerField(PLAYER2);
         resetPlayerField(PLAYER3);
         resetPlayerField(PLAYER4);
         setVisableFildsAfterRadioButtonSelection(TWO_PLAYERS);
@@ -324,14 +309,17 @@ public class GameParametersController implements Initializable, ControlledScreen
     @Override
     public void resetScreen() {
         this.errorMsg.setText(EMPTY_STRING);
-        resetFeilds(this.playersNames, (Consumer) (Object playerName) -> {
-            ((TextField)playerName).setText(EMPTY_STRING);
-            ((TextField)playerName).setDisable(false);
-        }); 
-        resetFeilds(this.radioButtonGroup.getToggles(), (Consumer)(Object rButton) -> {((RadioButton)rButton).setSelected(false);});
-        resetFeilds(this.checkBoxList, (Consumer)(Object cBox) -> {((CheckBox)cBox).setSelected(false);});
-        resetFeilds(this.hBoxList, (Consumer)(Object hBox) -> {((HBox)hBox).setVisible(false);});
-        this.gameName.setText(EMPTY_STRING);
+//        resetFeilds(this.playersNames, (Consumer) (Object playerName) -> {
+//            ((TextField)playerName).setText(EMPTY_STRING);
+//            ((TextField)playerName).setDisable(false);
+//        });
+        //resetFeilds(this.hBoxList, (Consumer)(Object hBox) -> {((HBox)hBox).setVisible(false);});
+        //resetFeilds(this.radioButtonGroup.getToggles(), (Consumer)(Object rButton) -> {((RadioButton)rButton).setSelected(false);});
+        //resetFeilds(this.checkBoxList, (Consumer)(Object cBox) -> {((CheckBox)cBox).setSelected(false);});
+        B2.setSelected(true);
+        handleTwoPlayersButton();
+        
+        this.gameName.setText("name");       
     }
     
     @Override

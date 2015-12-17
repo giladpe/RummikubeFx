@@ -56,6 +56,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private ArrayList<Label> playersLabels = new ArrayList<>(4);
     private ScreensController myController;
     private GameLogic rummikubLogic=new GameLogic();
+
+
     private PlayersMove currentPlayerMove;
 
     @FXML
@@ -174,5 +176,12 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         //printablePlayersList.remove(rummikubLogic.getCurrentPlayer());
         //printablePlayersList.add(printablePlayer);
 
+    }
+        public GameLogic getRummikubLogic() {
+        return rummikubLogic;
+    }
+
+    public void setRummikubLogic(GameLogic rummikubLogic) {
+        this.rummikubLogic = rummikubLogic;
     }
 }
