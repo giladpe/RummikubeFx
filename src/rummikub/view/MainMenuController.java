@@ -1,7 +1,6 @@
 /*
  * this class is responsible for contolling the main menu scene
  */
-
 package rummikub.view;
 
 import rummikub.Rummikub;
@@ -21,40 +20,44 @@ import rummikub.gameLogic.model.logic.GameLogic;
 import rummikub.gameLogic.view.ioui.JaxBXmlParser;
 import rummikub.gameLogic.view.ioui.Utils;
 
+public class MainMenuController implements Initializable, ControlledScreen, ResetableScreen {
 
-public class MainMenuController implements Initializable, ControlledScreen,ResetableScreen {
-    
     //FXML Private members:
-    @FXML private Button LoadGame;
-    @FXML private Button ExitButton;
-    @FXML private Button NewGame;
-    @FXML private Label errorMsg;
+    @FXML
+    private Button LoadGame;
+    @FXML
+    private Button ExitButton;
+    @FXML
+    private Button NewGame;
+    @FXML
+    private Label errorMsg;
     //Private members:
     private ScreensController myController;
     //private GameParametersController gameParmetersController;
     //FXML Protected methods:
-    private String EMPTY_STRING="";
+    private String EMPTY_STRING = "";
 
-    @FXML 
+    @FXML
     protected void handleNewGameButtonAction(ActionEvent event) {
         //((GameParametersController)this.myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID)).resetScreen();
-        this.myController.setScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID,ScreensController.NOT_RESETABLE);
+        this.myController.setScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID, ScreensController.NOT_RESETABLE);
         resetScreen();
     }
-    
-    @FXML 
+
+    @FXML
     protected void handleExitButtonAction(ActionEvent event) {
         closeMainMenuScene(event);
     }
-    
-    
+
     //TODO: finish wrting methods to work with scene
-    @FXML 
+    @FXML
     protected void handleLoadGameButtonAction(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        File file = fileChooser.showOpenDialog(((Button)event.getSource()).getContextMenu()); 
-        loadGame(file);
+        File file = fileChooser.showOpenDialog(((Button) event.getSource()).getContextMenu());
+        if (file != null) {
+            loadGame(file);
+        }
         // now i got the file => need to check it if legal
         // then need to init the game from the file
         // then start the game
@@ -62,54 +65,49 @@ public class MainMenuController implements Initializable, ControlledScreen,Reset
 //            openFile(file);
 //        }
     }
-    
 
-        
     //Private methods:
     private void closeMainMenuScene(ActionEvent event) {
-        (((Node)event.getSource()).getScene().getWindow()).hide();
+        (((Node) event.getSource()).getScene().getWindow()).hide();
     }
-    
+
     //Public methods:
-    
     @Override
     public void setScreenParent(ScreensController parentScreen) {
         this.myController = parentScreen;
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-    } 
-    
+    }
+
     private void loadGame(File file) {
-        
+
         boolean succedLoadingFile = false;
         resetScreen();
         try {
             succedLoadingFile = JaxBXmlParser.loadSettingsFromXml(file);
 
             if (succedLoadingFile) {
-                GameLogic rummikubLogic= new GameLogic();
+                GameLogic rummikubLogic = new GameLogic();
                 rummikubLogic.initGameFromFile(JaxBXmlParser.getPlayerArray(),
-                                               JaxBXmlParser.getBoard(),
-                                               JaxBXmlParser.getCurrPlayer(), 
-                                               JaxBXmlParser.getGameName());
+                        JaxBXmlParser.getBoard(),
+                        JaxBXmlParser.getCurrPlayer(),
+                        JaxBXmlParser.getGameName());
 
-        PlayScreenController gameScreen = (PlayScreenController)this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
-        gameScreen.setRummikubLogic(rummikubLogic);
-        gameScreen.show();
-        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,gameScreen);
-        resetScreen();
+                PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
+                gameScreen.setRummikubLogic(rummikubLogic);
+                gameScreen.show();
+                this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, gameScreen);
+                resetScreen();
 //                playGame();
 //                roundResualt();
-               
+
             }
-        }
-        catch (SAXException | IOException ex) {
+        } catch (SAXException | IOException ex) {
             succedLoadingFile = false;
-        }
-        finally{
-            if(!succedLoadingFile){
+        } finally {
+            if (!succedLoadingFile) {
                 errorMsg.setText(Utils.Constants.ErrorMessages.FAIL_LOADING_FILE_MSG);
             }
         }
@@ -121,8 +119,6 @@ public class MainMenuController implements Initializable, ControlledScreen,Reset
 }
 
 //************************Test Zone*****************************//
-
-
 //    @FXML
 //    protected void handleNewGameButtonAction(ActionEvent event) throws IOException {
 //        Stage primaryStage=(Stage)((Node)event.getSource()).getScene().getWindow();
