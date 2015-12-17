@@ -38,9 +38,10 @@ public class GameParametersController implements Initializable, ControlledScreen
     public static final int PLAYER3 = 2;
     public static final int PLAYER4 = 3;
     private final String DUP_NAME_MSG = "Name is already exict!";
-    private final String EMPTY_GAME_NAME_MSG = "Insert name for the game!";
+    private final String INVALID_GAME_NAME_MSG = "Invalid game name!";
     private final String NO_HUMAN_MSG = "Chose atleast one human player!";
     private final String EMPTY_STRING="";
+    private final String CONTAINS_WHITE_SPACES_MSG="Name can not statr with whitespaces!";
     // FXML private members:
     @FXML private Button StartPlayingButton;
     @FXML private Label errorMsg;
@@ -68,6 +69,7 @@ public class GameParametersController implements Initializable, ControlledScreen
     private final ArrayList<CheckBox> checkBoxList = new ArrayList<>();
     private final ArrayList<TextField> playersNames = new ArrayList<>();
     private Settings gameSettings;
+    
 
     //FXML Protected methods:
     
@@ -194,7 +196,20 @@ public class GameParametersController implements Initializable, ControlledScreen
 
     /////////adding error msg !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     private boolean isValidTextField(String str) {
-        return !(str.trim().isEmpty() || Character.isWhitespace(str.charAt(0)));
+        return !(str.trim().isEmpty() || isInvalidFirstChar(str));
+    }
+    private boolean isInvalidFirstChar(String str){
+        boolean retVal=false;
+        if(Character.isWhitespace(str.charAt(0)))
+        {
+            errorMsg.setText(CONTAINS_WHITE_SPACES_MSG);
+            retVal=true;
+        }
+        else if(isCurrMsgSameAs(CONTAINS_WHITE_SPACES_MSG)){
+            clearMsg();
+        }
+        return retVal;
+            
     }
 
     private void initStartPlayingButton() {
@@ -206,7 +221,7 @@ public class GameParametersController implements Initializable, ControlledScreen
     }
 
     private boolean isGameNameSet() {
-        if (isCurrMsgSameAs(EMPTY_GAME_NAME_MSG)) {
+        if (isCurrMsgSameAs(INVALID_GAME_NAME_MSG)) {
             clearMsg();
         }
         if (gameName.getText() != null) {
@@ -214,7 +229,7 @@ public class GameParametersController implements Initializable, ControlledScreen
                 return true;
             }
         }
-        this.errorMsg.setText(this.EMPTY_GAME_NAME_MSG);
+        this.errorMsg.setText(this.INVALID_GAME_NAME_MSG);
         return false;
     }
 
