@@ -179,7 +179,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         //printablePlayersList.add(printablePlayer);
 
     }
-        public GameLogic getRummikubLogic() {
+    
+    public GameLogic getRummikubLogic() {
         return rummikubLogic;
     }
 
