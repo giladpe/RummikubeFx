@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,7 +19,6 @@ import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 import rummikub.gameLogic.model.logic.GameLogic;
 import rummikub.gameLogic.view.ioui.JaxBXmlParser;
-
 
 public class MainMenuController implements Initializable, ControlledScreen, ResetableScreen {
 
@@ -36,11 +36,12 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
     //private GameParametersController gameParmetersController;
     //FXML Protected methods:
     private String EMPTY_STRING = "";
-    private final static String FAIL_LOADING_FILE_MSG = "Error was not able to load file!"; 
+    private final static String FAIL_LOADING_FILE_MSG = "Error was not able to load file!";
+
     @FXML
     protected void handleNewGameButtonAction(ActionEvent event) {
-    GameParametersController gameSeettingsScene;
-        gameSeettingsScene = (GameParametersController)this.myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID);
+        GameParametersController gameSeettingsScene;
+        gameSeettingsScene = (GameParametersController) this.myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID);
         this.myController.setScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID, gameSeettingsScene);
         resetScreen();
     }
@@ -53,20 +54,41 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
     //TODO: finish wrting methods to work with scene
     @FXML
     protected void handleLoadGameButtonAction(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-        File file = fileChooser.showOpenDialog(((Button) event.getSource()).getContextMenu());
-        if (file != null) {
-            loadGame(file);
-         //   initCurrentPlayerMove()
-        }
-        // now i got the file => need to check it if legal
-        // then need to init the game from the file
-        // then start the game
+//        Thread t1 = new Thread(new Runnable() {
+//            public void run() {
+//                FileChooser fileChooser = new FileChooser();
+//
+////                FileChooser.ExtensionFilter extFilterXML = new FileChooser.ExtensionFilter("XML files (*.xml)");
+// //               fileChooser.getExtensionFilters().add(extFilterXML);
+//               File file = fileChooser.showOpenDialog(((Button) event.getSource()).getContextMenu());
+//                if (file != null) {
+//                    loadGame(file);
+//                }
+//            }
+//        });
+//        t1.setDaemon(true);
+//        t1.start();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                FileChooser fileChooser = new FileChooser();
+                FileChooser.ExtensionFilter extFilterXML = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.XML");
+                fileChooser.getExtensionFilters().add(extFilterXML);
+                File file = fileChooser.showOpenDialog(((Button) event.getSource()).getContextMenu());
+                if (file != null) {
+                    loadGame(file);
+                }
+            }
+        });
+
+        //   initCurrentPlayerMove()
+    }
+    // now i got the file => need to check it if legal
+    // then need to init the game from the file
+    // then start the game
 //        if (file != null) {
 //            openFile(file);
 //        }
-    }
 
     //Private methods:
     private void closeMainMenuScene(ActionEvent event) {
