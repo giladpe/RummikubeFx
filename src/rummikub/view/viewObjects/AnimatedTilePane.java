@@ -31,6 +31,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -47,7 +48,9 @@ import rummikub.gameLogic.model.gameobjects.Tile;
  */
 public class AnimatedTilePane extends HBox {
 
-    Label tileLabel;
+    private Label tileLabel;
+    
+
 
     public AnimatedTilePane(Tile currTile) {
         super();
@@ -67,30 +70,50 @@ public class AnimatedTilePane extends HBox {
         });
         
         this.setOnDragDetected((event) -> {
-//                  WritableImage snapshot = snapshot(new SnapshotParameters(), null);
-//      Dragboard db = startDragAndDrop(TransferMode.ANY);
-//            db.setDragView(snapshot, snapshot.getWidth() / 2, snapshot.getHeight() / 2);
             WritableImage snapshot = this.snapshot(new SnapshotParameters(), null);
-            this.getScene().setCursor(new ImageCursor(snapshot,
-                    snapshot.getWidth() / 2,
-                    snapshot.getHeight() / 2));
-            this.opacityProperty().set(0.5);
-//            Dragboard db = startDragAndDrop(TransferMode.ANY);
+            Dragboard db = this.startDragAndDrop(TransferMode.ANY);
 
-//            ClipboardContent content = new ClipboardContent();
-//            content.
-//            db.setContent();
+            //ClipboardContent content = new ClipboardContent();
+            // content.putString(number + "");
+            // db.setContent(content);
+             db.setDragView(snapshot, snapshot.getWidth() / 2, snapshot.getHeight() / 2);
 
-            event.consume();
+             event.consume();
         });
-        
-        
+
         this.setOnDragDone((event) -> {
             if (event.getTransferMode() == TransferMode.MOVE) {
-                            this.getScene().setCursor(Cursor.CROSSHAIR);
+                this.setScaleX(5);
+             //label.setText("");
             }
             event.consume();
         });
+        
+//        this.setOnDragDetected((event) -> {
+//                  WritableImage snapshot = snapshot(new SnapshotParameters(), null);
+//      Dragboard db = startDragAndDrop(TransferMode.ANY);
+//            db.setDragView(snapshot, snapshot.getWidth() / 2, snapshot.getHeight() / 2);
+////            WritableImage snapshot = this.snapshot(new SnapshotParameters(), null);
+////            this.getScene().setCursor(new ImageCursor(snapshot,
+////                    snapshot.getWidth() / 2,
+////                    snapshot.getHeight() / 2));
+////            this.opacityProperty().set(0.5);
+////            Dragboard db = startDragAndDrop(TransferMode.ANY);
+//
+////            ClipboardContent content = new ClipboardContent();
+////            content.
+////            db.setContent();
+//
+//            event.consume();
+//        });
+//        
+//        
+//        this.setOnDragDone((event) -> {
+//            if (event.getTransferMode() == TransferMode.MOVE) {
+//                
+//            }
+//            event.consume();
+//        });
     }
 
     private void initTile(Tile currTile) {

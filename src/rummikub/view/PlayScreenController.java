@@ -16,10 +16,22 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import rummikub.gameLogic.model.gameobjects.Tile;
@@ -40,6 +52,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private static final String styleWhite = "-fx-text-fill: white";
     private static final String styleBlue = "-fx-text-fill: blue";
+    @FXML
+    BorderPane board;
     @FXML
     private Button menu;
     @FXML
@@ -114,6 +128,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     public void initialize(URL url, ResourceBundle rb) {
         //this.hand.setSpacing(5);
         initPlayers();
+        board.setCenter(createGridPane());
 
         //not good - what about loading file?????
         //Game.Settings gameSetting = ((GameParametersController)myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID)).getGameSettings();
@@ -225,7 +240,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
 
     private void initCurrPlayerLabel() {
-        int index = 0;
+        int index;
 
         for (Label playersLabel : playersLabels) {
             playersLabel.setStyle(styleWhite);
@@ -233,4 +248,66 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         index = rummikubLogic.getPlayers().indexOf(rummikubLogic.getCurrentPlayer());
         this.playersLabels.get(index).setStyle(styleBlue);
     }
+    
+    
+    //TEST
+        private static final int BOARD_SIZE = 5;
+        
+        private Node createGridPane() {
+            GridPane pane = new GridPane();
+            pane.setHgap(2);
+            pane.setVgap(2);
+            pane.setAlignment(Pos.CENTER);
+            pane.setPadding(new Insets(25));
+
+            for (int i = 0; i < BOARD_SIZE; i++) {
+                for (int j = 0; j < BOARD_SIZE; j++) {
+                    pane.add(createCell(), i, j);
+                }
+            }
+
+        return pane;
+    }
+
+    private Node createCell() {
+        final Label cell = new Label();
+        cell.setPrefSize(25, 25);
+        cell.setAlignment(Pos.CENTER);
+        cell.setStyle("-fx-border-color: gray; -fx-border-width: 1");
+
+        cell.setOnDragOver((event) -> {
+            //if (event.getDragboard().hasString()) {
+              event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            //}
+            event.consume();
+        });
+
+        cell.setOnDragEntered((event) -> {
+            //if (event.getDragboard().hasString()) {
+              cell.setStyle("-fx-background-color: green");
+            //}
+            event.consume();
+        });
+
+        cell.setOnDragExited((event) -> {
+            cell.setStyle("-fx-background-color: none");
+            cell.setStyle("-fx-border-color: gray; -fx-border-width: 1");
+            event.consume();
+        });
+
+        cell.setOnDragDropped((event) -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasString()) {
+                cell.setBackground(new Background(new BackgroundImage(db.getDragView(), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+              //cell.setText(db.getString());
+              success = true;
+              
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
+
+        return cell;
+      }
 }
