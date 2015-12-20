@@ -32,6 +32,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import rummikub.gameLogic.model.gameobjects.Tile;
@@ -57,8 +58,6 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     @FXML
     private Button menu;
     @FXML
-    private Button orgenaizeHand;
-    @FXML
     private FlowPane handTile;
     @FXML
     private Button endTrun;
@@ -78,7 +77,26 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private GameLogic rummikubLogic = new GameLogic();
 
     private PlayersMove currentPlayerMove;
-
+    @FXML
+    private HBox barPlayer1;
+    @FXML
+    private Label numTileP1;
+    @FXML
+    private HBox barPlayer3;
+    @FXML
+    private Label numTileP3;
+    @FXML
+    private HBox barPlayer2;
+    @FXML
+    private Label numTileP2;
+    @FXML
+    private HBox barPlayer4;
+    @FXML
+    private Label numTileP4;
+    private ArrayList<HBox>playersBar=new ArrayList<>(4);
+   private ArrayList<Label>numOfTileInHand=new ArrayList<>(4);
+    @FXML
+    private Label heapTile;
     @FXML
     private void handleMenuButtonAction(ActionEvent event) {
         this.myController.setScreen(Rummikub.SUBMENU_SCREEN_ID, ScreensController.NOT_RESETABLE);
@@ -96,15 +114,12 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         this.rummikubLogic.playSingleTurn(currentPlayerMove);
 
         //this.handTile.getChildren().clear();
-        this.handTile.getChildren().remove(0, this.handTile.getChildren().size());
-
-        this.showPlayerHand(this.rummikubLogic.getCurrentPlayer());
+        this.handTile.getChildren().clear();
+        show();
 //        try {
-//            Thread.sleep(5000);
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(PlayScreenController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-
+//            Thread.sleep(1000);
+//        } catch (InterruptedException ex) {}
+        initHeapLabel();
         if (rummikubLogic.getHeap().isEmptyHeap()) {
             ((Button) event.getSource()).setFont(new Font(14));
             ((Button) event.getSource()).setText("Empy Deck");
@@ -136,10 +151,18 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
 
     private void initPlayers() {
+        this.playersBar.add(barPlayer1);
+        this.playersBar.add(barPlayer2);
+        this.playersBar.add(barPlayer3);
+        this.playersBar.add(barPlayer4);
         this.playersLabels.add(player1);
         this.playersLabels.add(player2);
         this.playersLabels.add(player3);
         this.playersLabels.add(player4);
+        this.numOfTileInHand.add(numTileP1);
+        this.numOfTileInHand.add(numTileP2);
+        this.numOfTileInHand.add(numTileP3);
+        this.numOfTileInHand.add(numTileP4);
     }
 
     public void createNewGame(Settings gameSetting) {
@@ -152,27 +175,37 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     //TODO:
     @Override
     public void resetScreen() {
+        resetPlayersBar();
+        setPlayersBar();
+        handTile.getChildren().clear();
+        show();
     }
-
+public void resetPlayersBar(){
+        for (HBox playerBar: this.playersBar) {
+            playerBar.setVisible(false);
+        }
+}
     @Override
     public void setScreenParent(ScreensController parentScreen) {
         this.myController = parentScreen;
     }
 
     public void show() {
-        this.rummikubLogic.getPlayers().stream().forEach((player) -> {
-            setLabel(player, this.rummikubLogic.getPlayers().indexOf(player));
-        });
+        
+        setPlayersBar();
         showPlayerHand(this.rummikubLogic.getCurrentPlayer());
         initCurrPlayerLabel();
+        initHeapLabel();
         ///int currPlayerIndex=this.rummikubLogic.getPlayers().indexOf(this.rummikubLogic.getCurrentPlayer());
 
     }
 
     private void setLabel(Player player, int index) {
         Label currentPlayer = this.playersLabels.get(index);
-        currentPlayer.setText(" " + player.getName() + "  ");
+        playersBar.get(index).setVisible(true);
         currentPlayer.setVisible(true);
+        currentPlayer.setText(" " + player.getName() + "  ");
+        
         currentPlayer.setAlignment(Pos.CENTER);
         currentPlayer.setTextAlignment(TextAlignment.JUSTIFY);
 
@@ -240,13 +273,26 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
 
     private void initCurrPlayerLabel() {
-        int index;
+        int index=0;
 
-        for (Label playersLabel : playersLabels) {
-            playersLabel.setStyle(styleWhite);
+        for (HBox barPlayer : playersBar) {
+            for (Node child : barPlayer.getChildren()) {
+                child.setStyle(styleWhite);
+            }
         }
+        
+        for (Player player : rummikubLogic.getPlayers()) {            
+            this.numOfTileInHand.get(index).setText(String.valueOf(player.getListPlayerTiles().size()));
+            index++;
+        }
+//        for (Label playersLabel : playersLabels) {
+//            playersLabel.setStyle(styleWhite);
+//        }
+        
         index = rummikubLogic.getPlayers().indexOf(rummikubLogic.getCurrentPlayer());
-        this.playersLabels.get(index).setStyle(styleBlue);
+        for (Node child :  this.playersBar.get(index).getChildren()) {
+                child.setStyle(styleBlue);
+            }
     }
     
     
@@ -310,4 +356,16 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
         return cell;
       }
+
+    private void initHeapLabel() {
+       this.heapTile.setStyle(styleWhite);
+       this.heapTile.setText("Tile Left:"+rummikubLogic.getHeap().getTileList().size());
+    }
+
+    private void setPlayersBar() {
+       this.rummikubLogic.getPlayers().stream().forEach((player) -> {
+            setLabel(player, this.rummikubLogic.getPlayers().indexOf(player));
+        });
+    }
+    
 }

@@ -24,30 +24,39 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label id="nameF" fx:id="player1" styleClass="nameF" visible="false">
-               <GridPane.margin>
-                  <Insets left="10.0" />
-               </GridPane.margin>
-            </Label>
-            <Label id="nameF" fx:id="player2" styleClass="nameF" visible="false" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets left="10.0" />
-               </GridPane.margin>
-            </Label>
-            <Label id="nameF" fx:id="player3" layoutX="20.0" layoutY="27.0" styleClass="nameF" visible="false" GridPane.columnIndex="1">
-               <GridPane.margin>
-                  <Insets left="10.0" />
-               </GridPane.margin>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </Label>
-            <Label id="nameF" fx:id="player4" layoutX="20.0" layoutY="46.0" styleClass="nameF" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets left="10.0" />
-               </GridPane.margin>
-            </Label>
             <Button fx:id="menu" mnemonicParsing="false" onAction="#handleMenuButtonAction" prefHeight="41.0" prefWidth="85.0" text="Menu" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER" />
+            <HBox fx:id="barPlayer1" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label id="nameF" fx:id="player1" styleClass="nameF" visible="false" />
+                  <Label text="Tiles:" />
+                  <Label fx:id="numTileP1" />
+               </children>
+            </HBox>
+            <HBox fx:id="barPlayer3" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" visible="false" GridPane.columnIndex="1">
+               <children>
+                  <Label id="nameF" fx:id="player3" styleClass="nameF" visible="false">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <Label text="Tiles:" />
+                  <Label fx:id="numTileP3" />
+               </children>
+            </HBox>
+            <HBox fx:id="barPlayer2" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" visible="false" GridPane.rowIndex="1">
+               <children>
+                  <Label id="nameF" fx:id="player2" styleClass="nameF" visible="false" />
+                  <Label text="Tiles:" />
+                  <Label fx:id="numTileP2" />
+               </children>
+            </HBox>
+            <HBox fx:id="barPlayer4" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <Label id="nameF" fx:id="player4" styleClass="nameF" visible="false" />
+                  <Label text="Tiles:" />
+                  <Label fx:id="numTileP4" />
+               </children>
+            </HBox>
          </children>
          <padding>
             <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
@@ -88,7 +97,12 @@
                   <Insets />
                </GridPane.margin>
             </Button>
-            <Button id="withdrawCard" fx:id="withdrawCard" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleWithdrawCardAction" prefHeight="41.0" prefWidth="85.0" styleClass="withdrawCard" text="+" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
+               <children>
+                  <Label fx:id="heapTile" prefHeight="20.0" prefWidth="89.0" />
+                  <Button id="withdrawCard" fx:id="withdrawCard" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleWithdrawCardAction" prefHeight="41.0" prefWidth="85.0" styleClass="withdrawCard" text="+" textAlignment="CENTER" />
+               </children>
+            </VBox>
          </children>
          <padding>
             <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />

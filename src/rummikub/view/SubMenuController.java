@@ -67,7 +67,7 @@ public class SubMenuController implements Initializable,ControlledScreen {
 
     @FXML
     private void handleExitToMainMenuButtonAction(ActionEvent event) {
-        this.myController.setScreen(Rummikub.MAINMENU_SCREEN_ID,ScreensController.NOT_RESETABLE);
+        this.myController.setScreen(Rummikub.MAINMENU_SCREEN_ID,(PlayScreenController)myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID));
     }
     
     @Override

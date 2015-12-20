@@ -68,18 +68,18 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
 //        });
 //        t1.setDaemon(true);
 //        t1.start();
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                FileChooser fileChooser = new FileChooser();
-                FileChooser.ExtensionFilter extFilterXML = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.XML");
-                fileChooser.getExtensionFilters().add(extFilterXML);
-                File file = fileChooser.showOpenDialog(((Button) event.getSource()).getContextMenu());
-                if (file != null) {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilterXML = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.XML");
+        fileChooser.getExtensionFilters().add(extFilterXML);
+        File file = fileChooser.showOpenDialog(((Button) event.getSource()).getContextMenu());
+        if (file != null) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
                     loadGame(file);
                 }
-            }
-        });
+            });
+        }
 
         //   initCurrentPlayerMove()
     }
