@@ -12,8 +12,11 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -22,6 +25,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
@@ -233,14 +238,23 @@ public void resetPlayersBar(){
 //        };
 
         for (Tile currTile : player.getListPlayerTiles()) {
-            this.handTile.getChildren().add(new AnimatedTilePane(currTile));
+            AnimatedTilePane viewTile = new AnimatedTilePane(currTile);
+            viewTile.addListener(new ChangeListener<Boolean>() {
+
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if(newValue) {
+                        removeTileFromHand(viewTile);
+                    }
+                }
+            });
+            
+            this.handTile.getChildren().add(viewTile);
         }
     }
-
-    private void foo(Player player) {
-        for (Tile currTile : player.getListPlayerTiles()) {
-            this.handTile.getChildren().add(new AnimatedTilePane(currTile));
-        }
+    
+    private void removeTileFromHand(AnimatedTilePane CurrTile) {
+        this.handTile.getChildren().remove(CurrTile);
     }
 
     public void initCurrentPlayerMove() {
@@ -296,42 +310,85 @@ public void resetPlayersBar(){
     }
     
     
-    //TEST
-        private static final int BOARD_SIZE = 5;
-        
-        private Node createGridPane() {
-            GridPane pane = new GridPane();
-            pane.setHgap(2);
-            pane.setVgap(2);
-            pane.setAlignment(Pos.CENTER);
-            pane.setPadding(new Insets(25));
+    private void initHeapLabel() {
+       this.heapTile.setStyle(styleWhite);
+       this.heapTile.setText("Tile Left:"+rummikubLogic.getHeap().getTileList().size());
+    }
 
-            for (int i = 0; i < BOARD_SIZE; i++) {
-                for (int j = 0; j < BOARD_SIZE; j++) {
-                    pane.add(createCell(), i, j);
-                }
+    private void setPlayersBar() {
+       this.rummikubLogic.getPlayers().stream().forEach((player) -> {
+            setLabel(player, this.rummikubLogic.getPlayers().indexOf(player));
+        });
+    }
+    
+    //TEST
+    //private static final int BOARD_SIZE = 5;
+        
+    private Node createGridPane() {
+        FlowPane pane = new FlowPane();
+        pane.setMinSize(300, 300);
+        //pane.setPrefWidth(300);
+        //pane.setPrefHeight(300);
+        pane.setHgap(2);
+        pane.setVgap(2);
+        pane.setAlignment(Pos.CENTER);
+        pane.setPadding(new Insets(25));
+
+        Node cell = createCell();
+
+        pane.getChildren().add(cell);
+
+        pane.setOnDragDropped((DragEvent event) -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
+                FlowPane cell1 = (FlowPane)createCell();
+                cell1.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
+                //cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
+                pane.getChildren().add(cell1);
+                //cell.setBackground(new Background(new BackgroundImage(db.getDragView(), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+                //cell.setText(db.getString());
+                success = true;
+                
+                //cell.getChildren().add();
             }
+            event.setDropCompleted(success);
+            event.consume();
+        });
+        
+        
+    
+//        for (int i = 0; i < BOARD_SIZE; i++) {
+//            for (int j = 0; j < BOARD_SIZE; j++) {
+//                Node cell = createCell();
+//                
+//                pane.add(cell, i, j);
+//            }
+//        }
 
         return pane;
     }
 
     private Node createCell() {
-        final Label cell = new Label();
-        cell.setPrefSize(25, 25);
-        cell.setAlignment(Pos.CENTER);
+        //final Label cell = new Label();
+        final FlowPane cell = new FlowPane();
+        //cell.setMinSize(30, 40);
+        //cell.setMaxSize(30, 40);
+        cell.setPrefSize(30, 40);
+        cell.setAlignment(Pos.TOP_LEFT);
         cell.setStyle("-fx-border-color: gray; -fx-border-width: 1");
 
         cell.setOnDragOver((event) -> {
-            //if (event.getDragboard().hasString()) {
-              event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-            //}
+            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class ) {
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
             event.consume();
         });
 
         cell.setOnDragEntered((event) -> {
-            //if (event.getDragboard().hasString()) {
-              cell.setStyle("-fx-background-color: green");
-            //}
+            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
+                cell.setStyle("-fx-background-color: green");
+            }
             event.consume();
         });
 
@@ -344,11 +401,17 @@ public void resetPlayersBar(){
         cell.setOnDragDropped((event) -> {
             Dragboard db = event.getDragboard();
             boolean success = false;
-            if (db.hasString()) {
-                cell.setBackground(new Background(new BackgroundImage(db.getDragView(), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+            if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
+                int index = cell.getChildren().isEmpty()? 0 : cell.getChildren().indexOf(db.getContent(DataFormat.RTF));
+                //int index = cell.getChildren().indexOf(db.getContent(DataFormat.RTF));
+                cell.getChildren().add(index, (AnimatedTilePane)db.getContent(DataFormat.RTF));
+                //cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
+                
+                //cell.setBackground(new Background(new BackgroundImage(db.getDragView(), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
               //cell.setText(db.getString());
               success = true;
               
+              //cell.getChildren().add();
             }
             event.setDropCompleted(success);
             event.consume();
@@ -356,16 +419,4 @@ public void resetPlayersBar(){
 
         return cell;
       }
-
-    private void initHeapLabel() {
-       this.heapTile.setStyle(styleWhite);
-       this.heapTile.setText("Tile Left:"+rummikubLogic.getHeap().getTileList().size());
-    }
-
-    private void setPlayersBar() {
-       this.rummikubLogic.getPlayers().stream().forEach((player) -> {
-            setLabel(player, this.rummikubLogic.getPlayers().indexOf(player));
-        });
-    }
-    
 }

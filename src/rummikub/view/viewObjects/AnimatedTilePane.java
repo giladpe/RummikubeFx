@@ -27,6 +27,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
@@ -49,8 +50,10 @@ import rummikub.gameLogic.model.gameobjects.Tile;
 public class AnimatedTilePane extends HBox {
 
     private Label tileLabel;
-    
+    //A
+    private Tile tile;
 
+    private SimpleBooleanProperty isTileMovedToBoard;
 
     public AnimatedTilePane(Tile currTile) {
         super();
@@ -70,20 +73,22 @@ public class AnimatedTilePane extends HBox {
         });
         
         this.setOnDragDetected((event) -> {
-            WritableImage snapshot = this.snapshot(new SnapshotParameters(), null);
             Dragboard db = this.startDragAndDrop(TransferMode.ANY);
+            WritableImage snapshot = this.snapshot(new SnapshotParameters(), null);
 
-            //ClipboardContent content = new ClipboardContent();
+            ClipboardContent content = new ClipboardContent();  
+            content.put(DataFormat.RTF, this);
+            
+            //content.put(DataFormat.RTF, tile);
             // content.putString(number + "");
-            // db.setContent(content);
-             db.setDragView(snapshot, snapshot.getWidth() / 2, snapshot.getHeight() / 2);
-
-             event.consume();
+            db.setContent(content);
+            db.setDragView(snapshot, snapshot.getWidth() / 2, snapshot.getHeight() / 2);
+            event.consume();
         });
 
         this.setOnDragDone((event) -> {
             if (event.getTransferMode() == TransferMode.MOVE) {
-                this.setScaleX(5);
+                this.isTileMovedToBoard.set(true);
              //label.setText("");
             }
             event.consume();
@@ -129,5 +134,14 @@ public class AnimatedTilePane extends HBox {
         setPadding(new Insets(2,0 , 0,0));
         setTileEvents();
         getChildren().add(tileLabel);
+        //A
+        this.tile = currTile;
+        this.isTileMovedToBoard = new SimpleBooleanProperty(false);
+    }
+    
+    
+    
+    public void addListener(ChangeListener<Boolean> newListener) {
+        this.isTileMovedToBoard.addListener(newListener);
     }
 }
