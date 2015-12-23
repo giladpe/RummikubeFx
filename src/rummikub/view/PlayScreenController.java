@@ -202,9 +202,9 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //            Timeline animation;
 //            animation = new Timeline(new KeyFrame(Duration.millis(200),(ActionEvent event1) -> { styleOfHandWhenEnter(); }));
 //            animation.play();
-            
-            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class ) {
-                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            AnimatedTilePane currTile = (AnimatedTilePane)event.getDragboard().getContent(DataFormat.RTF);
+            if (currTile.getClass() == AnimatedTilePane.class && currTile.getIsTileMovedToBoard() ) {
+                event.acceptTransferModes(TransferMode.ANY);
             }
 //            animation = new Timeline(new KeyFrame(Duration.millis(200),(ActionEvent event1) -> { styleOfHandWhenExit(); }));
 //            animation.play();
@@ -213,8 +213,9 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         
         
         
-        this.handTile.setOnDragDone((event) -> {
+        this.handTile.setOnDragDropped((event) -> {
             Dragboard db = event.getDragboard();
+            boolean success = false;
             if (event.getTransferMode() == TransferMode.MOVE) {
                 //need to make it work in future
 //                int nRowLoc,nColLoc;
@@ -224,11 +225,25 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //                Point pointToTakeFromBoard = new Point(nRowLoc, nColLoc);
 //                SingleMove singleMove = new SingleMove(pointToTakeFromBoard, SingleMove.MoveType.BOARD_TO_HAND);
 //                dealWithSingleMoveResualt(singleMove);
-                this.handTile.getChildren().clear();
-//                showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
+
+                success = true;
             }
+            
+            event.setDropCompleted(success);
             event.consume();
-        });       
+        }); 
+        
+        this.handTile.setOnDragDone(new EventHandler<DragEvent>() {
+
+            @Override
+            public void handle(DragEvent event) {
+                if (event.getTransferMode() == TransferMode.MOVE) {
+                }
+                event.consume();
+                
+            }
+        });
+        
 //        this.setOnDragDetected((event) -> {
 //            Dragboard db = this.startDragAndDrop(TransferMode.ANY);
 //            WritableImage snapshot = this.snapshot(new SnapshotParameters(), null);
@@ -253,7 +268,10 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //        this.handTile.setStyle("-fx-border-color: none; -fx-border-width: 0");
 //    }
     
-    
+    private void updateHand() {
+        this.handTile.getChildren().clear();
+        showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
+    }
 
     private void initPlayers() {
         this.playersBar.add(barPlayer1);
@@ -340,6 +358,9 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
                 if(newValue) {
                     removeTileFromHand(viewTile);
                 }
+                else {
+                    updateHand();
+                }
             });
             
             this.handTile.getChildren().add(viewTile);
@@ -348,6 +369,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     
     
     private void removeTileFromHand(AnimatedTilePane CurrTile) {
+        //need to remove it for currplayermove hand here or somwhere else
         this.handTile.getChildren().remove(CurrTile);
     }
 

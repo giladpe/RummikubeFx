@@ -6,6 +6,10 @@
 package rummikub.view.viewObjects;
 
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
@@ -15,10 +19,13 @@ import javafx.scene.control.Label;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 import rummikub.gameLogic.model.gameobjects.Tile;
 
 /**
@@ -30,6 +37,12 @@ public class AnimatedTilePane extends HBox {
     private Label tileLabel;
     //A
     private Tile tile;
+    //private Timeline timeline = new Timeline();
+    //private KeyValue originalWidth;
+    //private Duration duration = Duration.seconds(0.2);
+
+
+
 
     private SimpleBooleanProperty isTileMovedToBoard;
 
@@ -37,9 +50,60 @@ public class AnimatedTilePane extends HBox {
         super();
         initTile(currTile);
     }
-
+    
+//
+//    private void onDragEnter(DragEvent event) {
+//        tileLabel.setScaleX(1.3);                
+//        tileLabel.setScaleY(1.3);
+//
+//        if (timeline.getStatus() == Animation.Status.RUNNING) {
+//            timeline.stop();
+//        }
+//        double targetWidth = Double.parseDouble(event.getDragboard().getString()) + 2;
+//        growNode(targetWidth);
+//        event.consume();
+//    }
+//
+//    private void onDragLeave(DragEvent event) {
+//        tileLabel.setScaleX(1);
+//        tileLabel.setScaleY(1);
+//        if (timeline.getStatus() == Animation.Status.RUNNING) {
+//            timeline.stop();
+//        }
+//        shrinkNode();
+//        event.consume();
+//    }
+//
+//    private void growNode(double targetWidth) {
+//        timeline.getKeyFrames().clear();
+//
+//        if (originalWidth == null) {
+//            originalWidth = new KeyValue(this.widthProperty(), getWidth());
+//        }
+//        KeyFrame fromKeyFrame = new KeyFrame(Duration.ZERO, originalWidth);
+//
+//        KeyFrame toKeyFrame = new KeyFrame(duration., new KeyValue(this.w, targetWidth));
+//        timeline.getKeyFrames().addAll(fromKeyFrame, toKeyFrame);
+//        timeline.play();
+//    }
+//
+//    private void shrinkNode() {
+//        timeline.getKeyFrames().clear();
+//
+//        KeyFrame fromKeyFrame = new KeyFrame(Duration.ZERO, new KeyValue(widthProperty(), getWidth()));
+//        KeyFrame toKeyFrame = new KeyFrame(duration, originalWidth);
+//        timeline.getKeyFrames().addAll(fromKeyFrame, toKeyFrame);
+//        timeline.play();
+//    }
+//
 
     private void setTileEvents() {
+        
+        
+        //this.setOnDragEntered(this::onDragEnter);
+        //this.setOnDragExited(this::onDragLeave);
+
+        
         this.setOnMouseEntered((MouseEvent event) -> {
             tileLabel.setScaleX(1.3);
             tileLabel.setScaleY(1.3);
@@ -65,8 +129,9 @@ public class AnimatedTilePane extends HBox {
         });
 
         this.setOnDragDone((event) -> {
-            if (event.getTransferMode() == TransferMode.MOVE) {
-                this.isTileMovedToBoard.set(true);
+            TransferMode a= event.getTransferMode();
+            if (event.getTransferMode() == TransferMode.MOVE ) {
+                this.isTileMovedToBoard.set(!this.isTileMovedToBoard.get());
             }
             event.consume();
         });
@@ -94,6 +159,10 @@ public class AnimatedTilePane extends HBox {
     
     public void addListener(ChangeListener<Boolean> newListener) {
         this.isTileMovedToBoard.addListener(newListener);
+    }
+    
+    public boolean getIsTileMovedToBoard() {
+        return this.isTileMovedToBoard.get();
     }
 }
 
