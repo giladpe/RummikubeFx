@@ -5,42 +5,20 @@
  */
 package rummikub.view.viewObjects;
 
-import com.sun.javafx.beans.event.AbstractNotifyListener;
-import com.sun.javafx.property.adapter.PropertyDescriptor;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
+
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.ImageCursor;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
-import javafx.util.Duration;
 import rummikub.gameLogic.model.gameobjects.Tile;
 
 /**
@@ -89,11 +67,37 @@ public class AnimatedTilePane extends HBox {
         this.setOnDragDone((event) -> {
             if (event.getTransferMode() == TransferMode.MOVE) {
                 this.isTileMovedToBoard.set(true);
-             //label.setText("");
             }
             event.consume();
         });
+    }
+
+    private void initTile(Tile currTile) {
+        getStyleClass().add("tile");
+        String style = "-fx-text-fill: " +  currTile.getTileColor().getAnsiColor();
+        setMinSize(30, 40);
+        setMaxSize(30, 40);
+        tileLabel = new Label();
+        tileLabel.getStyleClass().add("tileText");
+        tileLabel.setText(currTile.getEnumTileNumber().toString());
+        tileLabel.setStyle(style);
+        setAlignment(Pos.TOP_CENTER);
+        setPadding(new Insets(2,0 , 0,0));
+        setTileEvents();
+        getChildren().add(tileLabel);
         
+        //A
+        this.tile = currTile;
+        this.isTileMovedToBoard = new SimpleBooleanProperty(false);
+    }
+    
+    
+    public void addListener(ChangeListener<Boolean> newListener) {
+        this.isTileMovedToBoard.addListener(newListener);
+    }
+}
+
+
 //        this.setOnDragDetected((event) -> {
 //                  WritableImage snapshot = snapshot(new SnapshotParameters(), null);
 //      Dragboard db = startDragAndDrop(TransferMode.ANY);
@@ -119,29 +123,3 @@ public class AnimatedTilePane extends HBox {
 //            }
 //            event.consume();
 //        });
-    }
-
-    private void initTile(Tile currTile) {
-        getStyleClass().add("tile");
-        String style = "-fx-text-fill: " +  currTile.getTileColor().getAnsiColor();
-        setMinSize(30, 40);
-        setMaxSize(30, 40);
-        tileLabel = new Label();
-        tileLabel.getStyleClass().add("tileText");
-        tileLabel.setText(currTile.getEnumTileNumber().toString());
-        tileLabel.setStyle(style);
-        setAlignment(Pos.TOP_CENTER);
-        setPadding(new Insets(2,0 , 0,0));
-        setTileEvents();
-        getChildren().add(tileLabel);
-        //A
-        this.tile = currTile;
-        this.isTileMovedToBoard = new SimpleBooleanProperty(false);
-    }
-    
-    
-    
-    public void addListener(ChangeListener<Boolean> newListener) {
-        this.isTileMovedToBoard.addListener(newListener);
-    }
-}

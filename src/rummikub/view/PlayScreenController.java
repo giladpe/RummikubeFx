@@ -5,12 +5,16 @@
  */
 package rummikub.view;
 
+import java.awt.Point;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -22,12 +26,15 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -40,13 +47,18 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
 import rummikub.gameLogic.model.gameobjects.Tile;
 import rummikub.gameLogic.model.logic.GameLogic;
 import rummikub.gameLogic.model.logic.Settings;
 import rummikub.gameLogic.model.player.Player;
 import rummikub.Rummikub;
+import rummikub.gameLogic.controller.rummikub.SingleMove;
 import rummikub.gameLogic.model.gameobjects.Board;
 import rummikub.gameLogic.model.logic.PlayersMove;
+import rummikub.gameLogic.view.ioui.InputOutputParser;
+import rummikub.gameLogic.view.ioui.Utils;
+import rummikub.view.viewObjects.AnimatedFlowPane;
 import rummikub.view.viewObjects.AnimatedTilePane;
 
 /**
@@ -80,6 +92,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private ArrayList<Label> playersLabels = new ArrayList<>(4);
     private ScreensController myController;
     private GameLogic rummikubLogic = new GameLogic();
+    private Timeline withdrawCardWithDelay;
 
     private PlayersMove currentPlayerMove;
     @FXML
@@ -100,6 +113,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private Label numTileP4;
     private ArrayList<HBox>playersBar=new ArrayList<>(4);
    private ArrayList<Label>numOfTileInHand=new ArrayList<>(4);
+   
     @FXML
     private Label heapTile;
     @FXML
@@ -114,46 +128,132 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     @FXML
     private void handleWithdrawCardAction(ActionEvent event) {
 
-        ///when loading file error in this line !!!
-        this.currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
-        this.rummikubLogic.playSingleTurn(currentPlayerMove);
+        if(withdrawCardWithDelay.getStatus() == Animation.Status.STOPPED) {
 
-        //this.handTile.getChildren().clear();
-        this.handTile.getChildren().clear();
-        show();
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException ex) {}
-        initHeapLabel();
-        if (rummikubLogic.getHeap().isEmptyHeap()) {
-            ((Button) event.getSource()).setFont(new Font(14));
-            ((Button) event.getSource()).setText("Empy Deck");
-            ((Button) event.getSource()).setDisable(true);
+            ///when loading file error in this line !!!
+            this.currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
+            this.rummikubLogic.playSingleTurn(currentPlayerMove);
+
+            //this.handTile.getChildren().clear();
+            this.handTile.getChildren().clear();
+            show();
+    //        try {
+    //            Thread.sleep(1000);
+    //        } catch (InterruptedException ex) {}
+            initHeapLabel();
+            if (rummikubLogic.getHeap().isEmptyHeap()) {
+                ((Button) event.getSource()).setFont(new Font(14));
+                ((Button) event.getSource()).setText("Empy Deck");
+                ((Button) event.getSource()).setDisable(true);
+            }
+
+            if (rummikubLogic.isGameOver() || rummikubLogic.isOnlyOnePlayerLeft()) {
+                //it means the game is over..... what we do now
+            }
+
+            withdrawCardWithDelay.play();
+            //swapTurns();
+            //this.handFirstRow.getChildren().add(new AnimatedTile(playerHand.get(playerHand.size()-1)));
+
+    //        ArrayList<Tile> playerHand=this.rummikubLogic.getCurrentPlayer().getListPlayerTiles();
+    //        if (this.gameLogic.withdrawCard()) {
+    //            playerHand = this.gameLogic.getCurrPlayer().getHand();
+    //            this.handFirstRow.getChildren().add(new AnimatedTile(playerHand.get(playerHand.size()-1)));
+    //        }
+        
         }
-
-        if (rummikubLogic.isGameOver() || rummikubLogic.isOnlyOnePlayerLeft()) {
-            //it means the game is over..... what we do now
-        }
-        swapTurns();
-        //this.handFirstRow.getChildren().add(new AnimatedTile(playerHand.get(playerHand.size()-1)));
-
-//        ArrayList<Tile> playerHand=this.rummikubLogic.getCurrentPlayer().getListPlayerTiles();
-//        if (this.gameLogic.withdrawCard()) {
-//            playerHand = this.gameLogic.getCurrPlayer().getHand();
-//            this.handFirstRow.getChildren().add(new AnimatedTile(playerHand.get(playerHand.size()-1)));
-//        }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //this.hand.setSpacing(5);
         initPlayers();
-        board.setCenter(createGridPane());
-
+        AnimatedFlowPane centerPane = new AnimatedFlowPane();
+        //sighn for CenterPane events
+        this.board.setCenter(centerPane);
+     
+        this.withdrawCardWithDelay = new Timeline(new KeyFrame(Duration.millis(800), (ActionEvent event1) -> { swapTurns(); }));
+   
+        setHandEvents();
         //not good - what about loading file?????
         //Game.Settings gameSetting = ((GameParametersController)myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID)).getGameSettings();
         //this.gameLogic = new Game(gameSetting);
     }
+    
+    private void setHandEvents() {
+//        this.handTile.setOnMouseEntered((MouseEvent event) -> {
+//            this.handTile.setStyle("-fx-border-color: blue; -fx-border-width: 0.5");
+//        });
+//        
+//        this.handTile.setOnMouseExited((MouseEvent event) -> {
+//            this.handTile.setStyle("-fx-border-color: none; -fx-border-width: 0");
+//        });
+        
+        
+//        this.handTile.setOnDragDetected(null);
+//        this.handTile.setOnDragDone(null);
+//        this.handTile.setOnDragDropped(null);
+//        this.handTile.setOnDragEntered(null);
+//        this.handTile.setOnDragExited(null);
+//        this.handTile.setOnDragOver(null);
+
+                
+        this.handTile.setOnDragOver((event) -> {
+//            Timeline animation;
+//            animation = new Timeline(new KeyFrame(Duration.millis(200),(ActionEvent event1) -> { styleOfHandWhenEnter(); }));
+//            animation.play();
+            
+            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class ) {
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+//            animation = new Timeline(new KeyFrame(Duration.millis(200),(ActionEvent event1) -> { styleOfHandWhenExit(); }));
+//            animation.play();
+            event.consume();
+        });
+        
+        
+        
+        this.handTile.setOnDragDone((event) -> {
+            Dragboard db = event.getDragboard();
+            if (event.getTransferMode() == TransferMode.MOVE) {
+                //need to make it work in future
+//                int nRowLoc,nColLoc;
+//                // get somehow the index
+//                nColLoc = 0;
+//                nRowLoc = 0;
+//                Point pointToTakeFromBoard = new Point(nRowLoc, nColLoc);
+//                SingleMove singleMove = new SingleMove(pointToTakeFromBoard, SingleMove.MoveType.BOARD_TO_HAND);
+//                dealWithSingleMoveResualt(singleMove);
+                this.handTile.getChildren().clear();
+//                showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
+            }
+            event.consume();
+        });       
+//        this.setOnDragDetected((event) -> {
+//            Dragboard db = this.startDragAndDrop(TransferMode.ANY);
+//            WritableImage snapshot = this.snapshot(new SnapshotParameters(), null);
+//
+//            ClipboardContent content = new ClipboardContent();  
+//            content.put(DataFormat.RTF, this);
+//            
+//            //content.put(DataFormat.RTF, tile);
+//            // content.putString(number + "");
+//            db.setContent(content);
+//            db.setDragView(snapshot, snapshot.getWidth() / 2, snapshot.getHeight() / 2);
+//            event.consume();
+//        });
+
+    }
+
+//    private void styleOfHandWhenEnter() {
+//        this.handTile.setStyle("-fx-border-color: blue; -fx-border-width: 0.5");
+//    }
+//    
+//    private void styleOfHandWhenExit() {
+//        this.handTile.setStyle("-fx-border-color: none; -fx-border-width: 0");
+//    }
+    
+    
 
     private void initPlayers() {
         this.playersBar.add(barPlayer1);
@@ -180,29 +280,33 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     //TODO:
     @Override
     public void resetScreen() {
+        ((AnimatedFlowPane)this.board.getCenter()).resetScreen();
         resetPlayersBar();
         setPlayersBar();
         handTile.getChildren().clear();
+        withdrawCard.setStyle("-fx-font-size: 24px; -fx-font-weight: bold");
+        withdrawCard.setText("+");
+        withdrawCard.setDisable(false);
         show();
     }
-public void resetPlayersBar(){
+    public void resetPlayersBar() {
         for (HBox playerBar: this.playersBar) {
             playerBar.setVisible(false);
         }
 }
+    
     @Override
     public void setScreenParent(ScreensController parentScreen) {
         this.myController = parentScreen;
     }
 
+    
     public void show() {
-        
         setPlayersBar();
         showPlayerHand(this.rummikubLogic.getCurrentPlayer());
         initCurrPlayerLabel();
         initHeapLabel();
         ///int currPlayerIndex=this.rummikubLogic.getPlayers().indexOf(this.rummikubLogic.getCurrentPlayer());
-
     }
 
     private void setLabel(Player player, int index) {
@@ -222,36 +326,26 @@ public void resetPlayersBar(){
     }
 
     private void showPlayerHand(Player player) {
-//        Task task;
-//        task = new Task<Void>() {
-//            @Override
-//            public Void call() throws Exception {
-//                Platform.runLater(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        foo(player);
-//                    }
-//                });
-//                Thread.sleep(1000);
-//                
-//            }
-//        };
-
-        for (Tile currTile : player.getListPlayerTiles()) {
+        createPlayerHand(player.getListPlayerTiles());
+    }
+    
+    private void showPlayerPlayingHand(ArrayList<Tile> handTiles) {
+        createPlayerHand(handTiles);
+    }
+    
+    private void createPlayerHand(ArrayList<Tile> handTiles) {
+        for (Tile currTile : handTiles) {
             AnimatedTilePane viewTile = new AnimatedTilePane(currTile);
-            viewTile.addListener(new ChangeListener<Boolean>() {
-
-                @Override
-                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    if(newValue) {
-                        removeTileFromHand(viewTile);
-                    }
+            viewTile.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                if(newValue) {
+                    removeTileFromHand(viewTile);
                 }
             });
             
             this.handTile.getChildren().add(viewTile);
         }
     }
+    
     
     private void removeTileFromHand(AnimatedTilePane CurrTile) {
         this.handTile.getChildren().remove(CurrTile);
@@ -321,102 +415,39 @@ public void resetPlayersBar(){
         });
     }
     
-    //TEST
-    //private static final int BOARD_SIZE = 5;
-        
-    private Node createGridPane() {
-        FlowPane pane = new FlowPane();
-        pane.setMinSize(300, 300);
-        //pane.setPrefWidth(300);
-        //pane.setPrefHeight(300);
-        pane.setHgap(2);
-        pane.setVgap(2);
-        pane.setAlignment(Pos.CENTER);
-        pane.setPadding(new Insets(25));
-
-        Node cell = createCell();
-
-        pane.getChildren().add(cell);
-
-        pane.setOnDragDropped((DragEvent event) -> {
-            Dragboard db = event.getDragboard();
-            boolean success = false;
-            if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-                FlowPane cell1 = (FlowPane)createCell();
-                cell1.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
-                //cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
-                pane.getChildren().add(cell1);
-                //cell.setBackground(new Background(new BackgroundImage(db.getDragView(), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-                //cell.setText(db.getString());
-                success = true;
-                
-                //cell.getChildren().add();
-            }
-            event.setDropCompleted(success);
-            event.consume();
-        });
-        
-        
     
-//        for (int i = 0; i < BOARD_SIZE; i++) {
-//            for (int j = 0; j < BOARD_SIZE; j++) {
-//                Node cell = createCell();
-//                
-//                pane.add(cell, i, j);
-//            }
-//        }
+    
+    
+    
+    //test
+    private void dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/ SingleMove singleMove) {
+        SingleMove.SingleMoveResult singleMoveResualt;
 
-        return pane;
+        //if (turnResult == Utils.TurnMenuResult.CONTINUE) {
+
+            singleMoveResualt = this.currentPlayerMove.implementSingleMove(singleMove);
+            
+            switch(singleMoveResualt) {
+                case TILE_NOT_BELONG_HAND:{
+                    //show message on the scene
+                    //InputOutputParser.printTileNotBelongToTheHand();
+                    break;
+                }
+                case NOT_IN_THE_RIGHT_ORDER:{
+                    //show message on the scene
+                    //InputOutputParser.printTileInsertedNotInRightOrder();
+                    break;
+                }
+                case CAN_NOT_TOUCH_BOARD_IN_FIRST_MOVE:{
+                    //show message on the scene
+                    //InputOutputParser.printCantTuchBoardInFirstMove();
+                    break;
+                }
+                case LEGAL_MOVE:
+                default:{
+                    break;
+                }
+            }                    
+        //}
     }
-
-    private Node createCell() {
-        //final Label cell = new Label();
-        final FlowPane cell = new FlowPane();
-        //cell.setMinSize(30, 40);
-        //cell.setMaxSize(30, 40);
-        cell.setPrefSize(30, 40);
-        cell.setAlignment(Pos.TOP_LEFT);
-        cell.setStyle("-fx-border-color: gray; -fx-border-width: 1");
-
-        cell.setOnDragOver((event) -> {
-            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class ) {
-                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-            }
-            event.consume();
-        });
-
-        cell.setOnDragEntered((event) -> {
-            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-                cell.setStyle("-fx-background-color: green");
-            }
-            event.consume();
-        });
-
-        cell.setOnDragExited((event) -> {
-            cell.setStyle("-fx-background-color: none");
-            cell.setStyle("-fx-border-color: gray; -fx-border-width: 1");
-            event.consume();
-        });
-
-        cell.setOnDragDropped((event) -> {
-            Dragboard db = event.getDragboard();
-            boolean success = false;
-            if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-                int index = cell.getChildren().isEmpty()? 0 : cell.getChildren().indexOf(db.getContent(DataFormat.RTF));
-                //int index = cell.getChildren().indexOf(db.getContent(DataFormat.RTF));
-                cell.getChildren().add(index, (AnimatedTilePane)db.getContent(DataFormat.RTF));
-                //cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
-                
-                //cell.setBackground(new Background(new BackgroundImage(db.getDragView(), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-              //cell.setText(db.getString());
-              success = true;
-              
-              //cell.getChildren().add();
-            }
-            event.setDropCompleted(success);
-            event.consume();
-        });
-
-        return cell;
-      }
 }

@@ -58,11 +58,10 @@ public class AnimatedTile extends Label {
         });
 
         setOnDragDropped((event) -> {
-            AnimatedFlowPane parent = ((AnimatedFlowPane) event.getSource());
+            //AnimatedFlowPane parent = ((AnimatedFlowPane) event.getSource());
             Dragboard db = event.getDragboard();
-//                Paint paint = (Paint)db.getContent(OBJCET_DATA_FORMAT);
-            int index = parent.getChildren().indexOf(this);
-            parent.addChild(new Rectangle(40, 80, Color.FIREBRICK), index);
+            //int index = parent.getChildren().indexOf(this);
+            //parent.addChild(new Rectangle(40, 80, Color.FIREBRICK), index);
             event.setDropCompleted(true);
             event.consume();
         });
