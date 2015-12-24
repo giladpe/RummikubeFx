@@ -10,8 +10,13 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.DataFormat;
@@ -29,24 +34,28 @@ import rummikub.view.ResetableScreen;
  * @author Arthur
  */
 public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
- 
+    SimpleBooleanProperty isMoveDone;
     //TEST
     //private static final int BOARD_SIZE = 5;
+    public static final double TILE_SPACING=1.5;
         
     public AnimatedFlowPane() {
         super();
-        createGridPane();
+        createFlowPane();
     }
-    
-    private void createGridPane() {
+    public void addListener(ChangeListener<Boolean> newListener) {
+        this.isMoveDone.addListener(newListener);
+    }
+    private void createFlowPane() {
         this.setMinSize(300, 300);
+        isMoveDone=new SimpleBooleanProperty(false);
         //pane.setPrefWidth(300);
         //pane.setPrefHeight(300);
         this.setHgap(30);
-        this.setVgap(45);
+        this.setVgap(20);
         this.setAlignment(Pos.CENTER);
         this.setPadding(new Insets(25));
-
+        
         
         createNewSerieAddinArea();
 
@@ -74,13 +83,15 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
     }
 
     
-    private Node createSerie() {
+    public FlowPane createSerie() {
         //final Label cell = new Label();
         final FlowPane series = new FlowPane();
         //cell.setMinSize(30, 40);
         //cell.setMaxSize(30, 40);
-        series.setPrefSize(30, 40);
-        //series.set
+        series.setPrefHeight(40);
+        series.setOrientation(Orientation.VERTICAL);
+        series.setHgap(TILE_SPACING);
+//series.set
         //series.setHgap(5);
        // series.setAlignment(Pos.CENTER_LEFT);
         series.setStyle("-fx-border-color: gray; -fx-border-width: 1");
@@ -176,11 +187,12 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
             Dragboard db = event.getDragboard();
             boolean success = false;
             if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-                FlowPane serie = (FlowPane)createSerie();
+                FlowPane serie = createSerie();
 //              int index = this.getChildren().indexOf(newSeries);
                 
                 serie.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
                 this.getChildren().add(serie);
+                
                 //newSerieAddingArea (0),next(1)
                 success = true;
             }

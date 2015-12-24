@@ -55,6 +55,7 @@ import rummikub.gameLogic.model.player.Player;
 import rummikub.Rummikub;
 import rummikub.gameLogic.controller.rummikub.SingleMove;
 import rummikub.gameLogic.model.gameobjects.Board;
+import rummikub.gameLogic.model.gameobjects.Serie;
 import rummikub.gameLogic.model.logic.PlayersMove;
 import rummikub.gameLogic.view.ioui.InputOutputParser;
 import rummikub.gameLogic.view.ioui.Utils;
@@ -93,7 +94,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private ScreensController myController;
     private GameLogic rummikubLogic = new GameLogic();
     private Timeline withdrawCardWithDelay;
-
+    private AnimatedFlowPane centerPane;
     private PlayersMove currentPlayerMove;
     @FXML
     private HBox barPlayer1;
@@ -168,8 +169,14 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     public void initialize(URL url, ResourceBundle rb) {
         //this.hand.setSpacing(5);
         initPlayers();
-        AnimatedFlowPane centerPane = new AnimatedFlowPane();
+        centerPane = new AnimatedFlowPane();
         //sighn for CenterPane events
+//        centerPane.addListener(new ChangeListener<Boolean>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+//                fdd
+//            }
+//        });
         this.board.setCenter(centerPane);
      
         this.withdrawCardWithDelay = new Timeline(new KeyFrame(Duration.millis(800), (ActionEvent event1) -> { swapTurns(); }));
@@ -317,6 +324,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     public void show() {
         setPlayersBar();
         showPlayerHand(this.rummikubLogic.getCurrentPlayer());
+        showBoard();
         initCurrPlayerLabel();
         initHeapLabel();
         ///int currPlayerIndex=this.rummikubLogic.getPlayers().indexOf(this.rummikubLogic.getCurrentPlayer());
@@ -351,6 +359,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
             AnimatedTilePane viewTile = new AnimatedTilePane(currTile);
             viewTile.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                 if(newValue) {
+                    this.dealWithSingleMoveResualt(viewTile.getSingleMove());
                     removeTileFromHand(viewTile);
                 }
                 else {
@@ -361,7 +370,14 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
             this.handTile.getChildren().add(viewTile);
         }
     }
-    
+    private void showBoard(){
+    ArrayList<Serie> serieList = this.rummikubLogic.getGameBoard().getListOfSerie();
+    ArrayList<FlowPane> flowPaneSeriesList=new ArrayList<>();
+    for (Serie serie : serieList) {
+            flowPaneSeriesList.add(createFlowPaneSerie(serie)); 
+        }
+    centerPane.getChildren().addAll(flowPaneSeriesList);
+    }
     
     private void removeTileFromHand(AnimatedTilePane CurrTile) {
         //need to remove it for currplayermove hand here or somwhere else
@@ -375,7 +391,6 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         boolean isFirstMoveDone = rummikubLogic.getCurrentPlayer().isFirstMoveDone();
         Player printablePlayer = rummikubLogic.getCurrentPlayer().clonePlayer();
         this.currentPlayerMove = new PlayersMove(printablePlayer.getListPlayerTiles(), printableBoard, isFirstMoveDone);
-
         //need it for java fx?
         //ArrayList<Player> printablePlayersList = new ArrayList<>(rummikubLogic.getPlayers());
         //printablePlayersList.remove(rummikubLogic.getCurrentPlayer());
@@ -466,5 +481,14 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
                 }
             }                    
         //}
+    }
+
+    private FlowPane createFlowPaneSerie(Serie serie) {
+        FlowPane serieFlowPan=this.centerPane.createSerie();;
+        for (Tile tile : serie.getSerieOfTiles()) {
+            serieFlowPan.getChildren().add(new AnimatedTilePane(tile));
+        }
+        serieFlowPan.setMinWidth(serieFlowPan.getChildren().size()*30);
+        return serieFlowPan;
     }
 }

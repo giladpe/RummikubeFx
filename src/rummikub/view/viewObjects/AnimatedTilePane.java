@@ -5,8 +5,9 @@
  */
 package rummikub.view.viewObjects;
 
-
+import java.awt.MouseInfo;
 import java.util.Collections;
+import java.util.Objects;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -28,6 +29,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
+import javax.swing.DropMode;
 import rummikub.gameLogic.controller.rummikub.SingleMove;
 import rummikub.gameLogic.model.gameobjects.Tile;
 
@@ -37,6 +39,43 @@ import rummikub.gameLogic.model.gameobjects.Tile;
  */
 public class AnimatedTilePane extends HBox {
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 83 * hash + Objects.hashCode(this.tileLabel);
+        hash = 83 * hash + Objects.hashCode(this.tile);
+        hash = 83 * hash + Objects.hashCode(this.singleMove);
+        hash = 83 * hash + Objects.hashCode(this.isTileMovedToBoard);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AnimatedTilePane other = (AnimatedTilePane) obj;
+        if (!Objects.equals(this.tileLabel, other.tileLabel)) {
+            return false;
+        }
+        if (!Objects.equals(this.tile, other.tile)) {
+            return false;
+        }
+        if (!Objects.equals(this.singleMove, other.singleMove)) {
+            return false;
+        }
+        if (!Objects.equals(this.isTileMovedToBoard, other.isTileMovedToBoard)) {
+            return false;
+        }
+        return true;
+    }
+
     private Label tileLabel;
     //A
     private Tile tile;
@@ -45,16 +84,14 @@ public class AnimatedTilePane extends HBox {
     //private KeyValue originalWidth;
     //private Duration duration = Duration.seconds(0.2);
 
-
-
-
     private SimpleBooleanProperty isTileMovedToBoard;
+    public static final double TILE_WITHE = 30;
 
     public AnimatedTilePane(Tile currTile) {
         super();
         initTile(currTile);
     }
-    
+
 //
 //    private void onDragEnter(DragEvent event) {
 //        tileLabel.setScaleX(1.3);                
@@ -100,70 +137,81 @@ public class AnimatedTilePane extends HBox {
 //        timeline.play();
 //    }
 //
-
     private void setTileEvents() {
-        
+
         //this.setOnDragEntered(this::onDragEnter);
         //this.setOnDragExited(this::onDragLeave);
         this.setOnDragOver((DragEvent event) -> {
-            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class ) {
+            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
                 event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
             }
             event.consume();
         });
-        
+
         this.setOnDragDropped((DragEvent event) -> {
             Dragboard db = event.getDragboard();
+            
+//            int whereToDrop =MouseInfo.getPointerInfo().getLocation().x;
+//            double res = this.getLayoutX();
+//            this.get
+//            System.out.println("Tile X: "+res);
+//            System.out.println("Mouse X: "+res);
+//            res-=whereToDrop;
+//            System.out.println("Res: "+res);
             boolean success = false;
             int indexSource;
 
             if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-                FlowPane holdingSerie = ((FlowPane)this.getParent());
-                AnimatedTilePane currTile = (AnimatedTilePane)db.getContent(DataFormat.RTF);
+                FlowPane holdingSerie = ((FlowPane) this.getParent());
+                AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
                 indexSource = holdingSerie.getChildren().indexOf(this);
-
-                if(holdingSerie.getChildren().contains(currTile)) {
-                    int indexDestenetion = holdingSerie.getChildren().indexOf(currTile);
-                    Collections.swap(holdingSerie.getChildren(), indexDestenetion, indexSource);
-                }
-                else {
+//                if (res>15){
+//                    indexSource++;
+//                }   
+                if (holdingSerie.getChildren().contains(currTile)) {
+                    holdingSerie.getChildren().remove(currTile);
+                    holdingSerie.getChildren().add(indexSource, currTile);
+                
+                } else {
                     holdingSerie.getChildren().add(indexSource, currTile);
                 }
-              //cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
-              success = true;
+
+                holdingSerie.setMinWidth(holdingSerie.getChildren().size() * (TILE_WITHE + AnimatedFlowPane.TILE_SPACING));
+                holdingSerie.setPrefWidth(holdingSerie.getChildren().size() * (TILE_WITHE + AnimatedFlowPane.TILE_SPACING));                
+//cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
+                success = true;
             }
-            
+
             event.setDropCompleted(success);
-            event.consume();            
+            event.consume();
         });
-        
 
         this.setOnMouseEntered((MouseEvent event) -> {
             tileLabel.setScaleX(1.3);
             tileLabel.setScaleY(1.3);
         });
-        
+
         this.setOnMouseExited((MouseEvent event) -> {
             tileLabel.setScaleX(1);
             tileLabel.setScaleY(1);
         });
-        
+
         this.setOnDragDetected((event) -> {
             Dragboard db = this.startDragAndDrop(TransferMode.ANY);
             WritableImage snapshot = this.snapshot(new SnapshotParameters(), null);
-
-            ClipboardContent content = new ClipboardContent();  
+            ClipboardContent content = new ClipboardContent();
             content.put(DataFormat.RTF, this);
-            
             //content.put(DataFormat.RTF, tile);
             // content.putString(number + "");
             db.setContent(content);
             db.setDragView(snapshot, snapshot.getWidth() / 2, snapshot.getHeight() / 2);
+           // ((FlowPane)this.getParent()).setMinWidth((((FlowPane)this.getParent()).getChildren().size()-1) * (TILE_WITHE + AnimatedFlowPane.TILE_SPACING));
+            //this.getParent().setPrefWidth(this.getParent().getChildren().size() * (TILE_WITHE + AnimatedFlowPane.TILE_SPACING));                
             event.consume();
         });
 
         this.setOnDragDone((event) -> {
-            if (event.getTransferMode() == TransferMode.MOVE ) {
+            if (event.getTransferMode() == TransferMode.MOVE) {
                 this.isTileMovedToBoard.set(!this.isTileMovedToBoard.get());
             }
             event.consume();
@@ -172,7 +220,7 @@ public class AnimatedTilePane extends HBox {
 
     private void initTile(Tile currTile) {
         getStyleClass().add("tile");
-        String style = "-fx-text-fill: " +  currTile.getTileColor().getAnsiColor();
+        String style = "-fx-text-fill: " + currTile.getTileColor().getAnsiColor();
         setMinSize(30, 40);
         setMaxSize(30, 40);
         tileLabel = new Label();
@@ -180,25 +228,27 @@ public class AnimatedTilePane extends HBox {
         tileLabel.setText(currTile.getEnumTileNumber().toString());
         tileLabel.setStyle(style);
         setAlignment(Pos.TOP_CENTER);
-        setPadding(new Insets(2,0 , 0,0));
+        setPadding(new Insets(2, 0, 0, 0));
         setTileEvents();
         getChildren().add(tileLabel);
-        
+
         //A
         this.tile = currTile;
         this.isTileMovedToBoard = new SimpleBooleanProperty(false);
     }
-    
-    
+
     public void addListener(ChangeListener<Boolean> newListener) {
         this.isTileMovedToBoard.addListener(newListener);
     }
-    
+
     public boolean getIsTileMovedToBoard() {
         return this.isTileMovedToBoard.get();
     }
-}
 
+    public SingleMove getSingleMove() {
+        return singleMove;
+    }
+}
 
 //        this.setOnDragDetected((event) -> {
 //                  WritableImage snapshot = snapshot(new SnapshotParameters(), null);
