@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
@@ -150,14 +151,6 @@ public class AnimatedTilePane extends HBox {
 
         this.setOnDragDropped((DragEvent event) -> {
             Dragboard db = event.getDragboard();
-            
-//            int whereToDrop =MouseInfo.getPointerInfo().getLocation().x;
-//            double res = this.getLayoutX();
-//            this.get
-//            System.out.println("Tile X: "+res);
-//            System.out.println("Mouse X: "+res);
-//            res-=whereToDrop;
-//            System.out.println("Res: "+res);
             boolean success = false;
             int indexSource;
 
@@ -165,9 +158,9 @@ public class AnimatedTilePane extends HBox {
                 FlowPane holdingSerie = ((FlowPane) this.getParent());
                 AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
                 indexSource = holdingSerie.getChildren().indexOf(this);
-//                if (res>15){
-//                    indexSource++;
-//                }   
+                if(toAddAfter()){
+                    indexSource++;
+                }   
                 if (holdingSerie.getChildren().contains(currTile)) {
                     holdingSerie.getChildren().remove(currTile);
                     holdingSerie.getChildren().add(indexSource, currTile);
@@ -178,7 +171,6 @@ public class AnimatedTilePane extends HBox {
 
                 holdingSerie.setMinWidth(holdingSerie.getChildren().size() * (TILE_WITHE + AnimatedFlowPane.TILE_SPACING));
                 holdingSerie.setPrefWidth(holdingSerie.getChildren().size() * (TILE_WITHE + AnimatedFlowPane.TILE_SPACING));                
-//cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
                 success = true;
             }
 
@@ -247,6 +239,21 @@ public class AnimatedTilePane extends HBox {
 
     public SingleMove getSingleMove() {
         return singleMove;
+    }
+
+    private boolean toAddAfter() {
+         int whereToDrop =MouseInfo.getPointerInfo().getLocation().x;
+            boolean retVal=false;
+            double res =((HBox)this).localToScreen(Point2D.ZERO).getX();
+            System.out.println("Tile X: "+res);
+            System.out.println("Mouse X: "+whereToDrop);
+            res=whereToDrop-res;
+            System.out.println("Res: "+res);
+            if (res>15){
+                    retVal= true;
+             }   
+            return retVal;
+                    
     }
 }
 
