@@ -48,7 +48,7 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
         this.setPadding(new Insets(25));
 
         
-        createNewSeries();
+        createNewSerieAddinArea();
 
         //Node cell = createCell();
         //this.getChildren().add(cell);
@@ -74,34 +74,34 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
     }
 
     
-    private Node createSeries() {
+    private Node createSerie() {
         //final Label cell = new Label();
         final FlowPane series = new FlowPane();
         //cell.setMinSize(30, 40);
         //cell.setMaxSize(30, 40);
         series.setPrefSize(30, 40);
         //series.set
-        series.setHgap(5);
-        series.setAlignment(Pos.TOP_LEFT);
+        //series.setHgap(5);
+       // series.setAlignment(Pos.CENTER_LEFT);
         series.setStyle("-fx-border-color: gray; -fx-border-width: 1");
 
-        setSeriesEvents(series);
+        setSerieEvents(series);
 
         return series;
       }
     
-    private void setSeriesEvents(FlowPane series) {
-        series.setOnDragOver((event) -> {
-            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class ) {
-                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-            }
-            event.consume();
-        });
+    private void setSerieEvents(FlowPane series) {
+//        series.setOnDragOver((event) -> {
+//            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class ) {
+//                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+//            }
+//            event.consume();
+//        });
 
         series.setOnDragEntered((event) -> {
             if (series.getChildren().isEmpty()) {
                 if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-                 series.setStyle("-fx-background-color: green");
+                 series.setStyle("-fx-border-color: blue; -fx-border-width: 3");
                 }
             }
             
@@ -110,77 +110,78 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
         });
 
         series.setOnDragExited((event) -> {
-            series.setStyle("-fx-background-color: none");
             series.setStyle("-fx-border-color: gray; -fx-border-width: 1");
             event.consume();
         });
 
-        series.setOnDragDropped((event) -> {
-            Dragboard db = event.getDragboard();
-            boolean success = false;
-            if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-                int index = series.getChildren().isEmpty()? 0 : series.getChildren().indexOf(db.getContent(DataFormat.RTF));
-                //int index = cell.getChildren().indexOf(db.getContent(DataFormat.RTF));
-                series.getChildren().add(index, (AnimatedTilePane)db.getContent(DataFormat.RTF));
-                //cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
-                
-                //cell.setBackground(new Background(new BackgroundImage(db.getDragView(), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-              //cell.setText(db.getString());
-              success = true;
-              
-              //cell.getChildren().add();
-            }
-            event.setDropCompleted(success);
-            event.consume();
-        });
+//        series.setOnDragDropped((event) -> {
+//            Dragboard db = event.getDragboard();
+//            boolean success = false;
+//            if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
+//                //int index = series.getChildren().isEmpty()? 0 : series.getChildren().indexOf(db.getContent(DataFormat.RTF));
+//                //int index = cell.getChildren().indexOf(db.getContent(DataFormat.RTF));
+//                int index = series.getChildren().indexOf();
+//
+//                series.getChildren().add(index, (AnimatedTilePane)db.getContent(DataFormat.RTF));
+//                //cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
+//                
+//                //cell.setBackground(new Background(new BackgroundImage(db.getDragView(), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+//              //cell.setText(db.getString());
+//              success = true;
+//              
+//              //cell.getChildren().add();
+//            }
+//            event.setDropCompleted(success);
+//            event.consume();
+//        });
     }
 
-    private void createNewSeries() {
+    private void createNewSerieAddinArea() {
             //final Label cell = new Label();
-        FlowPane newSeries = new FlowPane();
+        FlowPane newSerieAddingArea = new FlowPane();
         Label label = new Label();
         label.setText("Add New Series");
-        newSeries.getChildren().add(label);
-        newSeries.setMinSize(120, 40);
-        newSeries.setMaxSize(120, 40);
-        newSeries.setPrefSize(120, 40);
-        newSeries.setAlignment(Pos.CENTER);
-        newSeries.setStyle("-fx-border-color: gray; -fx-border-width: 1");
-        this.getChildren().add(newSeries);
-        setNewSeriesEvents(newSeries);
-        
+        newSerieAddingArea.getChildren().add(label);
+        newSerieAddingArea.setMinSize(120, 40);
+        newSerieAddingArea.setMaxSize(120, 40);
+        newSerieAddingArea.setPrefSize(120, 40);
+        newSerieAddingArea.setAlignment(Pos.CENTER);
+        newSerieAddingArea.setStyle("-fx-border-color: gray; -fx-border-width: 1");
+        this.getChildren().add(newSerieAddingArea);
+        setNewSeriesEvents(newSerieAddingArea);
     }
 
-    private void setNewSeriesEvents(FlowPane newSeries) {
-        newSeries.setOnDragEntered((event) -> {
+    private void setNewSeriesEvents(FlowPane newSerieAddingArea) {
+        newSerieAddingArea.setOnDragEntered((event) -> {
             if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-                newSeries.setStyle("-fx-background-color: red");
+                newSerieAddingArea.setStyle("-fx-background-color: red");
             }
             event.consume();
         });
 
-        newSeries.setOnDragExited((event) -> {
-            newSeries.setStyle("-fx-background-color: none");
-            newSeries.setStyle("-fx-border-color: gray; -fx-border-width: 1");
+        newSerieAddingArea.setOnDragExited((event) -> {
+            newSerieAddingArea.setStyle("-fx-background-color: none");
+            newSerieAddingArea.setStyle("-fx-border-color: gray; -fx-border-width: 1");
             event.consume();
         });
         
-        
-        newSeries.setOnDragOver((event) -> {
+        newSerieAddingArea.setOnDragOver((event) -> {
             if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class ) {
                 event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
             }
             event.consume();
         });
         
-        newSeries.setOnDragDropped((DragEvent event) -> {
+        newSerieAddingArea.setOnDragDropped((DragEvent event) -> {
             Dragboard db = event.getDragboard();
             boolean success = false;
             if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-                FlowPane cell = (FlowPane)createSeries();
-                int index = this.getChildren().indexOf(newSeries);
-                cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
-                this.getChildren().add(index,cell);
+                FlowPane serie = (FlowPane)createSerie();
+//              int index = this.getChildren().indexOf(newSeries);
+                
+                serie.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
+                this.getChildren().add(serie);
+                //newSerieAddingArea (0),next(1)
                 success = true;
             }
             event.setDropCompleted(success);
@@ -211,7 +212,7 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
     @Override
     public void resetScreen() {
         this.getChildren().clear();
-        createNewSeries();
+        createNewSerieAddinArea();
     }
     
     

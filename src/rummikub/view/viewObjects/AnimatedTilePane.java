@@ -6,12 +6,14 @@
 package rummikub.view.viewObjects;
 
 
+import java.util.Collections;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
@@ -103,8 +105,39 @@ public class AnimatedTilePane extends HBox {
         
         //this.setOnDragEntered(this::onDragEnter);
         //this.setOnDragExited(this::onDragLeave);
-
+        this.setOnDragOver((DragEvent event) -> {
+            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class ) {
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+            event.consume();
+        });
         
+        this.setOnDragDropped((DragEvent event) -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            int indexSource;
+
+            if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
+                FlowPane holdingSerie = ((FlowPane)this.getParent());
+                AnimatedTilePane currTile = (AnimatedTilePane)db.getContent(DataFormat.RTF);
+                indexSource = holdingSerie.getChildren().indexOf(this);
+
+                if(holdingSerie.getChildren().contains(currTile)) {
+                    int indexDestenetion = holdingSerie.getChildren().indexOf(currTile);
+                    Collections.swap(holdingSerie.getChildren(), indexDestenetion, indexSource);
+                }
+                else {
+                    holdingSerie.getChildren().add(indexSource, currTile);
+                }
+              //cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
+              success = true;
+            }
+            
+            event.setDropCompleted(success);
+            event.consume();            
+        });
+        
+
         this.setOnMouseEntered((MouseEvent event) -> {
             tileLabel.setScaleX(1.3);
             tileLabel.setScaleY(1.3);
@@ -130,7 +163,6 @@ public class AnimatedTilePane extends HBox {
         });
 
         this.setOnDragDone((event) -> {
-            TransferMode a= event.getTransferMode();
             if (event.getTransferMode() == TransferMode.MOVE ) {
                 this.isTileMovedToBoard.set(!this.isTileMovedToBoard.get());
             }
