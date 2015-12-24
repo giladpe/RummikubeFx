@@ -233,15 +233,10 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
             event.consume();
         }); 
         
-        this.handTile.setOnDragDone(new EventHandler<DragEvent>() {
-
-            @Override
-            public void handle(DragEvent event) {
-                if (event.getTransferMode() == TransferMode.MOVE) {
-                }
-                event.consume();
-                
+        this.handTile.setOnDragDone((DragEvent event) -> {
+            if (event.getTransferMode() == TransferMode.MOVE) {
             }
+            event.consume();
         });
         
 //        this.setOnDragDetected((event) -> {

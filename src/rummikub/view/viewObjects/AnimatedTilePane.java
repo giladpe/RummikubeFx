@@ -26,6 +26,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
+import rummikub.gameLogic.controller.rummikub.SingleMove;
 import rummikub.gameLogic.model.gameobjects.Tile;
 
 /**
@@ -37,6 +38,7 @@ public class AnimatedTilePane extends HBox {
     private Label tileLabel;
     //A
     private Tile tile;
+    private SingleMove singleMove;
     //private Timeline timeline = new Timeline();
     //private KeyValue originalWidth;
     //private Duration duration = Duration.seconds(0.2);
@@ -98,7 +100,6 @@ public class AnimatedTilePane extends HBox {
 //
 
     private void setTileEvents() {
-        
         
         //this.setOnDragEntered(this::onDragEnter);
         //this.setOnDragExited(this::onDragLeave);

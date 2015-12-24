@@ -80,6 +80,7 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
         //cell.setMinSize(30, 40);
         //cell.setMaxSize(30, 40);
         series.setPrefSize(30, 40);
+        //series.set
         series.setHgap(5);
         series.setAlignment(Pos.TOP_LEFT);
         series.setStyle("-fx-border-color: gray; -fx-border-width: 1");
