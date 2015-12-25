@@ -29,6 +29,10 @@ public class Rummikub extends Application {
     public static final String SAVE_GAME_SCREEN_ID = "saveGameMenu";
     public static final String SAVE_GAME_FXML = "SaveGameMenu.fxml";
 
+    //not created yet
+    public static final String RESAULT_SCREEN_ID = "resualtScreen";
+    public static final String RESAULT_SCREEN_FXML = "ResualtScreen.fxml";
+
     //TODO: finish loading all screens
     @Override
     public void start(Stage primaryStage) {
@@ -43,6 +47,8 @@ public class Rummikub extends Application {
         screensController.loadScreen(PLAY_SCREEN_ID, PLAY_SCREEN_FXML);
         screensController.loadScreen(SAVE_GAME_SCREEN_ID, SAVE_GAME_FXML);
         screensController.loadScreen(SUBMENU_SCREEN_ID, SUBMENU_SCREEN_FXML);
+        //not exists yet:
+        //screensController.loadScreen(RESAULT_SCREEN_ID, RESAULT_SCREEN_FXML);
 
         screensController.setScreen(MAINMENU_SCREEN_ID, ScreensController.NOT_RESETABLE);
         StackPane root = new StackPane();

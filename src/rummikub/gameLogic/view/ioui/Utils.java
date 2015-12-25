@@ -101,7 +101,7 @@ public class Utils {
         }
     }
     
-        public enum TurnMenuResult{
+    public enum TurnMenuResult{
         CONTINUE(1),
         SAVE_GAME(2),
         EXIT_GAME(3);
@@ -115,9 +115,9 @@ public class Utils {
         public int getTurnMenuResultValue(){
             return this.turnMenuResult;
         }
-        }
+    }
         
-        public enum TurnMenuResultWithOutSave{
+    public enum TurnMenuResultWithOutSave{
         CONTINUE(1),
         EXIT_GAME(2);
         
@@ -130,9 +130,9 @@ public class Utils {
         public int getTurnMenuResultWithOutSaveValue(){
             return this.turnMenuResultWithOutSave;
         }
-        }
+    }
         
-        public enum SaveOrSaveas{
+    public enum SaveOrSaveas{
         SAVE(1),
         SAVEAS(2);
         
@@ -145,9 +145,9 @@ public class Utils {
         public int getSaveOrSaveasValue(){
             return this.SaveOrSaveas;
         }
-        }
+    }
         
-        public enum NewSettingsOrOldSettings{
+    public enum NewSettingsOrOldSettings{
         OLD_SETTINGS(1),
         NEW_SETTINGS(2);
         
@@ -160,9 +160,9 @@ public class Utils {
         public int getNewSettingsOrOldSettingsValue(){
             return this.newSettingsOrOldSettings;
         }
-        }
+    }
         
-        public enum MainMenuResult{
+    public enum MainMenuResult{
         START_NEW_GAME(1),
         LOAD_GAME(2),
         EXIT_GAME(3);

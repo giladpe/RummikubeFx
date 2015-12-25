@@ -5,45 +5,26 @@
  */
 package rummikub.view;
 
-import java.awt.Point;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.WritableImage;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -57,7 +38,6 @@ import rummikub.gameLogic.controller.rummikub.SingleMove;
 import rummikub.gameLogic.model.gameobjects.Board;
 import rummikub.gameLogic.model.gameobjects.Serie;
 import rummikub.gameLogic.model.logic.PlayersMove;
-import rummikub.gameLogic.view.ioui.InputOutputParser;
 import rummikub.gameLogic.view.ioui.Utils;
 import rummikub.view.viewObjects.AnimatedFlowPane;
 import rummikub.view.viewObjects.AnimatedTilePane;
@@ -95,7 +75,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private ArrayList<Label> playersLabels = new ArrayList<>(4);
     private ScreensController myController;
     private GameLogic rummikubLogic = new GameLogic();
-    private Timeline withdrawCardWithDelay;
+    private Timeline swapTurnTimeLineDelay;
     private AnimatedFlowPane centerPane;
     private PlayersMove currentPlayerMove;
     @FXML
@@ -115,10 +95,11 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     @FXML
     private Label numTileP4;
     private ArrayList<HBox>playersBar=new ArrayList<>(4);
-   private ArrayList<Label>numOfTileInHand=new ArrayList<>(4);
+    private ArrayList<Label>numOfTileInHand=new ArrayList<>(4);
    
     @FXML
     private Label heapTile;
+    
     @FXML
     private void handleMenuButtonAction(ActionEvent event) {
         this.myController.setScreen(Rummikub.SUBMENU_SCREEN_ID, ScreensController.NOT_RESETABLE);
@@ -126,44 +107,45 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     @FXML
     private void handleEndTrunAction(ActionEvent event) {
+        if (swapTurnTimeLineDelay.getStatus() == Animation.Status.STOPPED) {
+
+            //check the player move
+            rummikubLogic.playSingleTurn(currentPlayerMove);
+
+            // Swap players
+            if (!rummikubLogic.isGameOver()) {
+                rummikubLogic.swapTurns();
+                swapTurnTimeLineDelay.play();
+            }
+            else {
+                //game is over - swap next screen??? or something like that
+                //will be resetable??
+                //this.myController.setScreen(Rummikub.RESAULT_SCREEN_ID, ScreensController.NOT_RESETABLE);
+            }
+        }
     }
 
     @FXML
     private void handleWithdrawCardAction(ActionEvent event) {
 
-        if(withdrawCardWithDelay.getStatus() == Animation.Status.STOPPED) {
+        if(swapTurnTimeLineDelay.getStatus() == Animation.Status.STOPPED) {
 
-            ///when loading file error in this line !!!
             this.currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
             this.rummikubLogic.playSingleTurn(currentPlayerMove);
 
-            //this.handTile.getChildren().clear();
             this.handTile.getChildren().clear();
             show();
-    //        try {
-    //            Thread.sleep(1000);
-    //        } catch (InterruptedException ex) {}
-            initHeapLabel();
-            if (rummikubLogic.getHeap().isEmptyHeap()) {
-                ((Button) event.getSource()).setFont(new Font(14));
-                ((Button) event.getSource()).setText("Empy Deck");
-                ((Button) event.getSource()).setDisable(true);
-            }
+            //i put them into show, didnt bebugged
+            //initAboveHeapLabel();
+            //initHeapButton();
 
             if (rummikubLogic.isGameOver() || rummikubLogic.isOnlyOnePlayerLeft()) {
                 //it means the game is over..... what we do now
+                //will be resetable??
+                //this.myController.setScreen(Rummikub.RESAULT_SCREEN_ID, ScreensController.NOT_RESETABLE);
             }
 
-            withdrawCardWithDelay.play();
-            //swapTurns();
-            //this.handFirstRow.getChildren().add(new AnimatedTile(playerHand.get(playerHand.size()-1)));
-
-    //        ArrayList<Tile> playerHand=this.rummikubLogic.getCurrentPlayer().getListPlayerTiles();
-    //        if (this.gameLogic.withdrawCard()) {
-    //            playerHand = this.gameLogic.getCurrPlayer().getHand();
-    //            this.handFirstRow.getChildren().add(new AnimatedTile(playerHand.get(playerHand.size()-1)));
-    //        }
-        
+            swapTurnTimeLineDelay.play();
         }
     }
 
@@ -181,7 +163,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //        });
         this.board.setCenter(centerPane);
      
-        this.withdrawCardWithDelay = new Timeline(new KeyFrame(Duration.millis(800), (ActionEvent event1) -> { swapTurns(); }));
+        this.swapTurnTimeLineDelay = new Timeline(new KeyFrame(Duration.millis(800), (ActionEvent event1) -> { swapTurns(); }));
    
         setHandEvents();
         //not good - what about loading file?????
@@ -272,8 +254,9 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //        this.handTile.setStyle("-fx-border-color: none; -fx-border-width: 0");
 //    }
     
-    private void updateHand() {
+    private void updateHand(AnimatedTilePane viewTile) {
         this.handTile.getChildren().clear();
+        //this.dealWithSingleMoveResualt(viewTile.getSingleMove());
         showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
     }
 
@@ -326,9 +309,11 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     public void show() {
         setPlayersBar();
         showPlayerHand(this.rummikubLogic.getCurrentPlayer());
-        showBoard();
+        //need to debub it
+        //showBoard();
         initCurrPlayerLabel();
-        initHeapLabel();
+        initAboveHeapLabel();
+        initHeapButton();
         ///int currPlayerIndex=this.rummikubLogic.getPlayers().indexOf(this.rummikubLogic.getCurrentPlayer());
     }
 
@@ -361,17 +346,19 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
             AnimatedTilePane viewTile = new AnimatedTilePane(currTile);
             viewTile.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                 if(newValue) {
-                    this.dealWithSingleMoveResualt(viewTile.getSingleMove());
+                    //this.dealWithSingleMoveResualt(viewTile.getSingleMove());
                     removeTileFromHand(viewTile);
                 }
                 else {
-                    updateHand();
+                    updateHand(viewTile);
                 }
             });
             
             this.handTile.getChildren().add(viewTile);
         }
     }
+    
+    //need to sigh tile events......
     private void showBoard(){
     ArrayList<Serie> serieList = this.rummikubLogic.getGameBoard().getListOfSerie();
     ArrayList<FlowPane> flowPaneSeriesList=new ArrayList<>();
@@ -412,6 +399,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         this.handTile.getChildren().clear();
         this.showPlayerHand(this.rummikubLogic.getCurrentPlayer());
         initCurrPlayerLabel();
+        initCurrentPlayerMove();
     }
 
     private void initCurrPlayerLabel() {
@@ -438,9 +426,22 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
     
     
-    private void initHeapLabel() {
+    private void initAboveHeapLabel() {
        this.heapTile.setStyle(styleWhite);
        this.heapTile.setText("Tile Left:"+rummikubLogic.getHeap().getTileList().size());
+    }
+    
+    private void initHeapButton(/*ActionEvent event*/) {
+        
+        if (rummikubLogic.getHeap().isEmptyHeap()) {
+            this.withdrawCard.setFont(new Font(14));
+            this.withdrawCard.setText("Empy Deck");
+            this.withdrawCard.setDisable(true);
+            //if the code above maks problems then need to use this one and pass the event to here
+//            ((Button) event.getSource()).setFont(new Font(14));
+//            ((Button) event.getSource()).setText("Empy Deck");
+//            ((Button) event.getSource()).setDisable(true);
+        }
     }
 
     private void setPlayersBar() {
@@ -451,9 +452,57 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     
     
     
-    
+    private FlowPane createFlowPaneSerie(Serie serie) {
+        FlowPane serieFlowPan=this.centerPane.createSerie();
+        for (Tile tile : serie.getSerieOfTiles()) {
+            serieFlowPan.getChildren().add(new AnimatedTilePane(tile));
+        }
+        serieFlowPan.setMinWidth(serieFlowPan.getChildren().size()*30);
+        return serieFlowPan;
+    }    
     
     //test
+    
+    // Deals with the basic inputs from the user about the game board and his hand
+//    private Utils.TurnMenuResult getMoveFromPlayer(PlayersMove currentPlayerMove, Player printablePlayer, ArrayList<Player> printablePlayersList) {
+//        Utils.TurnMenuResult turnResult = null;
+//        SingleMove singleMove;
+//        boolean keepPlaying, isTurnSkipped = false, isFirstMoveForPlayerInCurrTurn = true;
+//        
+//        do{
+//            if (rummikubLogic.getCurrentPlayer().getIsHuman()) {
+//                if(isFirstMoveForPlayerInCurrTurn){
+//                    turnResult = InputOutputParser.askTurnMenuWithSave();
+//                    isFirstMoveForPlayerInCurrTurn = false;
+//                }
+//                else {
+//                    turnResult = InputOutputParser.askTurnMenuWithoutSave();
+//                }
+//                singleMove = dealWithHumanPlayer(turnResult, currentPlayerMove, isTurnSkipped);
+//            }
+//            else {  
+//                singleMove = dealWithComputerPlayer(currentPlayerMove, isTurnSkipped); 
+//                turnResult = Utils.TurnMenuResult.CONTINUE;
+//            }
+//            keepPlaying = turnResult != Utils.TurnMenuResult.EXIT_GAME && !currentPlayerMove.getIsTurnSkipped();
+//            if(keepPlaying){
+//                if(singleMove != null) {
+//                    try {
+//                       dealWithSingleMoveResualt(turnResult,singleMove,currentPlayerMove);        
+//                       InputOutputParser.printGameScreen(printablePlayer, currentPlayerMove.getBoardAfterMove(), printablePlayersList);
+//                    }
+//                    catch (Exception ex) {
+//                         currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
+//                    }
+//                }
+//            }
+//            keepPlaying = keepPlaying && isPlayerWantsToContinueHisTurn(); 
+//        }while (keepPlaying); 
+//        
+//        return turnResult;
+//    }
+
+    
     private void dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/ SingleMove singleMove) {
         SingleMove.SingleMoveResult singleMoveResualt;
 
@@ -485,12 +534,4 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         //}
     }
 
-    private FlowPane createFlowPaneSerie(Serie serie) {
-        FlowPane serieFlowPan=this.centerPane.createSerie();;
-        for (Tile tile : serie.getSerieOfTiles()) {
-            serieFlowPan.getChildren().add(new AnimatedTilePane(tile));
-        }
-        serieFlowPan.setMinWidth(serieFlowPan.getChildren().size()*30);
-        return serieFlowPan;
-    }
 }

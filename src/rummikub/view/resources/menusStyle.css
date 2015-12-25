@@ -136,7 +136,6 @@ withdrawCard{
     //-fx-text-alignment:center;
     -fx-pref-tile-height: 40;
     -fx-pref-tile-width: 30;
-
 }
 .tileText {
     -fx-font-size: 14px;

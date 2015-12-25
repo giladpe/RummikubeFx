@@ -3,15 +3,12 @@
  */
 package rummikub.view;
 
-import java.io.IOException;
 import java.util.HashMap;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -26,7 +23,8 @@ public class ScreensController extends StackPane {
     private static final double ZERO_VALUE = 0.0;
     private static final double EFFECT_VALUE = 1.5;    
     private static final int FIRST_CHILD_LOCATION = 0;
-    public static final  ResetableScreen NOT_RESETABLE=null;
+    public static final  ResetableScreen NOT_RESETABLE = null;
+    
     //Private members:
     private final KeyFrame fadeFrameValue;
     private final KeyFrame fadeInFrameEffect1;
@@ -37,6 +35,7 @@ public class ScreensController extends StackPane {
     private final Duration durationOfEffect;
     private final HashMap<String, Node> gameScreens = new HashMap<>();
     private final HashMap<String, ControlledScreen> screensController = new HashMap<>();
+    
     //Constractor:
     public ScreensController() {
         super();
