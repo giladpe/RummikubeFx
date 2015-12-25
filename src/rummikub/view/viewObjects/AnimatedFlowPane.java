@@ -187,9 +187,9 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
             Dragboard db = event.getDragboard();
             boolean success = false;
             if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-                FlowPane serie = createSerie();
+//                AnimatedSeriePane serie = new AnimatedSeriePane();
 //              int index = this.getChildren().indexOf(newSeries);
-                
+                FlowPane serie=createSerie();
                 serie.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
                 this.getChildren().add(serie);
                 

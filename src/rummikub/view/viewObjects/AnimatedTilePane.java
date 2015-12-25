@@ -14,6 +14,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -90,6 +91,8 @@ public class AnimatedTilePane extends HBox {
 
     public AnimatedTilePane(Tile currTile) {
         super();
+        //setOnDragEntered(this::onDragEnter);
+        //setOnDragExited(this::onDragLeave);
         initTile(currTile);
     }
 
@@ -140,7 +143,7 @@ public class AnimatedTilePane extends HBox {
 //
     private void setTileEvents() {
 
-        //this.setOnDragEntered(this::onDragEnter);
+       // this.setOnDragEntered(this::onDragEnter);
         //this.setOnDragExited(this::onDragLeave);
         this.setOnDragOver((DragEvent event) -> {
             if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
@@ -158,19 +161,20 @@ public class AnimatedTilePane extends HBox {
                 FlowPane holdingSerie = ((FlowPane) this.getParent());
                 AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
                 indexSource = holdingSerie.getChildren().indexOf(this);
-                if(toAddAfter()){
+                if (toAddAfter()) {
                     indexSource++;
-                }   
+                }
                 if (holdingSerie.getChildren().contains(currTile)) {
                     holdingSerie.getChildren().remove(currTile);
                     holdingSerie.getChildren().add(indexSource, currTile);
-                
+
                 } else {
                     holdingSerie.getChildren().add(indexSource, currTile);
                 }
-
+//      this.timeline = new Timeline(new KeyFrame(Duration.millis(800), (ActionEvent event1) -> { 
                 holdingSerie.setMinWidth(holdingSerie.getChildren().size() * (TILE_WITHE + AnimatedFlowPane.TILE_SPACING));
-                holdingSerie.setPrefWidth(holdingSerie.getChildren().size() * (TILE_WITHE + AnimatedFlowPane.TILE_SPACING));                
+                holdingSerie.setPrefWidth(holdingSerie.getChildren().size() * (TILE_WITHE + AnimatedFlowPane.TILE_SPACING));
+//                 }));
                 success = true;
             }
 
@@ -197,7 +201,7 @@ public class AnimatedTilePane extends HBox {
             // content.putString(number + "");
             db.setContent(content);
             db.setDragView(snapshot, snapshot.getWidth() / 2, snapshot.getHeight() / 2);
-           // ((FlowPane)this.getParent()).setMinWidth((((FlowPane)this.getParent()).getChildren().size()-1) * (TILE_WITHE + AnimatedFlowPane.TILE_SPACING));
+            // ((FlowPane)this.getParent()).setMinWidth((((FlowPane)this.getParent()).getChildren().size()-1) * (TILE_WITHE + AnimatedFlowPane.TILE_SPACING));
             //this.getParent().setPrefWidth(this.getParent().getChildren().size() * (TILE_WITHE + AnimatedFlowPane.TILE_SPACING));                
             event.consume();
         });
@@ -242,18 +246,59 @@ public class AnimatedTilePane extends HBox {
     }
 
     private boolean toAddAfter() {
-         int whereToDrop =MouseInfo.getPointerInfo().getLocation().x;
-            boolean retVal=false;
-            double res =((HBox)this).localToScreen(Point2D.ZERO).getX();
-            System.out.println("Tile X: "+res);
-            System.out.println("Mouse X: "+whereToDrop);
-            res=whereToDrop-res;
-            System.out.println("Res: "+res);
-            if (res>15){
-                    retVal= true;
-             }   
-            return retVal;
-                    
+        int whereToDrop = MouseInfo.getPointerInfo().getLocation().x;
+        boolean retVal = false;
+        double res = ((HBox) this).localToScreen(Point2D.ZERO).getX();
+        res = whereToDrop - res;
+        if (res > 15) {
+            retVal = true;
+        }
+        return retVal;
+
+    }
+    ////////////test
+    Timeline timeline = new Timeline();
+    private KeyValue originalWidth;
+
+    Duration duration = Duration.seconds(0.2);
+    private double gap = 15.0;
+
+    private void onDragEnter(DragEvent event) {
+        if (timeline.getStatus() == Animation.Status.RUNNING) {
+            timeline.stop();
+        }
+        double targetWidth = Double.parseDouble(event.getDragboard().getString()) + 2;
+        growNode(targetWidth);
+        event.consume();
+    }
+
+    private void onDragLeave(DragEvent event) {
+        if (timeline.getStatus() == Animation.Status.RUNNING) {
+            timeline.stop();
+        }
+        shrinkNode();
+        event.consume();
+    }
+
+    private void growNode(double targetWidth) {
+        timeline.getKeyFrames().clear();
+        if (originalWidth == null) {
+            originalWidth = new KeyValue(prefWidthProperty(), getWidth());
+        }
+        KeyFrame fromKeyFrame = new KeyFrame(Duration.ZERO, originalWidth);
+
+        KeyFrame toKeyFrame = new KeyFrame(duration, new KeyValue(prefWidthProperty(), targetWidth));
+        timeline.getKeyFrames().addAll(fromKeyFrame, toKeyFrame);
+        timeline.play();
+    }
+
+    private void shrinkNode() {
+        timeline.getKeyFrames().clear();
+
+        KeyFrame fromKeyFrame = new KeyFrame(Duration.ZERO, new KeyValue(prefWidthProperty(), getWidth()));
+        KeyFrame toKeyFrame = new KeyFrame(duration, originalWidth);
+        timeline.getKeyFrames().addAll(fromKeyFrame, toKeyFrame);
+        timeline.play();
     }
 }
 
