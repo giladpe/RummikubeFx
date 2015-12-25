@@ -71,6 +71,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private static final String styleWhite = "-fx-text-fill: white";
     private static final String styleBlue = "-fx-text-fill: blue";
+    @FXML 
+    private Label errorMsg; 
     @FXML
     BorderPane board;
     @FXML
