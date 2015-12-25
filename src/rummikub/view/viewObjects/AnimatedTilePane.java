@@ -190,7 +190,7 @@ public class AnimatedTilePane extends HBox {
         
         if (event.getTransferMode() == TransferMode.MOVE) {
             
-            isTileDroppedInBoard = ((Node)event.getAcceptingObject()).getParent().getParent().getClass() == AnimatedFlowPane.class;
+            isTileDroppedInBoard = ((Node)event.getTarget()).getParent().getParent().getClass() == AnimatedFlowPane.class;
             isTileDroppedInHand = !isTileDroppedInBoard;
                 
             if (isTileDroppedInBoard) {
