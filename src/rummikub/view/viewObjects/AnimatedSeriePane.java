@@ -31,51 +31,48 @@ import static rummikub.view.viewObjects.AnimatedFlowPane.TILE_SPACING;
 public class AnimatedSeriePane extends FlowPane {
 
     public AnimatedSeriePane() {
-        final FlowPane series = new FlowPane();
-        series.setPrefHeight(40);
-        series.setOrientation(Orientation.VERTICAL);
-        series.setHgap(TILE_SPACING);
-        series.setStyle("-fx-border-color: gray; -fx-border-width: 1");
+        setPrefHeight(40);
+        setOrientation(Orientation.VERTICAL);
+        setHgap(TILE_SPACING);
+        setStyle("-fx-border-color: gray; -fx-border-width: 1");
 
-        setSerieEvents(series);
+//        setSerieEvents();
         //setOnDragEntered(this::onDragEnter);
         //setOnDragExited(this::onDragLeave);
-        setOnDragOver((DragEvent event) -> {
-            event.acceptTransferModes(TransferMode.ANY);
-            event.consume();
-        });
-        setOnDragDropped((event) -> {
-            Dragboard db = event.getDragboard();
-            AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
-//            HBox hb = new HBox();
-//            hb.getChildren().add(new Rectangle(40, 80, Color.FIREBRICK));
-            int index = getChildren().indexOf(this);
-            addChild(currTile, index);
-            event.setDropCompleted(true);
-            event.consume();
-        });
+//        setOnDragOver((DragEvent event) -> {
+//            event.acceptTransferModes(TransferMode.ANY);
+//            event.consume();
+//        });
+//        setOnDragDropped((event) -> {
+//            Dragboard db = event.getDragboard();
+//            AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
+//            int index = getChildren().indexOf(this);
+//            addChild(currTile, index);
+//            event.setDropCompleted(true);
+//            event.consume();
+//        });
 
         //return series;
     }
 
-    private void setSerieEvents(FlowPane series) {
-
-        series.setOnDragEntered((event) -> {
-            if (series.getChildren().isEmpty()) {
-                if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-                    series.setStyle("-fx-border-color: blue; -fx-border-width: 3");
-                }
-            }
-
-            event.consume();
-        });
-
-        series.setOnDragExited((event) -> {
-            series.setStyle("-fx-border-color: gray; -fx-border-width: 1");
-            event.consume();
-        });
-
-    }
+//    private void setSerieEvents() {
+//
+//        this.setOnDragEntered((event) -> {
+//            if (this.getChildren().isEmpty()) {
+//                if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
+//                    this.setStyle("-fx-border-color: blue; -fx-border-width: 3");
+//                }
+//            }
+//
+//            event.consume();
+//        });
+//
+//        this.setOnDragExited((event) -> {
+//            this.setStyle("-fx-border-color: gray; -fx-border-width: 1");
+//            event.consume();
+//        });
+//
+//    }
     ////////////test
     Timeline timeline = new Timeline();
     private KeyValue originalWidth;

@@ -6,6 +6,7 @@
 package rummikub.view.viewObjects;
 
 import java.awt.MouseInfo;
+import java.awt.Point;
 import java.util.Objects;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -40,7 +41,6 @@ public class AnimatedTilePane extends HBox {
 
     private static final boolean TILE_MOVED_TO_BOARD = true;
     private Label tileLabel;
-    //A
     private Tile tile;
     private SingleMove singleMove;
     //private Timeline timeline = new Timeline();
@@ -49,6 +49,9 @@ public class AnimatedTilePane extends HBox {
 
     private SimpleBooleanProperty isTileMovedFromHandToBoard;
     public static final double TILE_WIDTH = 30;
+    public static final double TILE_SPACING = 1.5;
+    public static final double TILE_TOTAL_WIDTH=TILE_SPACING+TILE_WIDTH;
+    private Point sourceLocation;
 
     public AnimatedTilePane(Tile currTile) {
         super();
@@ -141,22 +144,64 @@ public class AnimatedTilePane extends HBox {
         content.put(DataFormat.RTF, this);
         db.setContent(content);
         db.setDragView(snapshot, snapshot.getWidth() / 2, snapshot.getHeight() / 2);
-        // ((FlowPane)this.getParent()).setMinWidth((((FlowPane)this.getParent()).getChildren().size()-1) * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
-        //this.getParent().setPrefWidth(this.getParent().getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));                
         event.consume();
     }
 
+  
+//    private void OnDragDropped(DragEvent event) {
+//        Dragboard db = event.getDragboard();
+//        boolean successfulDrag = db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class;
+//        boolean isDroppedOnSerie = this.getParent().getClass() == AnimatedSeriePane.class;
+//        int indexTarget;
+//        AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
+//        successfulDrag = successfulDrag && isDroppedOnSerie;
+//        
+//        if (successfulDrag) {
+//            AnimatedSeriePane holdingSerie = (AnimatedSeriePane)this.getParent();  
+//            indexTarget = holdingSerie.getChildren().indexOf(this);
+//            indexTarget = checkIfToAddTileAfterTheDroppedOnTile(indexTarget);
+//
+//            if (holdingSerie.containsTile(currTile)) {
+//                holdingSerie.removeTile(currTile);
+//            } 
+//            //else {
+//              //maybe we need to remove it from the serie who held that tile before  
+//            //}
+//
+//            holdingSerie.addTile(indexTarget, currTile);
+//            
+////      this.timeline = new Timeline(new KeyFrame(Duration.millis(800), (ActionEvent event1) -> { 
+////            if (holdingSerie.getChildren().isEmpty()) {
+////                ((AnimatedFlowPane) holdingSerie.getParent()).removeEmptySerie(holdingSerie);
+////            } else {
+////                holdingSerie.setMinWidth(holdingSerie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
+////                holdingSerie.setPrefWidth(holdingSerie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
+////            }
+////                 }));
+//        }
+//        
+//     //   holdingSerie.fixSize(event);
+//        //((AnimatedSeriePane)currTile.getParent()).getChildren().remove(currTile);
+//        event.setDropCompleted(successfulDrag);
+//        event.consume();
+//    }
+    
+    
+    
+    
+    
     private void OnDragDropped(DragEvent event) {
         Dragboard db = event.getDragboard();
-        boolean success = false;
+        boolean success = db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class;
+        boolean isDroppedOnSerie = this.getParent().getClass() == AnimatedSeriePane.class;
         int indexSource;
         FlowPane holdingSerie = ((FlowPane) this.getParent());
         AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
 
-        if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
+        if (isDroppedOnSerie && success && event.getGestureSource() != event.getGestureTarget()) {
 
             indexSource = holdingSerie.getChildren().indexOf(this);
-            indexSource=checkIfToAddTileAfterTheDroppedOnTile(indexSource);
+            indexSource = checkIfToAddTileAfterTheDroppedOnTile(indexSource);
 
             if (holdingSerie.getChildren().contains(currTile)) {
                 holdingSerie.getChildren().remove(currTile);
@@ -175,11 +220,51 @@ public class AnimatedTilePane extends HBox {
 //                 }));
             success = true;
         }
-        ((AnimatedFlowPane)holdingSerie.getParent()).fixSize();
+
+        // ((AnimatedFlowPane)holdingSerie.getParent()).fixSize();
         event.setDropCompleted(success);
         event.consume();
     }
 
+// private void OnDragDone(DragEvent event) {
+//        Dragboard db = event.getDragboard();
+//        boolean isTileDroppedInBoard, isTileDroppedInHand;
+//        AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
+//        Point pTarget, pSource;
+//
+//        if (event.getTransferMode() == TransferMode.MOVE) {
+//
+//            isTileDroppedInBoard = (((Node) event.getTarget()).getParent()).getParent().getClass() == AnimatedFlowPane.class;
+//            isTileDroppedInHand = !isTileDroppedInBoard;
+//
+//            if (isTileDroppedInBoard) {
+//                pTarget = new Point(currTile.getIndexOfMySerieInBorad(event), currTile.getIndexOfMeInSerie(event));
+//                if (!this.isTileMovedFromHandToBoard.get()) {
+//                    //make singleMove From Hand To Board
+//                    //pTarget = new Point(currTile.getIndexOfMySerieInBorad(event), currTile.getIndexOfMeInSerie(event));
+//                    this.singleMove = new SingleMove(pTarget, (int)sourceLocation.getY(), SingleMove.MoveType.HAND_TO_BOARD);
+//                    this.isTileMovedFromHandToBoard.set(TILE_MOVED_TO_BOARD);
+//                }
+//                else {
+//                    //make singleMove From Board To Board
+//                    //pTarget = new Point(currTile.getIndexOfMySerieInBorad(event), currTile.getIndexOfMeInSerie(event));
+//                    pSource = sourceLocation;
+//                    this.singleMove = new SingleMove(pTarget, pSource, SingleMove.MoveType.BOARD_TO_BOARD);
+//                }
+//                
+//                this.sourceLocation.setLocation(pTarget);
+//            } 
+//            else if (isTileDroppedInHand) {
+//                //make singleMove From Board To Hand
+//                pSource = new Point(currTile.getIndexOfMySerieInBorad(event), currTile.getIndexOfMeInSerie(event));
+//                this.singleMove = new SingleMove(pSource, SingleMove.MoveType.BOARD_TO_HAND);
+//                this.isTileMovedFromHandToBoard.set(!TILE_MOVED_TO_BOARD);
+//            }
+//        }
+//
+//        event.consume();
+//    }
+//MY-DONE
     private void OnDragDone(DragEvent event) {
         boolean isTileDroppedInBoard, isTileDroppedInHand;
 
@@ -204,6 +289,18 @@ public class AnimatedTilePane extends HBox {
         event.consume();
     }
 
+    private int getIndexOfMySerieInBorad(DragEvent event) {
+        AnimatedTilePane currTile = (AnimatedTilePane) event.getDragboard().getContent(DataFormat.RTF);
+        AnimatedFlowPane parent = (AnimatedFlowPane) (currTile.getParent().getParent());
+        return parent.getChildren().indexOf(currTile.getParent()) - AnimatedFlowPane.INDEX_OF_NEW_SERIE_ADDING_ARREA;
+    }
+
+    private int getIndexOfMeInSerie(DragEvent event) {
+        AnimatedTilePane currTile = (AnimatedTilePane) event.getDragboard().getContent(DataFormat.RTF);
+        AnimatedSeriePane parent = (AnimatedSeriePane) (currTile.getParent());
+        return parent.getChildren().indexOf(currTile);
+    }
+
     private void initTile(Tile currTile) {
         getStyleClass().add("tile");
         String style = "-fx-text-fill: " + currTile.getTileColor().getAnsiColor();
@@ -221,13 +318,15 @@ public class AnimatedTilePane extends HBox {
         //A
         this.tile = currTile;
         this.isTileMovedFromHandToBoard = new SimpleBooleanProperty(false);
+        this.sourceLocation = new Point();
+
     }
 
     public void addListener(ChangeListener<Boolean> newListener) {
         this.isTileMovedFromHandToBoard.addListener(newListener);
     }
 
-    public boolean getIsTileMovedToBoard() {
+    public boolean getIsTileMovedFromHandToBoard() {
         return this.isTileMovedFromHandToBoard.get();
     }
 
@@ -236,19 +335,25 @@ public class AnimatedTilePane extends HBox {
     }
 
     private int checkIfToAddTileAfterTheDroppedOnTile(int index) {
-        System.out.println("inFunc before:" + index);
         int whereToDrop = MouseInfo.getPointerInfo().getLocation().x;
         boolean retVal;
-        double res = ((HBox) this).localToScreen(Point2D.ZERO).getX();
-
-        res = whereToDrop - res;
-        retVal = res > 15;
+        double res = whereToDrop - ((HBox) this).localToScreen(Point2D.ZERO).getX();
+        retVal = res >TILE_WIDTH/2;
 
         if (retVal) {
             index++;
         }
-        System.out.println("inFunc after:" + index);
         return index;
+    }
+
+    public void setSourceLocation() {
+        FlowPane parent = (FlowPane) this.getParent();
+        int xLocation = 0;
+        int yLocation = parent.getChildren().indexOf(this);
+        if (parent.getClass() == AnimatedSeriePane.class) {
+            xLocation = ((AnimatedFlowPane) parent.getParent()).getChildren().indexOf(parent) - AnimatedFlowPane.INDEX_OF_NEW_SERIE_ADDING_ARREA;
+        }
+        this.sourceLocation.setLocation(xLocation, yLocation);
     }
 
     //i replaced that function with my version of it to look beter
@@ -302,49 +407,49 @@ public class AnimatedTilePane extends HBox {
     }
 
     ////////////test
-    Timeline timeline = new Timeline();
-    private KeyValue originalWidth;
-
-    Duration duration = Duration.seconds(0.2);
-    private double gap = 15.0;
-
-    private void onDragEnter(DragEvent event) {
-        if (timeline.getStatus() == Animation.Status.RUNNING) {
-            timeline.stop();
-        }
-        double targetWidth = Double.parseDouble(event.getDragboard().getString()) + 2;
-        growNode(targetWidth);
-        event.consume();
-    }
-
-    private void onDragLeave(DragEvent event) {
-        if (timeline.getStatus() == Animation.Status.RUNNING) {
-            timeline.stop();
-        }
-        shrinkNode();
-        event.consume();
-    }
-
-    private void growNode(double targetWidth) {
-        timeline.getKeyFrames().clear();
-        if (originalWidth == null) {
-            originalWidth = new KeyValue(prefWidthProperty(), getWidth());
-        }
-        KeyFrame fromKeyFrame = new KeyFrame(Duration.ZERO, originalWidth);
-
-        KeyFrame toKeyFrame = new KeyFrame(duration, new KeyValue(prefWidthProperty(), targetWidth));
-        timeline.getKeyFrames().addAll(fromKeyFrame, toKeyFrame);
-        timeline.play();
-    }
-
-    private void shrinkNode() {
-        timeline.getKeyFrames().clear();
-
-        KeyFrame fromKeyFrame = new KeyFrame(Duration.ZERO, new KeyValue(prefWidthProperty(), getWidth()));
-        KeyFrame toKeyFrame = new KeyFrame(duration, originalWidth);
-        timeline.getKeyFrames().addAll(fromKeyFrame, toKeyFrame);
-        timeline.play();
-    }
+//    Timeline timeline = new Timeline();
+//    private KeyValue originalWidth;
+//
+//    Duration duration = Duration.seconds(0.2);
+//    private double gap = 15.0;
+//
+//    private void onDragEnter(DragEvent event) {
+//        if (timeline.getStatus() == Animation.Status.RUNNING) {
+//            timeline.stop();
+//        }
+//        double targetWidth = Double.parseDouble(event.getDragboard().getString()) + 2;
+//        growNode(targetWidth);
+//        event.consume();
+//    }
+//
+//    private void onDragLeave(DragEvent event) {
+//        if (timeline.getStatus() == Animation.Status.RUNNING) {
+//            timeline.stop();
+//        }
+//        shrinkNode();
+//        event.consume();
+//    }
+//
+//    private void growNode(double targetWidth) {
+//        timeline.getKeyFrames().clear();
+//        if (originalWidth == null) {
+//            originalWidth = new KeyValue(prefWidthProperty(), getWidth());
+//        }
+//        KeyFrame fromKeyFrame = new KeyFrame(Duration.ZERO, originalWidth);
+//
+//        KeyFrame toKeyFrame = new KeyFrame(duration, new KeyValue(prefWidthProperty(), targetWidth));
+//        timeline.getKeyFrames().addAll(fromKeyFrame, toKeyFrame);
+//        timeline.play();
+//    }
+//
+//    private void shrinkNode() {
+//        timeline.getKeyFrames().clear();
+//
+//        KeyFrame fromKeyFrame = new KeyFrame(Duration.ZERO, new KeyValue(prefWidthProperty(), getWidth()));
+//        KeyFrame toKeyFrame = new KeyFrame(duration, originalWidth);
+//        timeline.getKeyFrames().addAll(fromKeyFrame, toKeyFrame);
+//        timeline.play();
+//    }
 }
 
 //        this.setOnDragDetected((event) -> {

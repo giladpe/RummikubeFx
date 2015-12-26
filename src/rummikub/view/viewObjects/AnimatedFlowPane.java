@@ -8,6 +8,7 @@ package rummikub.view.viewObjects;
 import java.util.Iterator;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -26,34 +27,36 @@ import static rummikub.view.viewObjects.AnimatedTilePane.TILE_WIDTH;
  * @author Arthur
  */
 public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
-    private SimpleBooleanProperty isMoveDone;
-    //TEST
+
+    static int INDEX_OF_NEW_SERIE_ADDING_ARREA=1;
+
+    //private SimpleBooleanProperty isMoveDone;
     //private static final int BOARD_SIZE = 5;
-    public static final double TILE_SPACING=1.5;
-        
+    public static final double TILE_SPACING = 1.5;
+
     public AnimatedFlowPane() {
         super();
         createFlowPane();
     }
-    public void addListener(ChangeListener<Boolean> newListener) {
-        this.isMoveDone.addListener(newListener);
-    }
-    
+
+//    public void addListener(ChangeListener<Boolean> newListener) {
+//        this.isMoveDone.addListener(newListener);
+//    }
+
     private void createFlowPane() {
         this.setMinSize(300, 300);
-        isMoveDone=new SimpleBooleanProperty(false);
+//        isMoveDone = new SimpleBooleanProperty(false);
         //pane.setPrefWidth(300);
         //pane.setPrefHeight(300);
         this.setHgap(30);
         this.setVgap(20);
         this.setAlignment(Pos.CENTER);
         this.setPadding(new Insets(25));
-        
+
         createNewSerieAddinArea();
 
         //Node cell = createCell();
         //this.getChildren().add(cell);
-        
 //
 //        this.setOnDragDropped((DragEvent event) -> {
 //            Dragboard db = event.getDragboard();
@@ -74,36 +77,34 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 //        });
     }
 
-    public void fixSize(){
-        FlowPane board=this;
-        
+    public void fixSize() {
+        FlowPane board = this;
+
         for (Iterator<Node> it = board.getChildren().iterator(); it.hasNext();) {
-            FlowPane serie = (FlowPane)it.next();
-            if(serie.getChildren().isEmpty()){
+            FlowPane serie = (FlowPane) it.next();
+            if (serie.getChildren().isEmpty()) {
                 it.remove();
-            }
-            else if (this.getChildren().indexOf(serie)>0){
+            } else if (this.getChildren().indexOf(serie) > 0) {
                 setSize(serie);
             }
         }
     }
-    
-    public FlowPane createSerie() {
-        //final Label cell = new Label();
-        final FlowPane series = new FlowPane();
-        //cell.setMinSize(30, 40);
-        //cell.setMaxSize(30, 40);
-        series.setPrefHeight(40);
-        series.setOrientation(Orientation.VERTICAL);
-        series.setHgap(TILE_SPACING);
-//series.set
-        //series.setHgap(5);
-       // series.setAlignment(Pos.CENTER_LEFT);
-        series.setStyle("-fx-border-color: gray; -fx-border-width: 1");
-        setSerieEvents(series);
-        return series;
-      }
-    
+
+//    public FlowPane createSerie() {
+//        //final Label cell = new Label();
+//        final FlowPane series = new FlowPane();
+//        //cell.setMinSize(30, 40);
+//        //cell.setMaxSize(30, 40);
+//        series.setPrefHeight(40);
+//        series.setOrientation(Orientation.VERTICAL);
+//        series.setHgap(TILE_SPACING);
+////series.set
+//        //series.setHgap(5);
+//       // series.setAlignment(Pos.CENTER_LEFT);
+//        series.setStyle("-fx-border-color: gray; -fx-border-width: 1");
+//        setSerieEvents(series);
+//        return series;
+//      }
     private void setSerieEvents(FlowPane series) {
 //        series.setOnDragOver((event) -> {
 //            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class ) {
@@ -115,10 +116,9 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
         series.setOnDragEntered((event) -> {
             if (series.getChildren().isEmpty()) {
                 if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-                 series.setStyle("-fx-border-color: blue; -fx-border-width: 3");
+                    series.setStyle("-fx-border-color: blue; -fx-border-width: 3");
                 }
             }
-            
 
             event.consume();
         });
@@ -151,7 +151,7 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
     }
 
     private void createNewSerieAddinArea() {
-            //final Label cell = new Label();
+        //final Label cell = new Label();
         FlowPane newSerieAddingArea = new FlowPane();
         Label label = new Label();
         label.setText("Add New Series");
@@ -178,24 +178,34 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
             newSerieAddingArea.setStyle("-fx-border-color: gray; -fx-border-width: 1");
             event.consume();
         });
-        
+
         newSerieAddingArea.setOnDragOver((event) -> {
-            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class ) {
+            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
                 event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
             }
             event.consume();
         });
-        
+
         newSerieAddingArea.setOnDragDropped((DragEvent event) -> {
             Dragboard db = event.getDragboard();
             boolean success = false;
             if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-//                AnimatedSeriePane serie = new AnimatedSeriePane();
+                AnimatedSeriePane newSerie = new AnimatedSeriePane();
+                newSerie.getChildren().addListener(new ListChangeListener<Node>() {
+                    @Override
+                    public void onChanged(ListChangeListener.Change<? extends Node> c) {
+                        if (newSerie.getChildren().isEmpty()) {
+                            removeEmptySerie(newSerie);
+                        } else {
+                            setSize(newSerie);
+                        }
+                    }
+                });
 //              int index = this.getChildren().indexOf(newSeries);
-                FlowPane serie = createSerie();
-                serie.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
-                this.getChildren().add(serie);
-                
+//                FlowPane serie = createSerie();
+                newSerie.getChildren().add((AnimatedTilePane) db.getContent(DataFormat.RTF));
+                this.getChildren().add(newSerie);
+
                 //newSerieAddingArea (0),next(1)
                 success = true;
             }
@@ -222,10 +232,7 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 //            event.setDropCompleted(success);
 //            event.consume();
 //        });
-        
     }
-
-    @Override
     public void resetScreen() {
         this.getChildren().clear();
         createNewSerieAddinArea();
@@ -237,17 +244,12 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 
     private void setSize(FlowPane serie) {
         serie.setMinWidth(serie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
-            serie.setPrefWidth(serie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
+        serie.setPrefWidth(serie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
     }
-    
-    
+
 }
 
-
-
 //************************Test Zone*****************************//
-
-
 //
 //    private Node createGridPane() {
 //        FlowPane pane = new FlowPane();
@@ -293,33 +295,6 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 //
 //        return pane;
 //    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //        public AnimatedFlowPane() {
 //            super();
 //        }
@@ -350,8 +325,5 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 //            super(orientation, 0, vgap, children);
 //            this.gap = hgap;
 //        }
-
-
 //***************************END********************************//
-
 

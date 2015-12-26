@@ -29,7 +29,7 @@ public class PlayersMove {
     private final ArrayList<Integer> indexPlayerUsedForFirstMove; 
     
     private boolean isValidMove;
-    boolean isFirstMoveDone;
+    private boolean isFirstMoveDone;
     private boolean isTurnSkipped;
     private int moveCounter;
     

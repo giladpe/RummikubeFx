@@ -51,8 +51,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private static final String styleWhite = "-fx-text-fill: white";
     private static final String styleBlue = "-fx-text-fill: blue";
-    @FXML 
-    private Label errorMsg; 
+    @FXML
+    private Label errorMsg;
     @FXML
     BorderPane board;
     @FXML
@@ -94,12 +94,12 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private HBox barPlayer4;
     @FXML
     private Label numTileP4;
-    private ArrayList<HBox>playersBar=new ArrayList<>(4);
-    private ArrayList<Label>numOfTileInHand=new ArrayList<>(4);
-   
+    private ArrayList<HBox> playersBar = new ArrayList<>(4);
+    private ArrayList<Label> numOfTileInHand = new ArrayList<>(4);
+
     @FXML
     private Label heapTile;
-    
+
     @FXML
     private void handleMenuButtonAction(ActionEvent event) {
         this.myController.setScreen(Rummikub.SUBMENU_SCREEN_ID, ScreensController.NOT_RESETABLE);
@@ -116,8 +116,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
             if (!rummikubLogic.isGameOver()) {
                 rummikubLogic.swapTurns();
                 swapTurnTimeLineDelay.play();
-            }
-            else {
+            } else {
                 //game is over - swap next screen??? or something like that
                 //will be resetable??
                 //this.myController.setScreen(Rummikub.RESAULT_SCREEN_ID, ScreensController.NOT_RESETABLE);
@@ -128,7 +127,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     @FXML
     private void handleWithdrawCardAction(ActionEvent event) {
 
-        if(swapTurnTimeLineDelay.getStatus() == Animation.Status.STOPPED) {
+        if (swapTurnTimeLineDelay.getStatus() == Animation.Status.STOPPED) {
 
             this.currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
             this.rummikubLogic.playSingleTurn(currentPlayerMove);
@@ -162,15 +161,17 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //            }
 //        });
         this.board.setCenter(centerPane);
-     
-        this.swapTurnTimeLineDelay = new Timeline(new KeyFrame(Duration.millis(800), (ActionEvent event1) -> { swapTurns(); }));
-   
+
+        this.swapTurnTimeLineDelay = new Timeline(new KeyFrame(Duration.millis(800), (ActionEvent event1) -> {
+            swapTurns();
+        }));
+
         setHandEvents();
         //not good - what about loading file?????
         //Game.Settings gameSetting = ((GameParametersController)myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID)).getGameSettings();
         //this.gameLogic = new Game(gameSetting);
     }
-    
+
     private void setHandEvents() {
 //        this.handTile.setOnMouseEntered((MouseEvent event) -> {
 //            this.handTile.setStyle("-fx-border-color: blue; -fx-border-width: 0.5");
@@ -179,31 +180,26 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //        this.handTile.setOnMouseExited((MouseEvent event) -> {
 //            this.handTile.setStyle("-fx-border-color: none; -fx-border-width: 0");
 //        });
-        
-        
+
 //        this.handTile.setOnDragDetected(null);
 //        this.handTile.setOnDragDone(null);
 //        this.handTile.setOnDragDropped(null);
 //        this.handTile.setOnDragEntered(null);
 //        this.handTile.setOnDragExited(null);
 //        this.handTile.setOnDragOver(null);
-
-                
         this.handTile.setOnDragOver((event) -> {
 //            Timeline animation;
 //            animation = new Timeline(new KeyFrame(Duration.millis(200),(ActionEvent event1) -> { styleOfHandWhenEnter(); }));
 //            animation.play();
-            AnimatedTilePane currTile = (AnimatedTilePane)event.getDragboard().getContent(DataFormat.RTF);
-            if (currTile.getClass() == AnimatedTilePane.class && currTile.getIsTileMovedToBoard() ) {
+            AnimatedTilePane currTile = (AnimatedTilePane) event.getDragboard().getContent(DataFormat.RTF);
+            if (currTile.getClass() == AnimatedTilePane.class && currTile.getIsTileMovedFromHandToBoard()) {
                 event.acceptTransferModes(TransferMode.ANY);
             }
 //            animation = new Timeline(new KeyFrame(Duration.millis(200),(ActionEvent event1) -> { styleOfHandWhenExit(); }));
 //            animation.play();
             event.consume();
         });
-        
-        
-        
+
         this.handTile.setOnDragDropped((event) -> {
             Dragboard db = event.getDragboard();
             boolean success = false;
@@ -219,17 +215,17 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
                 success = true;
             }
-            
+
             event.setDropCompleted(success);
             event.consume();
-        }); 
-        
+        });
+
         this.handTile.setOnDragDone((DragEvent event) -> {
             if (event.getTransferMode() == TransferMode.MOVE) {
             }
             event.consume();
         });
-        
+
 //        this.setOnDragDetected((event) -> {
 //            Dragboard db = this.startDragAndDrop(TransferMode.ANY);
 //            WritableImage snapshot = this.snapshot(new SnapshotParameters(), null);
@@ -243,7 +239,6 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //            db.setDragView(snapshot, snapshot.getWidth() / 2, snapshot.getHeight() / 2);
 //            event.consume();
 //        });
-
     }
 
 //    private void styleOfHandWhenEnter() {
@@ -253,13 +248,6 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //    private void styleOfHandWhenExit() {
 //        this.handTile.setStyle("-fx-border-color: none; -fx-border-width: 0");
 //    }
-    
-    private void updateHand(AnimatedTilePane viewTile) {
-        this.handTile.getChildren().clear();
-        //this.dealWithSingleMoveResualt(viewTile.getSingleMove());
-        showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
-    }
-
     private void initPlayers() {
         this.playersBar.add(barPlayer1);
         this.playersBar.add(barPlayer2);
@@ -285,7 +273,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     //TODO:
     @Override
     public void resetScreen() {
-        ((AnimatedFlowPane)this.board.getCenter()).resetScreen();
+        ((AnimatedFlowPane) this.board.getCenter()).resetScreen();
         resetPlayersBar();
         setPlayersBar();
         handTile.getChildren().clear();
@@ -294,18 +282,18 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         withdrawCard.setDisable(false);
         show();
     }
+
     public void resetPlayersBar() {
-        for (HBox playerBar: this.playersBar) {
+        for (HBox playerBar : this.playersBar) {
             playerBar.setVisible(false);
         }
-}
-    
+    }
+
     @Override
     public void setScreenParent(ScreensController parentScreen) {
         this.myController = parentScreen;
     }
 
-    
     public void show() {
         setPlayersBar();
         showPlayerHand(this.rummikubLogic.getCurrentPlayer());
@@ -314,7 +302,6 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         initCurrPlayerLabel();
         initAboveHeapLabel();
         initHeapButton();
-        ///int currPlayerIndex=this.rummikubLogic.getPlayers().indexOf(this.rummikubLogic.getCurrentPlayer());
     }
 
     private void setLabel(Player player, int index) {
@@ -322,7 +309,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         playersBar.get(index).setVisible(true);
         currentPlayer.setVisible(true);
         currentPlayer.setText(" " + player.getName() + "  ");
-        
+
         currentPlayer.setAlignment(Pos.CENTER);
         currentPlayer.setTextAlignment(TextAlignment.JUSTIFY);
 
@@ -336,41 +323,47 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private void showPlayerHand(Player player) {
         createPlayerHand(player.getListPlayerTiles());
     }
-    
+
     private void showPlayerPlayingHand(ArrayList<Tile> handTiles) {
         createPlayerHand(handTiles);
     }
-    
+
     private void createPlayerHand(ArrayList<Tile> handTiles) {
         for (Tile currTile : handTiles) {
             AnimatedTilePane viewTile = new AnimatedTilePane(currTile);
             viewTile.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                if(newValue) {
-                    //this.dealWithSingleMoveResualt(viewTile.getSingleMove());
-                    removeTileFromHand(viewTile);
-                }
-                else {
-                    updateHand(viewTile);
-                }
+//                if (newValue) {
+//                    //this.dealWithSingleMoveResualt(viewTile.getSingleMove());
+//                    removeTileFromHand(viewTile);
+//                } else {
+                updateHand(viewTile);
+//                }
             });
-            
+
             this.handTile.getChildren().add(viewTile);
+            viewTile.setSourceLocation();
         }
     }
-    
+
     //need to sigh tile events......
-    private void showBoard(){
-    ArrayList<Serie> serieList = this.rummikubLogic.getGameBoard().getListOfSerie();
-    ArrayList<FlowPane> flowPaneSeriesList=new ArrayList<>();
-    for (Serie serie : serieList) {
-            flowPaneSeriesList.add(createFlowPaneSerie(serie)); 
-        }
-    centerPane.getChildren().addAll(flowPaneSeriesList);
-    }
-    
-    private void removeTileFromHand(AnimatedTilePane CurrTile) {
-        //need to remove it for currplayermove hand here or somwhere else
-        this.handTile.getChildren().remove(CurrTile);
+//    private void showBoard(){
+//    ArrayList<Serie> serieList = this.rummikubLogic.getGameBoard().getListOfSerie();
+//    ArrayList<FlowPane> flowPaneSeriesList=new ArrayList<>();
+//    for (Serie serie : serieList) {
+//            flowPaneSeriesList.add(createFlowPaneSerie(serie)); 
+//        }
+//    centerPane.getChildren().addAll(flowPaneSeriesList);
+//    }
+//    private void removeTileFromHand(AnimatedTilePane currTile) {
+//        //need to remove it for currplayermove hand here or somwhere else
+//        this.handTile.getChildren().clear();
+//        this.dealWithSingleMoveResualt(currTile.getSingleMove());
+//        showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
+//    }
+    private void updateHand(AnimatedTilePane viewTile) {
+        this.handTile.getChildren().clear();
+        this.dealWithSingleMoveResualt(viewTile.getSingleMove());
+        showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
     }
 
     public void initCurrentPlayerMove() {
@@ -403,36 +396,35 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
 
     private void initCurrPlayerLabel() {
-        int index=0;
+        int index = 0;
 
         for (HBox barPlayer : playersBar) {
             for (Node child : barPlayer.getChildren()) {
                 child.setStyle(styleWhite);
             }
         }
-        
-        for (Player player : rummikubLogic.getPlayers()) {            
+
+        for (Player player : rummikubLogic.getPlayers()) {
             this.numOfTileInHand.get(index).setText(String.valueOf(player.getListPlayerTiles().size()));
             index++;
         }
 //        for (Label playersLabel : playersLabels) {
 //            playersLabel.setStyle(styleWhite);
 //        }
-        
+
         index = rummikubLogic.getPlayers().indexOf(rummikubLogic.getCurrentPlayer());
-        for (Node child :  this.playersBar.get(index).getChildren()) {
-                child.setStyle(styleBlue);
-            }
+        for (Node child : this.playersBar.get(index).getChildren()) {
+            child.setStyle(styleBlue);
+        }
     }
-    
-    
+
     private void initAboveHeapLabel() {
-       this.heapTile.setStyle(styleWhite);
-       this.heapTile.setText("Tile Left:"+rummikubLogic.getHeap().getTileList().size());
+        this.heapTile.setStyle(styleWhite);
+        this.heapTile.setText("Tile Left:" + rummikubLogic.getHeap().getTileList().size());
     }
-    
+
     private void initHeapButton(/*ActionEvent event*/) {
-        
+
         if (rummikubLogic.getHeap().isEmptyHeap()) {
             this.withdrawCard.setFont(new Font(14));
             this.withdrawCard.setText("Empy Deck");
@@ -445,24 +437,21 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
 
     private void setPlayersBar() {
-       this.rummikubLogic.getPlayers().stream().forEach((player) -> {
+        this.rummikubLogic.getPlayers().stream().forEach((player) -> {
             setLabel(player, this.rummikubLogic.getPlayers().indexOf(player));
         });
     }
-    
-    
-    
-    private FlowPane createFlowPaneSerie(Serie serie) {
-        FlowPane serieFlowPan=this.centerPane.createSerie();
-        for (Tile tile : serie.getSerieOfTiles()) {
-            serieFlowPan.getChildren().add(new AnimatedTilePane(tile));
-        }
-        serieFlowPan.setMinWidth(serieFlowPan.getChildren().size()*30);
-        return serieFlowPan;
-    }    
-    
+
+//    
+//    private FlowPane createFlowPaneSerie(Serie serie) {
+//        FlowPane serieFlowPan=this.centerPane.createSerie();
+//        for (Tile tile : serie.getSerieOfTiles()) {
+//            serieFlowPan.getChildren().add(new AnimatedTilePane(tile));
+//        }
+//        serieFlowPan.setMinWidth(serieFlowPan.getChildren().size()*30);
+//        return serieFlowPan;
+//    }    
     //test
-    
     // Deals with the basic inputs from the user about the game board and his hand
 //    private Utils.TurnMenuResult getMoveFromPlayer(PlayersMove currentPlayerMove, Player printablePlayer, ArrayList<Player> printablePlayersList) {
 //        Utils.TurnMenuResult turnResult = null;
@@ -501,36 +490,33 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //        
 //        return turnResult;
 //    }
-
-    
-    private void dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/ SingleMove singleMove) {
+    private void dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/SingleMove singleMove) {
         SingleMove.SingleMoveResult singleMoveResualt;
 
         //if (turnResult == Utils.TurnMenuResult.CONTINUE) {
+        singleMoveResualt = this.currentPlayerMove.implementSingleMove(singleMove);
 
-            singleMoveResualt = this.currentPlayerMove.implementSingleMove(singleMove);
-            
-            switch(singleMoveResualt) {
-                case TILE_NOT_BELONG_HAND:{
-                    //show message on the scene
-                    //InputOutputParser.printTileNotBelongToTheHand();
-                    break;
-                }
-                case NOT_IN_THE_RIGHT_ORDER:{
-                    //show message on the scene
-                    //InputOutputParser.printTileInsertedNotInRightOrder();
-                    break;
-                }
-                case CAN_NOT_TOUCH_BOARD_IN_FIRST_MOVE:{
-                    //show message on the scene
-                    //InputOutputParser.printCantTuchBoardInFirstMove();
-                    break;
-                }
-                case LEGAL_MOVE:
-                default:{
-                    break;
-                }
-            }                    
+        switch (singleMoveResualt) {
+            case TILE_NOT_BELONG_HAND: {
+                //show message on the scene
+                //InputOutputParser.printTileNotBelongToTheHand();
+                break;
+            }
+            case NOT_IN_THE_RIGHT_ORDER: {
+                //show message on the scene
+                //InputOutputParser.printTileInsertedNotInRightOrder();
+                break;
+            }
+            case CAN_NOT_TOUCH_BOARD_IN_FIRST_MOVE: {
+                //show message on the scene
+                //InputOutputParser.printCantTuchBoardInFirstMove();
+                break;
+            }
+            case LEGAL_MOVE:
+            default: {
+                break;
+            }
+        }
         //}
     }
 

@@ -18,7 +18,7 @@ import javafx.scene.control.Label;
  *
  * @author giladPe
  */
-public class WinnerController implements Initializable {
+public class ResultScreenController implements Initializable {
 
     @FXML
     private Button mainMenu;
@@ -42,6 +42,5 @@ public class WinnerController implements Initializable {
     @FXML
     private void handleRestartGameButtonAction(ActionEvent event) {
     }
-
     
 }
