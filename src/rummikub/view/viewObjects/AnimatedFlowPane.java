@@ -5,11 +5,13 @@
  */
 package rummikub.view.viewObjects;
 
+import java.util.Iterator;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.DragEvent;
@@ -17,6 +19,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
 import rummikub.view.ResetableScreen;
+import static rummikub.view.viewObjects.AnimatedTilePane.TILE_WIDTH;
 
 /**
  *
@@ -71,6 +74,19 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 //        });
     }
 
+    public void fixSize(){
+        FlowPane board=this;
+        
+        for (Iterator<Node> it = board.getChildren().iterator(); it.hasNext();) {
+            FlowPane serie = (FlowPane)it.next();
+            if(serie.getChildren().isEmpty()){
+                it.remove();
+            }
+            else if (this.getChildren().indexOf(serie)>0){
+                setSize(serie);
+            }
+        }
+    }
     
     public FlowPane createSerie() {
         //final Label cell = new Label();
@@ -183,6 +199,7 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
                 //newSerieAddingArea (0),next(1)
                 success = true;
             }
+////////////////////////////////            fixSize();
             event.setDropCompleted(success);
             event.consume();
         });
@@ -216,6 +233,11 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 
     public void removeEmptySerie(FlowPane holdingSerie) {
         this.getChildren().remove(holdingSerie);
+    }
+
+    private void setSize(FlowPane serie) {
+        serie.setMinWidth(serie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
+            serie.setPrefWidth(serie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
     }
     
     
