@@ -55,7 +55,10 @@ public class SubMenuController implements Initializable,ControlledScreen {
     //TODO: restart the logic of the game and the screen
     @FXML
     private void handleRestartGameButtonAction(ActionEvent event) {
-        
+        PlayScreenController gameScreen = (PlayScreenController)this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
+        gameScreen.createNewGame(gameScreen.getRummikubLogic().getGameSettings());
+        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,gameScreen);
+        gameScreen.show();
     }
 
     //TODO: after loading the file we need to start a game with that file
@@ -63,6 +66,7 @@ public class SubMenuController implements Initializable,ControlledScreen {
     @FXML
     private void handleResumeGameButtonAction(ActionEvent event) {
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,ScreensController.NOT_RESETABLE);
+        
     }
 
     @FXML
