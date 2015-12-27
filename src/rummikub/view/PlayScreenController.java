@@ -115,8 +115,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
             // Swap players
             if (!rummikubLogic.isGameOver()) {
-                rummikubLogic.swapTurns();
                 swapTurnTimeLineDelay.play();
+                
             } else {
                 //game is over - swap next screen??? or something like that
                 //will be resetable??
@@ -375,6 +375,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         this.handTile.getChildren().clear();
         viewTile.updateSource();
         showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
+        updateCurrPlayerBar();
     }
 
     private void updateBoard(AnimatedTilePane viewTile) {
@@ -404,7 +405,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         this.rummikubLogic = rummikubLogic;
     }
 
-    private void swapTurns() {
+    public void swapTurns() {
         rummikubLogic.swapTurns();
         this.handTile.getChildren().clear();
         this.showPlayerHand(this.rummikubLogic.getCurrentPlayer());
@@ -422,17 +423,19 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         }
 
         for (Player player : rummikubLogic.getPlayers()) {
-            this.numOfTileInHand.get(index).setText(String.valueOf(player.getListPlayerTiles().size()));
+           this.numOfTileInHand.get(index).setText(String.valueOf(player.getListPlayerTiles().size()));
             index++;
         }
 //        for (Label playersLabel : playersLabels) {
 //            playersLabel.setStyle(styleWhite);
 //        }
-
-        index = rummikubLogic.getPlayers().indexOf(rummikubLogic.getCurrentPlayer());
-        for (Node child : this.playersBar.get(index).getChildren()) {
-            child.setStyle(styleBlue);
-        }
+        updateCurrPlayerBar();
+//        index = rummikubLogic.getPlayers().indexOf(rummikubLogic.getCurrentPlayer());
+//        for (Node child : this.playersBar.get(index).getChildren()) {
+//            child.setStyle(styleBlue);
+//            this.numOfTileInHand.get(index).setText(String.valueOf(this.currentPlayerMove.getHandAfterMove().size()));
+//            
+//        }
     }
 
     private void initAboveHeapLabel() {
@@ -535,6 +538,15 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
             }
         }
         //}
+    }
+
+    private void updateCurrPlayerBar() {
+       int index = rummikubLogic.getPlayers().indexOf(rummikubLogic.getCurrentPlayer());
+        for (Node child : this.playersBar.get(index).getChildren()) {
+            child.setStyle(styleBlue);
+            this.numOfTileInHand.get(index).setText(String.valueOf(this.currentPlayerMove.getHandAfterMove().size()));
+            
+        }
     }
 
 }

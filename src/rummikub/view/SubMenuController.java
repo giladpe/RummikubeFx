@@ -18,7 +18,8 @@ import rummikub.Rummikub;
  *
  * @author giladPe
  */
-public class SubMenuController implements Initializable,ControlledScreen {
+public class SubMenuController implements Initializable, ControlledScreen {
+
     @FXML
     private Button saveGame;
     @FXML
@@ -36,42 +37,54 @@ public class SubMenuController implements Initializable,ControlledScreen {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-    }    
+    }
 
     @FXML
     private void handleSaveGameButtonAction(ActionEvent event) {
-        SaveGameMenuController saveScreen = (SaveGameMenuController)this.myController.getControllerScreen(Rummikub.SAVE_GAME_SCREEN_ID);
-        this.myController.setScreen(Rummikub.SAVE_GAME_SCREEN_ID,saveScreen);
+        SaveGameMenuController saveScreen = (SaveGameMenuController) this.myController.getControllerScreen(Rummikub.SAVE_GAME_SCREEN_ID);
+        this.myController.setScreen(Rummikub.SAVE_GAME_SCREEN_ID, saveScreen);
     }
-    
+
     //TODO: 
     @FXML
     private void handlePlayerQuitButtonAction(ActionEvent event) {
+        PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
+        gameScreen.getRummikubLogic().removeCurrentPlayerFromTheGame();
+        if (!gameScreen.getRummikubLogic().isGameOver()) {
+            gameScreen.swapTurns();
+        }
+        if (!(gameScreen.getRummikubLogic().isGameOver() || gameScreen.getRummikubLogic().isOnlyOnePlayerLeft())){
+            gameScreen.show();
+            this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, gameScreen);
+        }
+        else{
+            this.myController.setScreen(Rummikub.RESAULT_SCREEN_ID, gameScreen);
+        }
         
+
     }
 
     //TODO: restart the logic of the game and the screen
     @FXML
     private void handleRestartGameButtonAction(ActionEvent event) {
-        PlayScreenController gameScreen = (PlayScreenController)this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
+        PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
         gameScreen.createNewGame(gameScreen.getRummikubLogic().getGameSettings());
-        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,gameScreen);
+        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, gameScreen);
         gameScreen.show();
     }
 
     //TODO: after loading the file we need to start a game with that file
-
     @FXML
     private void handleResumeGameButtonAction(ActionEvent event) {
-        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,ScreensController.NOT_RESETABLE);
-        
+        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, ScreensController.NOT_RESETABLE);
+
     }
 
     @FXML
     private void handleExitToMainMenuButtonAction(ActionEvent event) {
-        this.myController.setScreen(Rummikub.MAINMENU_SCREEN_ID,(PlayScreenController)myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID));
+        this.myController.setScreen(Rummikub.MAINMENU_SCREEN_ID, (PlayScreenController) myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID));
     }
-    
+
     @Override
     public void setScreenParent(ScreensController parentScreen) {
         this.myController = parentScreen;
