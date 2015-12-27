@@ -45,9 +45,6 @@
     -fx-font-family: Georgia;
     -fx-font-weight: bold;
     -fx-pref-height: 30;
-   // -fx-background-image: url("nameF.png");
-    //-fx-background-size:100% 100%;
-    //-fx-background-position: center;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 #nameFcurrPlayer{
@@ -142,8 +139,6 @@ withdrawCard{
     -fx-background-size:100% 100%;
     -fx-background-position: center;
     -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
-    //-fx-alignment:TOP_CENTER;
-    //-fx-text-alignment:center;
     -fx-pref-tile-height: 40;
     -fx-pref-tile-width: 30;
 }
