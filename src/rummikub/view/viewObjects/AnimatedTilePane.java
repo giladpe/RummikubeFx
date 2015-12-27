@@ -481,7 +481,9 @@ public class AnimatedTilePane extends HBox {
         System.out.println("Target: X=" + targetLocation.getX() + " Y=" + targetLocation.getY());
         System.out.println("Source: X=" + sourceLocation.getX() + " Y=" + sourceLocation.getY());
             
-        this.sourceLocation = this.targetLocation;
+        //this.sourceLocation = this.targetLocation;
+        this.sourceLocation.setLocation(this.targetLocation);
+
     }
 }
 
