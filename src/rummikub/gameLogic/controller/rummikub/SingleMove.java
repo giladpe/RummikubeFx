@@ -9,6 +9,18 @@ import java.awt.Point;
 
 
 public class SingleMove {
+
+    public void setnSource(int nSource) {
+        this.nSource = nSource;
+    }
+
+    public void setpTarget(Point pTarget) {
+        this.pTarget = pTarget;
+    }
+
+    public void setpSource(Point pSource) {
+        this.pSource = pSource;
+    }
     
     public enum MoveType {
         HAND_TO_BOARD(0),

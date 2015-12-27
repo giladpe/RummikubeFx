@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -331,7 +332,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private void createPlayerHand(ArrayList<Tile> handTiles) {
         for (Tile currTile : handTiles) {
             AnimatedTilePane viewTile = new AnimatedTilePane(currTile);
-            viewTile.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            viewTile.addHandListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
 //                if (newValue) {
 //                    //this.dealWithSingleMoveResualt(viewTile.getSingleMove());
 //                    removeTileFromHand(viewTile);
@@ -339,9 +340,17 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
                 updateHand(viewTile);
 //                }
             });
+            viewTile.addBoardListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if (newValue) {
+                        updateBoard(viewTile);
+                    }
+                }
 
+            });
             this.handTile.getChildren().add(viewTile);
-            viewTile.setSourceLocation();
+                viewTile.setSourceLocation();
         }
     }
 
@@ -361,9 +370,17 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //        showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
 //    }
     private void updateHand(AnimatedTilePane viewTile) {
+        System.out.println("Hand:");
+        dealWithSingleMoveResualt(viewTile.test());
         this.handTile.getChildren().clear();
-        this.dealWithSingleMoveResualt(viewTile.getSingleMove());
+        viewTile.updateSource();
         showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
+    }
+
+    private void updateBoard(AnimatedTilePane viewTile) {
+        System.out.println("BOARD:");
+        dealWithSingleMoveResualt(viewTile.test());
+        viewTile.updateSource();
     }
 
     public void initCurrentPlayerMove() {
