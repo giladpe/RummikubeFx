@@ -79,6 +79,7 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
                     loadGame(file);
                 }
             });
+                
         }
 
         //   initCurrentPlayerMove()
@@ -121,13 +122,13 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
 
                 PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
                 gameScreen.setRummikubLogic(rummikubLogic);
-                gameScreen.show();
-                this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, gameScreen);
+                
+                 this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, ScreensController.NOT_RESETABLE);
                 gameScreen.initCurrentPlayerMove();
+                gameScreen.show();
+                gameScreen.showBoard();
                 resetScreen();
-//                playGame();
-//                roundResualt();
-
+               
             }
         } catch (SAXException | IOException ex) {
             succedLoadingFile = false;
@@ -138,6 +139,7 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
         }
     }
 
+    @Override
     public void resetScreen() {
         this.errorMsg.setText(EMPTY_STRING);
     }

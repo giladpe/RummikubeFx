@@ -117,7 +117,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
             // Swap players
             if (!rummikubLogic.isGameOver()) {
                 swapTurnTimeLineDelay.play();
-                
+
             } else {
                 //game is over - swap next screen??? or something like that
                 //will be resetable??
@@ -143,7 +143,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
             if (rummikubLogic.isGameOver() || rummikubLogic.isOnlyOnePlayerLeft()) {
                 //it means the game is over..... what we do now
                 //will be resetable??
-                //this.myController.setScreen(Rummikub.RESAULT_SCREEN_ID, ScreensController.NOT_RESETABLE);
+                this.myController.setScreen(Rummikub.RESULT_SCREEN_ID, ScreensController.NOT_RESETABLE);
             }
 
             swapTurnTimeLineDelay.play();
@@ -205,7 +205,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
         this.handTile.setOnDragDropped((event) -> {
             Dragboard db = event.getDragboard();
-            AnimatedTilePane currTile = (AnimatedTilePane)db.getContent(DataFormat.RTF);
+            AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
 
             boolean success = false;
             if (event.getTransferMode() == TransferMode.MOVE) {
@@ -244,6 +244,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //    private void styleOfHandWhenExit() {
 //        this.handTile.setStyle("-fx-border-color: none; -fx-border-width: 0");
 //    }
+
     private void initPlayers() {
         this.playersBar.add(barPlayer1);
         this.playersBar.add(barPlayer2);
@@ -299,6 +300,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         initCurrPlayerLabel();
         initAboveHeapLabel();
         initHeapButton();
+        //showBoard();
     }
 
     private void setLabel(Player player, int index) {
@@ -319,6 +321,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private void showPlayerHand(Player player) {
         createPlayerHand(player.getListPlayerTiles());
+        
     }
 
     private void showPlayerPlayingHand(ArrayList<Tile> handTiles) {
@@ -327,7 +330,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private void createPlayerHand(ArrayList<Tile> handTiles) {
         for (Tile currTile : handTiles) {
-            AnimatedTilePane viewTile = new AnimatedTilePane(currTile);
+            AnimatedTilePane viewTile = new AnimatedTilePane(currTile, !(AnimatedTilePane.TILE_BELONG_TO_BOARD));
             viewTile.addHandListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
 //                if (newValue) {
 //                    //this.dealWithSingleMoveResualt(viewTile.getSingleMove());
@@ -346,10 +349,39 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
             });
             this.handTile.getChildren().add(viewTile);
-                viewTile.setSourceLocation();
+            viewTile.setSourceLocation();
         }
     }
 
+    public void showBoard() {
+        this.centerPane= new AnimatedFlowPane();
+        createBoardToShow(this.rummikubLogic.getGameBoard());
+    }
+
+    private void createBoardToShow(Board board) {
+        for (Serie serie : board.getListOfSerie()) {
+            AnimatedSeriePane viewSerie = new AnimatedSeriePane();
+            
+            for (Tile currTile : serie.getSerieOfTiles()) {
+                AnimatedTilePane viewTile = new AnimatedTilePane(currTile, AnimatedTilePane.TILE_BELONG_TO_BOARD);
+                viewTile.addHandListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                    updateHand(viewTile);
+                });
+                viewTile.addBoardListener(new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        if (newValue) {
+                            updateBoard(viewTile);
+                        }
+                    }
+                });
+
+                viewSerie.getChildren().add(viewTile);
+            }
+            this.centerPane.getChildren().add(viewSerie);
+            viewSerie.updateSerieTilesSource();
+        }
+    }
     //need to sigh tile events......
 //    private void showBoard(){
 //    ArrayList<Serie> serieList = this.rummikubLogic.getGameBoard().getListOfSerie();
@@ -365,7 +397,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //        this.dealWithSingleMoveResualt(currTile.getSingleMove());
 //        showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
 //    }
-    
+
     private void updateHand(AnimatedTilePane viewTile) {
         dealWithSingleMoveResualt(viewTile.test());
         this.handTile.getChildren().clear();
@@ -418,7 +450,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         }
 
         for (Player player : rummikubLogic.getPlayers()) {
-           this.numOfTileInHand.get(index).setText(String.valueOf(player.getListPlayerTiles().size()));
+            this.numOfTileInHand.get(index).setText(String.valueOf(player.getListPlayerTiles().size()));
             index++;
         }
 //        for (Label playersLabel : playersLabels) {
@@ -505,9 +537,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //        
 //        return turnResult;
 //    }
-    
-    
-private void dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/SingleMove singleMove) {
+    private void dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/SingleMove singleMove) {
         SingleMove.SingleMoveResult singleMoveResualt;
         //if (turnResult == Utils.TurnMenuResult.CONTINUE) {
         singleMoveResualt = this.currentPlayerMove.implementSingleMove(singleMove);
@@ -533,7 +563,7 @@ private void dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/Singl
             }
             case LEGAL_MOVE:
                 this.errorMsg.setText(Utils.Constants.QuestionsAndMessagesToUser.SUCCSESSFUL_MOVE);
-                
+
             default: {
                 break;
             }
@@ -542,11 +572,11 @@ private void dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/Singl
     }
 
     private void updateCurrPlayerBar() {
-       int index = rummikubLogic.getPlayers().indexOf(rummikubLogic.getCurrentPlayer());
+        int index = rummikubLogic.getPlayers().indexOf(rummikubLogic.getCurrentPlayer());
         for (Node child : this.playersBar.get(index).getChildren()) {
             child.setStyle(styleBlue);
             this.numOfTileInHand.get(index).setText(String.valueOf(this.currentPlayerMove.getHandAfterMove().size()));
-            
+
         }
     }
 

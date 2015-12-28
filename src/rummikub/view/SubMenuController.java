@@ -59,9 +59,9 @@ public class SubMenuController implements Initializable, ControlledScreen {
             this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, gameScreen);
         }
         else{
-            ResultScreenController resultScreen = (ResultScreenController) this.myController.getControllerScreen(Rummikub.RESAULT_SCREEN_ID);
+            ResultScreenController resultScreen = (ResultScreenController) this.myController.getControllerScreen(Rummikub.RESULT_SCREEN_ID);
             resultScreen.updatedGameResultMsg();
-            this.myController.setScreen(Rummikub.RESAULT_SCREEN_ID, gameScreen);
+            this.myController.setScreen(Rummikub.RESULT_SCREEN_ID, gameScreen);
         }
         
 

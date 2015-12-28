@@ -233,6 +233,7 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 //            event.consume();
 //        });
     }
+    @Override
     public void resetScreen() {
         this.getChildren().clear();
         createNewSerieAddinArea();
