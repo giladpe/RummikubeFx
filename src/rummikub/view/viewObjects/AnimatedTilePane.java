@@ -56,7 +56,7 @@ public class AnimatedTilePane extends HBox {
     private Point targetLocation;
     //int move;
     private SingleMove.MoveType move;
-    private static final boolean BOARD_TO_BOARD=true;
+    private static final boolean BOARD_TO_BOARD = true;
 
     public AnimatedTilePane(Tile currTile) {
         super();
@@ -203,9 +203,14 @@ public class AnimatedTilePane extends HBox {
             indexSource = checkIfToAddTileAfterTheDroppedOnTile(indexSource);
 
             if (holdingSerie.getChildren().contains(currTile)) {
+                if (indexSource >= holdingSerie.getChildren().size()) {
+                    holdingSerie.getChildren().remove(currTile);
+                    holdingSerie.getChildren().add(currTile);
+                }
+                else{
                 holdingSerie.getChildren().remove(currTile);
                 holdingSerie.getChildren().add(indexSource, currTile);
-
+                }
             } else {
                 holdingSerie.getChildren().add(indexSource, currTile);
             }
@@ -302,7 +307,7 @@ public class AnimatedTilePane extends HBox {
                 this.isTileMovedFromBoardToBoard.set(!BOARD_TO_BOARD);
             }
         }
-    //    this.test();
+        //    this.test();
 
         event.consume();
     }
@@ -340,6 +345,7 @@ public class AnimatedTilePane extends HBox {
         this.sourceLocation = new Point();
         this.targetLocation = new Point();
     }
+
     public void addBoardListener(ChangeListener<Boolean> newListener) {
         this.isTileMovedFromBoardToBoard.addListener(newListener);
     }
@@ -477,13 +483,18 @@ public class AnimatedTilePane extends HBox {
 //        timeline.play();
 //    }
     public void updateSource() {
-        System.out.println("Update");
-        System.out.println("Target: X=" + targetLocation.getX() + " Y=" + targetLocation.getY());
-        System.out.println("Source: X=" + sourceLocation.getX() + " Y=" + sourceLocation.getY());
-            
-        //this.sourceLocation = this.targetLocation;
-        this.sourceLocation.setLocation(this.targetLocation);
+        //System.out.println("Update");
+        //System.out.println("Target: X=" + targetLocation.getX() + " Y=" + targetLocation.getY());
+        //System.out.println("Source: X=" + sourceLocation.getX() + " Y=" + sourceLocation.getY());
 
+        //this.sourceLocation = this.targetLocation;
+        //this.sourceLocation.setLocation(this.targetLocation);
+        AnimatedSeriePane serieCurr = (AnimatedSeriePane) this.getParent();
+
+        for (Node tile : serieCurr.getChildren()) {
+            ((AnimatedTilePane) tile).setSourceLocation();
+            //((AnimatedTilePane)tile).tile
+        }
     }
 }
 
