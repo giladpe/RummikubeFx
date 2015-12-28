@@ -165,12 +165,13 @@ public class AnimatedTilePane extends HBox {
                     if (indexSource >= holdingSerie.getChildren().size()) {
                         holdingSerie.getChildren().remove(currTile);
                         holdingSerie.getChildren().add(currTile);
-                    } else {
+                    } 
+                    else {
                         holdingSerie.getChildren().remove(currTile);
                         holdingSerie.getChildren().add(indexSource, currTile);
-
                     }
-                } else {
+                }
+                else {
                     holdingSerie.getChildren().add(indexSource, currTile);
                 }                
             //} 
@@ -185,7 +186,7 @@ public class AnimatedTilePane extends HBox {
 
 
     private void OnDragDone(DragEvent event) {
-        boolean isTileDroppedInBoard, isTileDroppedInHand;
+        boolean isTileDroppedInBoard, isTileDroppedInHandFromBoard;
 
         Point pTarget, pSource;
         Dragboard db = event.getDragboard();
@@ -195,9 +196,10 @@ public class AnimatedTilePane extends HBox {
 
             isTileDroppedInBoard = ((Node) event.getTarget()).getParent().getParent().getClass() == AnimatedFlowPane.class;
             isTileDroppedInBoard = isTileDroppedInBoard && !currTile.getIsTileDroppedInHand();
-            isTileDroppedInHand = !isTileDroppedInBoard;
+            isTileDroppedInHandFromBoard = !isTileDroppedInBoard;
 
             if (isTileDroppedInBoard) {
+                //make singleMove From Hand To Board
                 currTile.setIsTileDroppedInHand(false);
                 pTarget = new Point(currTile.getIndexOfMySerieInBorad(event), currTile.getIndexOfMeInSerie(event));
                 if (!this.isTileMovedFromHandToBoard.get()) {
@@ -215,7 +217,7 @@ public class AnimatedTilePane extends HBox {
 // this.singleMove = new SingleMove(pTarget, pSource, SingleMove.MoveType.BOARD_TO_BOARD);
 
                 }
-            } else if (isTileDroppedInHand) {
+            } else if (isTileDroppedInHandFromBoard) {
                 //make singleMove From Board To Hand
                 currTile.setIsTileDroppedInHand(true);
                 pSource = new Point(currTile.getIndexOfMySerieInBorad(event), currTile.getIndexOfMeInSerie(event));

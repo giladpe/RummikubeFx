@@ -365,8 +365,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //        this.dealWithSingleMoveResualt(currTile.getSingleMove());
 //        showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
 //    }
+    
     private void updateHand(AnimatedTilePane viewTile) {
-        System.out.println("Hand:");
         dealWithSingleMoveResualt(viewTile.test());
         this.handTile.getChildren().clear();
         viewTile.updateSource();
@@ -375,7 +375,6 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
 
     private void updateBoard(AnimatedTilePane viewTile) {
-        System.out.println("BOARD:");
         dealWithSingleMoveResualt(viewTile.test());
         viewTile.updateSource();
     }
@@ -534,6 +533,7 @@ private void dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/Singl
             }
             case LEGAL_MOVE:
                 this.errorMsg.setText(Utils.Constants.QuestionsAndMessagesToUser.SUCCSESSFUL_MOVE);
+                
             default: {
                 break;
             }
