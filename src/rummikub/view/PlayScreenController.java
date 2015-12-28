@@ -41,6 +41,7 @@ import rummikub.gameLogic.model.gameobjects.Serie;
 import rummikub.gameLogic.model.logic.PlayersMove;
 import rummikub.gameLogic.view.ioui.Utils;
 import rummikub.view.viewObjects.AnimatedFlowPane;
+import rummikub.view.viewObjects.AnimatedSeriePane;
 import rummikub.view.viewObjects.AnimatedTilePane;
 
 /**
@@ -194,7 +195,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //            animation.play();
             AnimatedTilePane currTile = (AnimatedTilePane) event.getDragboard().getContent(DataFormat.RTF);
             if (currTile.getClass() == AnimatedTilePane.class && currTile.getIsTileMovedFromHandToBoard()) {
-                event.acceptTransferModes(TransferMode.ANY);
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                //event.acceptTransferModes(TransferMode.ANY);
             }
 //            animation = new Timeline(new KeyFrame(Duration.millis(200),(ActionEvent event1) -> { styleOfHandWhenExit(); }));
 //            animation.play();
@@ -203,17 +205,11 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
         this.handTile.setOnDragDropped((event) -> {
             Dragboard db = event.getDragboard();
+            AnimatedTilePane currTile = (AnimatedTilePane)db.getContent(DataFormat.RTF);
+
             boolean success = false;
             if (event.getTransferMode() == TransferMode.MOVE) {
-                //need to make it work in future
-//                int nRowLoc,nColLoc;
-//                // get somehow the index
-//                nColLoc = 0;
-//                nRowLoc = 0;
-//                Point pointToTakeFromBoard = new Point(nRowLoc, nColLoc);
-//                SingleMove singleMove = new SingleMove(pointToTakeFromBoard, SingleMove.MoveType.BOARD_TO_HAND);
-//                dealWithSingleMoveResualt(singleMove);
-
+                currTile.setIsTileDroppedInHand(true);
                 success = true;
             }
 
@@ -241,7 +237,6 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //            event.consume();
 //        });
     }
-
 //    private void styleOfHandWhenEnter() {
 //        this.handTile.setStyle("-fx-border-color: blue; -fx-border-width: 0.5");
 //    }
@@ -281,6 +276,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         withdrawCard.setStyle("-fx-font-size: 24px; -fx-font-weight: bold");
         withdrawCard.setText("+");
         withdrawCard.setDisable(false);
+        this.errorMsg.setText(Utils.Constants.EMPTY_STRING);
         show();
     }
 
@@ -510,29 +506,34 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //        
 //        return turnResult;
 //    }
-    private void dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/SingleMove singleMove) {
+    
+    
+private void dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/SingleMove singleMove) {
         SingleMove.SingleMoveResult singleMoveResualt;
-
         //if (turnResult == Utils.TurnMenuResult.CONTINUE) {
         singleMoveResualt = this.currentPlayerMove.implementSingleMove(singleMove);
 
         switch (singleMoveResualt) {
             case TILE_NOT_BELONG_HAND: {
                 //show message on the scene
+                this.errorMsg.setText(Utils.Constants.ErrorMessages.ILEGAL_TILE_IS_NOT_BELONG_TO_HAND);
                 //InputOutputParser.printTileNotBelongToTheHand();
                 break;
             }
             case NOT_IN_THE_RIGHT_ORDER: {
                 //show message on the scene
+                this.errorMsg.setText(Utils.Constants.ErrorMessages.ILEGAL_TILE_INSERTED_NOT_IN_RIGHT_ORDER);
                 //InputOutputParser.printTileInsertedNotInRightOrder();
                 break;
             }
             case CAN_NOT_TOUCH_BOARD_IN_FIRST_MOVE: {
                 //show message on the scene
+                this.errorMsg.setText(Utils.Constants.ErrorMessages.ILEGAL_CANT_TUCH_BOARD_IN_FIRST_MOVE);
                 //InputOutputParser.printCantTuchBoardInFirstMove();
                 break;
             }
             case LEGAL_MOVE:
+                this.errorMsg.setText(Utils.Constants.QuestionsAndMessagesToUser.SUCCSESSFUL_MOVE);
             default: {
                 break;
             }

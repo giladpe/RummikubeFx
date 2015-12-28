@@ -14,6 +14,7 @@ public class Utils {
     public static class Constants{
         // Constants
         public static final String END_LINE = System.getProperty("line.separator");
+        public static final String EMPTY_STRING = "";
         static final String RIVALS = "Rivals: "; 
         static final int NUMBER_OF_SEPERATE_CHARS = 30; 
         static final char SEPERATE_CHAR = '_';
@@ -61,6 +62,8 @@ public class Utils {
             public static final String TIE = "We have a tie ";
             public static final String WINNER_IS = "The winner is: ";
             static final String PLAYER_IS_REMOVING = "%s is leaving the game. Bye Bye!!" + END_LINE;
+            public static final String SUCCSESSFUL_MOVE = "Move done";
+
         }
         
         // error messages
@@ -76,9 +79,9 @@ public class Utils {
             static final String ILEGAL_INPUT_SAVE_OR_SAVE_AS = "Ilegal input: plaese enter 1 to save and 2 to save as." + END_LINE;
             static final String ILEGAL_NUMIRIC_INPUT = "Wrong selection, You should enter a valid option numer."; /**/
             static final String ILEGAL_GAME_NAME = "Ilegal input, plaese enter a name.";
-            static final String ILEGAL_TILE_IS_NOT_BELONG_TO_HAND = "Ilegal move: tile is not exists in player's hand";
-            static final String ILEGAL_TILE_INSERTED_NOT_IN_RIGHT_ORDER = "Ilegal move: sequence have to be in right order";
-            static final String ILEGAL_CANT_TUCH_BOARD_IN_FIRST_MOVE = "Ilegal move: first move have to be from player hand only";
+            public static final String ILEGAL_TILE_IS_NOT_BELONG_TO_HAND = "Ilegal move: tile is not exists in player's hand";
+            public static final String ILEGAL_TILE_INSERTED_NOT_IN_RIGHT_ORDER = "Ilegal move: sequence have to be in right order";
+            public static final String ILEGAL_CANT_TUCH_BOARD_IN_FIRST_MOVE = "Ilegal move: first move have to be from player hand only";
             static final String ILEGAL_LOAD_GAME_XML_PATH = "ilegal path for xml file";
             public final static String FAIL_LOADING_FILE_MSG = "Error was not able to load file!"; 
             static final String ERROR_SAVING_FILE = "Error game was not saved!"; 
