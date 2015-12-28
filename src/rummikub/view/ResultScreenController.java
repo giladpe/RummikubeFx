@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import rummikub.Rummikub;
+import rummikub.gameLogic.view.ioui.Utils;
 
 /**
  * FXML Controller class
@@ -26,7 +27,7 @@ public class ResultScreenController implements Initializable, ControlledScreen {
     @FXML
     private Button restartGame;
     @FXML
-    private Label winnerName;
+    private Label resultMsg;
     private ScreensController myController;
     /**
      * Initializes the controller class.
@@ -52,6 +53,18 @@ public class ResultScreenController implements Initializable, ControlledScreen {
     @Override
     public void setScreenParent(ScreensController parentScreen) {
         this.myController = parentScreen;
+    }
+    
+    public void updatedGameResultMsg() {
+        PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
+        
+        if(gameScreen.getRummikubLogic().isGameOver() && !gameScreen.getRummikubLogic().isTie()) {
+            this.resultMsg.setText(Utils.Constants.QuestionsAndMessagesToUser.WINNER_IS + 
+                                   Utils.Constants.END_LINE + gameScreen.getRummikubLogic().getWinner().getName() );
+        }
+        else {
+            this.resultMsg.setText(Utils.Constants.QuestionsAndMessagesToUser.TIE);
+        }
     }
 
 }

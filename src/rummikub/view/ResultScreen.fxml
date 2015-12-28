@@ -49,8 +49,7 @@
       </HBox>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
          <children>
-            <Label id="winnerMsg" alignment="CENTER" contentDisplay="CENTER" text="The Winner is" textAlignment="CENTER" />
-            <Label id="winnerName" fx:id="winnerName" text="Name" textAlignment="CENTER" />
+            <Label id="winnerName" fx:id="resultMsg" textAlignment="CENTER" />
          </children>
       </VBox>
       <ImageView fitHeight="150.0" fitWidth="174.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2">

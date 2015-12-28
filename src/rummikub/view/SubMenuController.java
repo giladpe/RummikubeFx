@@ -53,11 +53,14 @@ public class SubMenuController implements Initializable, ControlledScreen {
         if (!gameScreen.getRummikubLogic().isGameOver()) {
             gameScreen.swapTurns();
         }
+        
         if (!(gameScreen.getRummikubLogic().isGameOver() || gameScreen.getRummikubLogic().isOnlyOnePlayerLeft())){
             gameScreen.show();
             this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, gameScreen);
         }
         else{
+            ResultScreenController resultScreen = (ResultScreenController) this.myController.getControllerScreen(Rummikub.RESAULT_SCREEN_ID);
+            resultScreen.updatedGameResultMsg();
             this.myController.setScreen(Rummikub.RESAULT_SCREEN_ID, gameScreen);
         }
         

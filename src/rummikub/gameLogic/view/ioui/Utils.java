@@ -13,7 +13,7 @@ import rummikub.gameLogic.model.logic.Settings;
 public class Utils {
     public static class Constants{
         // Constants
-        static final String END_LINE = System.getProperty("line.separator");
+        public static final String END_LINE = System.getProperty("line.separator");
         static final String RIVALS = "Rivals: "; 
         static final int NUMBER_OF_SEPERATE_CHARS = 30; 
         static final char SEPERATE_CHAR = '_';
@@ -31,7 +31,7 @@ public class Utils {
         }
         
         // questions
-        public static class QuestionsToUser{
+        public static class QuestionsAndMessagesToUser{
             static final String TOTAL_PLAYERS_NUMBER_QUESTION = String.format("Please enter the players total number (%d-%d): ",Settings.MIN_NUMBER_OF_PLAYERS,Settings.MAX_NUMBER_OF_PLAYERS);
             static final String COMPUTER_PLAYERS_NUMBER_QUESTION = "Please enter the computer players number (0-%s): ";
             static final String PLAYER_NAME_QUESTION = "Please enter the player name (non duplicate name): ";
@@ -57,9 +57,9 @@ public class Utils {
             static final String SAVE_OR_SAVEAS = "1. SAVE. " + END_LINE
                                              + "2. SAVE AS. " + END_LINE;           
             static final String SKIP_TURN = "would u like to skip your turn? (Y/N) ";
-            static final String GAME_OVER = "Game over... ";
-            static final String TIE = "We have a tie ";
-            static final String WINNER_IS = "The winner is: ";
+            public static final String GAME_OVER = "Game over... ";
+            public static final String TIE = "We have a tie ";
+            public static final String WINNER_IS = "The winner is: ";
             static final String PLAYER_IS_REMOVING = "%s is leaving the game. Bye Bye!!" + END_LINE;
         }
         

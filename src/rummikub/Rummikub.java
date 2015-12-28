@@ -30,8 +30,8 @@ public class Rummikub extends Application {
     public static final String SAVE_GAME_FXML = "SaveGameMenu.fxml";
 
     //not created yet
-    public static final String RESAULT_SCREEN_ID = "resualtScreen";
-    public static final String RESAULT_SCREEN_FXML = "ResualtScreen.fxml";
+    public static final String RESAULT_SCREEN_ID = "resultScreen";
+    public static final String RESAULT_SCREEN_FXML = "ResultScreen.fxml";
 
     @Override
     public void start(Stage primaryStage) {

@@ -220,7 +220,7 @@ final public class InputOutputParser {
         String answer = null;
         boolean found = false;
         
-        showUser(Utils.Constants.QuestionsToUser.PLAYER_NAME_QUESTION);
+        showUser(Utils.Constants.QuestionsAndMessagesToUser.PLAYER_NAME_QUESTION);
         Scanner scanIn = new Scanner(System.in);         
         
         while(!found && scanIn.hasNext()){
@@ -244,7 +244,7 @@ final public class InputOutputParser {
     }
 
     public static int getLocationInHandFromUser(int maxIndex){
-        String answer = getInputFromUser(Utils.Constants.QuestionsToUser.PLAYER_TILE_INDEX,
+        String answer = getInputFromUser(Utils.Constants.QuestionsAndMessagesToUser.PLAYER_TILE_INDEX,
                                         String.format(Utils.Constants.ErrorMessages.ILEGAL_INPUT_INT_BETWEEN, "0", String.valueOf(maxIndex-1)), 
                                         String.format(makePatteren(maxIndex-1)));
         
@@ -254,43 +254,43 @@ final public class InputOutputParser {
     public static int getRowWhereToPlaceNewPoint(int maxRow) {
         showUser("enter row number where to put the new value in board ");
         
-        return getLocationInBoardFromUser(maxRow, Utils.Constants.QuestionsToUser.ROW_QUESTION);
+        return getLocationInBoardFromUser(maxRow, Utils.Constants.QuestionsAndMessagesToUser.ROW_QUESTION);
     }
     
     public static int getColWhereToPlaceNewPoint(int maxCol) {
         showUser("enter col number where to put the new value in board ");
         
-        return getLocationInBoardFromUser(maxCol, Utils.Constants.QuestionsToUser.COL_QUESTION);
+        return getLocationInBoardFromUser(maxCol, Utils.Constants.QuestionsAndMessagesToUser.COL_QUESTION);
     }
     
     public static int getRowWhereToTakeFromBoard(int maxRow) {
         showUser("enter row number where to take from board ");
         
-        return getLocationInBoardFromUser(maxRow, Utils.Constants.QuestionsToUser.ROW_QUESTION);
+        return getLocationInBoardFromUser(maxRow, Utils.Constants.QuestionsAndMessagesToUser.ROW_QUESTION);
     }
     
     public static int getColWhereToTakeFromBoard(int maxCol){
         showUser("enter col number where to take from board ");
         
-        return getLocationInBoardFromUser(maxCol, Utils.Constants.QuestionsToUser.COL_QUESTION);
+        return getLocationInBoardFromUser(maxCol, Utils.Constants.QuestionsAndMessagesToUser.COL_QUESTION);
     }
     
     public static boolean isFinishYourTurn(){
-        return yesNoQuestion(Utils.Constants.QuestionsToUser.CONTINUE_IN_TURN_QUESTION);
+        return yesNoQuestion(Utils.Constants.QuestionsAndMessagesToUser.CONTINUE_IN_TURN_QUESTION);
     }
     
     public static Utils.DealWithTileFromBoardOrHand isTakenFromBoardOrPlayerList(){
-        return boardOrHandQuestion(Utils.Constants.QuestionsToUser.TAKE_BOARD_OR_PLAYERLIST_QUESTION);
+        return boardOrHandQuestion(Utils.Constants.QuestionsAndMessagesToUser.TAKE_BOARD_OR_PLAYERLIST_QUESTION);
     }
     
     public static Utils.DealWithTileFromBoardOrHand isPutInBoardOrPlayerHand(){
-        return boardOrHandQuestion(Utils.Constants.QuestionsToUser.PUT_BOARD_OR_PLAYERLIST_QUESTION);
+        return boardOrHandQuestion(Utils.Constants.QuestionsAndMessagesToUser.PUT_BOARD_OR_PLAYERLIST_QUESTION);
     }
         
     public static int getTotalNumOfPlayers(){
         String answer;
         
-        answer = getInputFromUser(Utils.Constants.QuestionsToUser.TOTAL_PLAYERS_NUMBER_QUESTION, 
+        answer = getInputFromUser(Utils.Constants.QuestionsAndMessagesToUser.TOTAL_PLAYERS_NUMBER_QUESTION, 
                                   Utils.Constants.ErrorMessages.ILEGAL_TOTAL_PLAYER_NUMBER, 
                                   Utils.Constants.ControlersPattern.PLAYER_TOTAL_NUMBER_OPTIONS);
             
@@ -300,7 +300,7 @@ final public class InputOutputParser {
     public static int getComputerPlayersNumber(int totalNumberOfPlayers){
         String answer;
         
-        answer = getInputFromUser(String.format(Utils.Constants.QuestionsToUser.COMPUTER_PLAYERS_NUMBER_QUESTION, String.valueOf(totalNumberOfPlayers)), 
+        answer = getInputFromUser(String.format(Utils.Constants.QuestionsAndMessagesToUser.COMPUTER_PLAYERS_NUMBER_QUESTION, String.valueOf(totalNumberOfPlayers)), 
                                   String.format(Utils.Constants.ErrorMessages.ILEGAL_COMPUTER_PLAYER_NUMBER, String.valueOf(totalNumberOfPlayers)), 
                                   String.format(makePatteren(totalNumberOfPlayers)));
             
@@ -323,7 +323,7 @@ final public class InputOutputParser {
         String answer;
         Utils.MainMenuResult returnValue = null;
         
-        answer = getInputFromUser(Utils.Constants.QuestionsToUser.MAIN_MENU,
+        answer = getInputFromUser(Utils.Constants.QuestionsAndMessagesToUser.MAIN_MENU,
                                   Utils.Constants.ErrorMessages.ILEGAL_INPUT_MAIN_MENU, 
                                   Utils.Constants.ControlersPattern.ONE_TWO_THREE_OPTIONS);
         
@@ -343,7 +343,7 @@ final public class InputOutputParser {
     public static String getGameName() {
         String gameNameToReturn;
         
-        gameNameToReturn = getInputFromUser(Utils.Constants.QuestionsToUser.GAME_NAME_QUESTION, 
+        gameNameToReturn = getInputFromUser(Utils.Constants.QuestionsAndMessagesToUser.GAME_NAME_QUESTION, 
                          Utils.Constants.ErrorMessages.ILEGAL_GAME_NAME, 
                          Utils.Constants.ControlersPattern.GAME_NAME_OPTION);
         
@@ -351,7 +351,7 @@ final public class InputOutputParser {
     }
     
     public static  boolean isSkipTurnOrPlay() {
-        return yesNoQuestion(Utils.Constants.QuestionsToUser.SKIP_TURN);    
+        return yesNoQuestion(Utils.Constants.QuestionsAndMessagesToUser.SKIP_TURN);    
     }
     
     public static void printGameScreen(Player currentPlayer, Board currentBoard , ArrayList<Player> players) /**/
@@ -373,7 +373,7 @@ final public class InputOutputParser {
         String answer;
         boolean isNewSettings;
         
-        answer = getInputFromUser(Utils.Constants.QuestionsToUser.NEW_SETTINGS_OR_OLD_SETTINGS_QUESTION,
+        answer = getInputFromUser(Utils.Constants.QuestionsAndMessagesToUser.NEW_SETTINGS_OR_OLD_SETTINGS_QUESTION,
                                   Utils.Constants.ErrorMessages.ILEGAL_INPUT_1_2, 
                                   Utils.Constants.ControlersPattern.ONE_TWO_OPTIONS);
         
@@ -395,17 +395,17 @@ final public class InputOutputParser {
     }
 
     public static void printGameOverMsg() {
-        showUser(Utils.Constants.QuestionsToUser.GAME_OVER + "\n\n");
+        showUser(Utils.Constants.QuestionsAndMessagesToUser.GAME_OVER + "\n\n");
 
     }
 
     public static void printTieMsg() {
-        showUser(Utils.Constants.QuestionsToUser.TIE + "\n\n");
+        showUser(Utils.Constants.QuestionsAndMessagesToUser.TIE + "\n\n");
 
     }
 
     public static void ShowWinner(String winnersName) {
-        showUser(Utils.Constants.QuestionsToUser.WINNER_IS + winnersName + "\n\n");
+        showUser(Utils.Constants.QuestionsAndMessagesToUser.WINNER_IS + winnersName + "\n\n");
 
     }
 
@@ -413,14 +413,14 @@ final public class InputOutputParser {
         String path;
         File file;
         
-        path = getInputFromUser(Utils.Constants.QuestionsToUser.LOAD_XML_PATH_QUESTION, 
+        path = getInputFromUser(Utils.Constants.QuestionsAndMessagesToUser.LOAD_XML_PATH_QUESTION, 
                     Utils.Constants.ErrorMessages.ILEGAL_LOAD_GAME_XML_PATH, 
                     Utils.Constants.ControlersPattern.LOAD_XML_FILE_OPTION);
         file = new File(path);
             
         while(!file.isFile()){
             showUser(Utils.Constants.ErrorMessages.ILEGAL_LOAD_GAME_XML_PATH + Utils.Constants.END_LINE);
-            path = getInputFromUser(Utils.Constants.QuestionsToUser.LOAD_XML_PATH_QUESTION, 
+            path = getInputFromUser(Utils.Constants.QuestionsAndMessagesToUser.LOAD_XML_PATH_QUESTION, 
                     Utils.Constants.ErrorMessages.ILEGAL_LOAD_GAME_XML_PATH, 
                     Utils.Constants.ControlersPattern.LOAD_XML_FILE_OPTION);
             file = new File(path);
@@ -432,7 +432,7 @@ final public class InputOutputParser {
     public static String getPathToSaveXmlFile() {
         String path;
         
-        path = getInputFromUser(Utils.Constants.QuestionsToUser.LOAD_XML_PATH_QUESTION, 
+        path = getInputFromUser(Utils.Constants.QuestionsAndMessagesToUser.LOAD_XML_PATH_QUESTION, 
                     Utils.Constants.ErrorMessages.ILEGAL_LOAD_GAME_XML_PATH, 
                     Utils.Constants.ControlersPattern.LOAD_XML_FILE_OPTION);
         
@@ -443,7 +443,7 @@ final public class InputOutputParser {
         String answer;
         Utils.TurnMenuResult returnValue = null;
         
-        answer = getInputFromUser(Utils.Constants.QuestionsToUser.TURN_MENU_WITH_SAVE,
+        answer = getInputFromUser(Utils.Constants.QuestionsAndMessagesToUser.TURN_MENU_WITH_SAVE,
                                   Utils.Constants.ErrorMessages.ILEGAL_INPUT_1_2_3, 
                                   Utils.Constants.ControlersPattern.ONE_TWO_THREE_OPTIONS);
         
@@ -464,7 +464,7 @@ final public class InputOutputParser {
         String answer;
         Utils.TurnMenuResult returnValue = null;
         
-        answer = getInputFromUser(Utils.Constants.QuestionsToUser.TURN_MENU_WITHOUT_SAVE,
+        answer = getInputFromUser(Utils.Constants.QuestionsAndMessagesToUser.TURN_MENU_WITHOUT_SAVE,
                                   Utils.Constants.ErrorMessages.ILEGAL_INPUT_1_2, 
                                   Utils.Constants.ControlersPattern.ONE_TWO_OPTIONS);
         
@@ -491,7 +491,7 @@ final public class InputOutputParser {
         String answer;
         Utils.SaveOrSaveas returnValue = null;
 
-        answer = getInputFromUser(Utils.Constants.QuestionsToUser.SAVE_OR_SAVEAS,
+        answer = getInputFromUser(Utils.Constants.QuestionsAndMessagesToUser.SAVE_OR_SAVEAS,
                                   Utils.Constants.ErrorMessages.ILEGAL_INPUT_SAVE_OR_SAVE_AS, 
                                   Utils.Constants.ControlersPattern.ONE_TWO_OPTIONS);
 
@@ -520,7 +520,7 @@ final public class InputOutputParser {
     }
 
     public static void playerIsRemoving(String name) {
-        showUser(String.format(Utils.Constants.QuestionsToUser.PLAYER_IS_REMOVING, name));
+        showUser(String.format(Utils.Constants.QuestionsAndMessagesToUser.PLAYER_IS_REMOVING, name));
     }
 }
  
