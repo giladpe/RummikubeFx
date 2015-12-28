@@ -206,10 +206,10 @@ public class AnimatedTilePane extends HBox {
                 if (indexSource >= holdingSerie.getChildren().size()) {
                     holdingSerie.getChildren().remove(currTile);
                     holdingSerie.getChildren().add(currTile);
-                }
-                else{
-                holdingSerie.getChildren().remove(currTile);
-                holdingSerie.getChildren().add(indexSource, currTile);
+                } else {
+                    holdingSerie.getChildren().remove(currTile);
+                    holdingSerie.getChildren().add(indexSource, currTile);
+
                 }
             } else {
                 holdingSerie.getChildren().add(indexSource, currTile);
