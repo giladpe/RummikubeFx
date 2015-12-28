@@ -108,6 +108,16 @@
     -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
     
 }
+#gameMsg{
+    -fx-stroke-width: 1;
+    -fx-stroke: white;   
+    -fx-font-family: Georgia;
+    -fx-font-size: 16px;
+    -fx-text-fill: greenyellow;
+    -fx-font-weight: bold;
+    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
+}
+
 #errorMsg{
     -fx-font-family: Georgia;
     -fx-font-size: 16px;
