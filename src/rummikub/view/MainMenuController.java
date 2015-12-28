@@ -79,6 +79,7 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
                     loadGame(file);
                 }
             });
+        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, ScreensController.NOT_RESETABLE);
                 
         }
 
@@ -123,10 +124,11 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
                 PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
                 gameScreen.setRummikubLogic(rummikubLogic);
                 
-                 this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, ScreensController.NOT_RESETABLE);
+                //this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, ScreensController.NOT_RESETABLE);
+                gameScreen.resetScreen();
                 gameScreen.initCurrentPlayerMove();
-                gameScreen.show();
                 gameScreen.showBoard();
+                gameScreen.show();
                 resetScreen();
                
             }

@@ -358,7 +358,6 @@ public class Rummikub {
                                                JaxBXmlParser.getGameName());
                 playGame();
                 roundResualt();
-               
             }
         }
         catch (SAXException | IOException ex) {
