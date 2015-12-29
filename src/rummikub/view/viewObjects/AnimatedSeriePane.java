@@ -23,6 +23,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import static rummikub.view.viewObjects.AnimatedFlowPane.TILE_SPACING;
+import static rummikub.view.viewObjects.AnimatedTilePane.TILE_WIDTH;
 
 /**
  *
@@ -53,6 +54,10 @@ public class AnimatedSeriePane extends FlowPane {
 //        });
 
         //return series;
+    }
+        public void setSize() {
+        this.setMinWidth(this.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
+        this.setPrefWidth(this.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
     }
 
 //    private void setSerieEvents() {
@@ -130,5 +135,13 @@ for (Node tile : this.getChildren()) {
         ac.setWidth(gap);
         //ac.heightProperty().bind(this.prefHeightProperty());
         getChildren().addAll(index, Arrays.asList(ac, node));
+    }
+
+    public void removeTileFromSerie(int i) {
+        this.getChildren().remove(i);
+        if(!this.getChildren().isEmpty()){
+            this.updateSerieTilesSource();
+        }
+        
     }
 }

@@ -33,6 +33,18 @@ import rummikub.gameLogic.model.gameobjects.Tile;
  */
 public class AnimatedTilePane extends HBox {
 
+    public Point getSourceLocation() {
+        return sourceLocation;
+    }
+
+    public Point getTargetLocation() {
+        return targetLocation;
+    }
+
+    public SingleMove.MoveType getMove() {
+        return move;
+    }
+
     public static final boolean TILE_BELONG_TO_BOARD=true;
     public static final double TILE_WIDTH = 30;
     public static final double TILE_SPACING = 1.5;

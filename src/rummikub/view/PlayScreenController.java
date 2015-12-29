@@ -5,6 +5,7 @@
  */
 package rummikub.view;
 
+import java.awt.Point;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -13,6 +14,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -270,7 +272,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     //TODO:
     @Override
     public void resetScreen() {
-        ((AnimatedFlowPane) this.board.getCenter()).resetScreen();
+        //((AnimatedFlowPane) this.board.getCenter()).resetScreen();
         resetPlayersBar();
         setPlayersBar();
         handTile.getChildren().clear();
@@ -296,7 +298,6 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         setPlayersBar();
         showPlayerHand(this.rummikubLogic.getCurrentPlayer());
         //need to debub it
-        //showBoard();
         initCurrPlayerLabel();
         initAboveHeapLabel();
         initHeapButton();
@@ -321,32 +322,39 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private void showPlayerHand(Player player) {
         createPlayerHand(player.getListPlayerTiles());
-        
+
     }
 
     private void showPlayerPlayingHand(ArrayList<Tile> handTiles) {
         createPlayerHand(handTiles);
     }
 
+    private void setHandListenerEvent(AnimatedTilePane viewTile) {
+        if (dealWithSingleMoveResualt(viewTile.test())) {
+            updateHand();
+        } else {
+            cancelLastMove(viewTile);
+        }
+    }
+
+    private void setBoardListenerEvent(boolean newValue, AnimatedTilePane viewTile) {
+        if (newValue) {
+            if (dealWithSingleMoveResualt(viewTile.test())) {
+                updateBoard(viewTile);
+            } else {
+                cancelLastMove(viewTile);
+            }
+        }
+    }
+
     private void createPlayerHand(ArrayList<Tile> handTiles) {
         for (Tile currTile : handTiles) {
             AnimatedTilePane viewTile = new AnimatedTilePane(currTile, !(AnimatedTilePane.TILE_BELONG_TO_BOARD));
             viewTile.addHandListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-//                if (newValue) {
-//                    //this.dealWithSingleMoveResualt(viewTile.getSingleMove());
-//                    removeTileFromHand(viewTile);
-//                } else {
-                updateHand(viewTile);
-//                }
+                setHandListenerEvent(viewTile);
             });
-            viewTile.addBoardListener(new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    if (newValue) {
-                        updateBoard(viewTile);
-                    }
-                }
-
+            viewTile.addBoardListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                setBoardListenerEvent(newValue, viewTile);
             });
             this.handTile.getChildren().add(viewTile);
             viewTile.setSourceLocation();
@@ -354,34 +362,73 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
 
     public void showBoard() {
-        this.centerPane= new AnimatedFlowPane();
+        this.centerPane = new AnimatedFlowPane();
         createBoardToShow(this.rummikubLogic.getGameBoard());
     }
 
     private void createBoardToShow(Board board) {
+        //ArrayList<AnimatedSeriePane> seriesList = new ArrayList<>();
         for (Serie serie : board.getListOfSerie()) {
             AnimatedSeriePane viewSerie = new AnimatedSeriePane();
-            
+
             for (Tile currTile : serie.getSerieOfTiles()) {
                 AnimatedTilePane viewTile = new AnimatedTilePane(currTile, AnimatedTilePane.TILE_BELONG_TO_BOARD);
                 viewTile.addHandListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                    updateHand(viewTile);
+                    setHandListenerEvent(viewTile);
                 });
-                viewTile.addBoardListener(new ChangeListener<Boolean>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                        if (newValue) {
-                            updateBoard(viewTile);
-                        }
-                    }
+                viewTile.addBoardListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                    setBoardListenerEvent(newValue, viewTile);
                 });
 
-                viewSerie.getChildren().add(viewTile);
+                viewSerie.getChildren().addAll(viewTile);
+                //viewSerie.setMinWidth(viewSerie.getChildren().size() * 30);
             }
-            this.centerPane.getChildren().add(viewSerie);
+            this.centerPane.getChildren().addAll(viewSerie);
             viewSerie.updateSerieTilesSource();
+
         }
     }
+
+    public void showGameBoard() {
+        showBoardTest(this.rummikubLogic.getGameBoard().getListOfSerie());
+    }
+
+    public void showCurrentPlayerBoard() {
+        showBoardTest(this.currentPlayerMove.getBoardAfterMove().getListOfSerie());
+    }
+
+    public void showBoardTest(ArrayList<Serie> serieList) {
+        centerPane.resetScreen();
+        ArrayList<FlowPane> flowPaneSeriesList = new ArrayList<>();
+        for (Serie serie : serieList) {
+            flowPaneSeriesList.add(createFlowPaneSerie(serie));
+        }
+        centerPane.getChildren().addAll(flowPaneSeriesList);
+    }
+
+    private FlowPane createFlowPaneSerie(Serie serie) {
+        FlowPane serieFlowPan = new AnimatedSeriePane();
+        serieFlowPan.getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
+            if (serieFlowPan.getChildren().isEmpty()) {
+                centerPane.removeEmptySerie(serieFlowPan);
+            } else {
+                ((AnimatedSeriePane) serieFlowPan).setSize();
+            }
+        });
+        for (Tile tile : serie.getSerieOfTiles()) {
+            AnimatedTilePane viewTile = new AnimatedTilePane(tile, AnimatedTilePane.TILE_BELONG_TO_BOARD);
+            viewTile.addHandListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                setHandListenerEvent(viewTile);
+            });
+            viewTile.addBoardListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                setBoardListenerEvent(newValue, viewTile);
+            });
+            serieFlowPan.getChildren().add(viewTile);
+        }
+        serieFlowPan.setMinWidth(serieFlowPan.getChildren().size() * 30);
+        return serieFlowPan;
+    }
+
     //need to sigh tile events......
 //    private void showBoard(){
 //    ArrayList<Serie> serieList = this.rummikubLogic.getGameBoard().getListOfSerie();
@@ -391,23 +438,31 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //        }
 //    centerPane.getChildren().addAll(flowPaneSeriesList);
 //    }
-//    private void removeTileFromHand(AnimatedTilePane currTile) {
-//        //need to remove it for currplayermove hand here or somwhere else
-//        this.handTile.getChildren().clear();
-//        this.dealWithSingleMoveResualt(currTile.getSingleMove());
-//        showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
+//    private FlowPane createFlowPaneSerie(Serie serie) {
+//        FlowPane serieFlowPan=this.centerPane.createSerie();
+//        for (Tile tile : serie.getSerieOfTiles()) {
+//            serieFlowPan.getChildren().add(new AnimatedTilePane(tile));
+//        }
+//        serieFlowPan.setMinWidth(serieFlowPan.getChildren().size()*30);
+//        return serieFlowPan;
 //    }
-
-    private void updateHand(AnimatedTilePane viewTile) {
-        dealWithSingleMoveResualt(viewTile.test());
+    private void removeTileFromHand(AnimatedTilePane currTile) {
+        //need to remove it for currplayermove hand here or somwhere else
         this.handTile.getChildren().clear();
-        viewTile.updateSource();
+        this.dealWithSingleMoveResualt(currTile.getSingleMove());
+        showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
+    }
+
+    private void updateHand() {
+        //dealWithSingleMoveResualt(viewTile.test());
+        this.handTile.getChildren().clear();
+        //viewTile.updateSource();
         showPlayerPlayingHand(currentPlayerMove.getHandAfterMove());
         updateCurrPlayerBar();
     }
 
     private void updateBoard(AnimatedTilePane viewTile) {
-        dealWithSingleMoveResualt(viewTile.test());
+        //dealWithSingleMoveResualt(viewTile.test());
         viewTile.updateSource();
     }
 
@@ -490,14 +545,6 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
 
 //    
-//    private FlowPane createFlowPaneSerie(Serie serie) {
-//        FlowPane serieFlowPan=this.centerPane.createSerie();
-//        for (Tile tile : serie.getSerieOfTiles()) {
-//            serieFlowPan.getChildren().add(new AnimatedTilePane(tile));
-//        }
-//        serieFlowPan.setMinWidth(serieFlowPan.getChildren().size()*30);
-//        return serieFlowPan;
-//    }    
     //test
     // Deals with the basic inputs from the user about the game board and his hand
 //    private Utils.TurnMenuResult getMoveFromPlayer(PlayersMove currentPlayerMove, Player printablePlayer, ArrayList<Player> printablePlayersList) {
@@ -537,11 +584,11 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //        
 //        return turnResult;
 //    }
-    private void dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/SingleMove singleMove) {
+    private boolean dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/SingleMove singleMove) {
         SingleMove.SingleMoveResult singleMoveResualt;
         //if (turnResult == Utils.TurnMenuResult.CONTINUE) {
         singleMoveResualt = this.currentPlayerMove.implementSingleMove(singleMove);
-
+        boolean isLegalMove = false;
         switch (singleMoveResualt) {
             case TILE_NOT_BELONG_HAND: {
                 //show message on the scene
@@ -562,20 +609,89 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
                 break;
             }
             case LEGAL_MOVE:
+            default:
                 this.errorMsg.setText(Utils.Constants.QuestionsAndMessagesToUser.SUCCSESSFUL_MOVE);
-
-            default: {
+                isLegalMove = true;
                 break;
-            }
+
         }
-        //}
+        return isLegalMove;
+//        if (singleMoveResualt != SingleMove.SingleMoveResult.LEGAL_MOVE) {
+//            centerPane.getChildren().clear();
+//            handTile.getChildren().clear();
+        ////add show board with currMoveBoard
+        ///add show hand with currPlayerMoveHand
     }
+    //}
 
     private void updateCurrPlayerBar() {
         int index = rummikubLogic.getPlayers().indexOf(rummikubLogic.getCurrentPlayer());
         for (Node child : this.playersBar.get(index).getChildren()) {
             child.setStyle(styleBlue);
             this.numOfTileInHand.get(index).setText(String.valueOf(this.currentPlayerMove.getHandAfterMove().size()));
+
+        }
+    }
+
+            if (isTileDroppedInBoard) {
+                //make singleMove From Hand To Board
+                currTile.setIsTileDroppedInHand(false);
+                pTarget = new Point(currTile.getIndexOfMySerieInBorad(event), currTile.getIndexOfMeInSerie(event));
+                if (!this.isTileMovedFromHandToBoard.get()) {
+                    this.targetLocation.setLocation(pTarget);
+                    this.move = SingleMove.MoveType.HAND_TO_BOARD;
+                    this.isTileMovedFromHandToBoard.set(TILE_MOVED_TO_BOARD);
+                    this.isTileMovedFromBoardToBoard.set(!BOARD_TO_BOARD);
+                } else {
+                    //make singleMove From Board To Board
+                    this.targetLocation.setLocation(pTarget);
+                    this.move = SingleMove.MoveType.BOARD_TO_BOARD;
+                    this.isTileMovedFromBoardToBoard.set(BOARD_TO_BOARD);
+// this.singleMove = new SingleMove(pTarget, pSource, SingleMove.MoveType.BOARD_TO_BOARD);
+
+                }
+            } else if (isTileDroppedInHandFromBoard) {
+                //make singleMove From Board To Hand
+                currTile.setIsTileDroppedInHand(true);
+                pSource = new Point(currTile.getIndexOfMySerieInBorad(event), currTile.getIndexOfMeInSerie(event));
+                //this.singleMove = new SingleMove(pSource, SingleMove.MoveType.BOARD_TO_HAND);
+                this.sourceLocation.setLocation(pSource);
+                this.move = SingleMove.MoveType.BOARD_TO_HAND;
+                this.isTileMovedFromHandToBoard.set(!TILE_MOVED_TO_BOARD);
+                this.isTileMovedFromBoardToBoard.set(!BOARD_TO_BOARD);
+                dealWithMovedTile(event);
+            }
+    private void cancelLastMove(AnimatedTilePane currTile) {
+        Point pTarget;
+        Point pTmp=new Point();
+        switch (currTile.getMove()) {
+            case HAND_TO_BOARD: {
+                //make singleMove From Hand To Board
+                currTile.setIsTileDroppedInHand(false);
+                  centerPane.getSerie((int)(currTile.getTargetLocation().getX())).removeTileFromSerie((int)(currTile.getTargetLocation().getY()));     
+                  updateHand();
+//                  this.targetLocation.setLocation(pTarget);
+//                    this.move = SingleMove.MoveType.HAND_TO_BOARD;
+//                    this.isTileMovedFromHandToBoard.set(TILE_MOVED_TO_BOARD);
+//                    this.isTileMovedFromBoardToBoard.set(!BOARD_TO_BOARD);
+                
+                break;
+            }
+            case BOARD_TO_BOARD: {
+                showCurrentPlayerBoard();
+                //updateHand();
+                
+//                currTile.setIsTileDroppedInHand(false);
+//                pTarget = new Point(currTile.getIndexOfMySerieInBorad(event), currTile.getIndexOfMeInSerie(event));
+//                  this.targetLocation.setLocation(pTarget);
+//                    this.move = SingleMove.MoveType.BOARD_TO_BOARD;
+//                    this.isTileMovedFromBoardToBoard.set(BOARD_TO_BOARD);
+                break;
+            }
+            case BOARD_TO_HAND: 
+                
+            default:
+                break;
 
         }
     }

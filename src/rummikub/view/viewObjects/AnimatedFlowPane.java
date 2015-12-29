@@ -28,7 +28,7 @@ import static rummikub.view.viewObjects.AnimatedTilePane.TILE_WIDTH;
  */
 public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 
-    static int INDEX_OF_NEW_SERIE_ADDING_ARREA=1;
+    static int INDEX_OF_NEW_SERIE_ADDING_ARREA = 1;
 
     //private SimpleBooleanProperty isMoveDone;
     //private static final int BOARD_SIZE = 5;
@@ -42,7 +42,6 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 //    public void addListener(ChangeListener<Boolean> newListener) {
 //        this.isMoveDone.addListener(newListener);
 //    }
-
     private void createFlowPane() {
         this.setMinSize(300, 300);
 //        isMoveDone = new SimpleBooleanProperty(false);
@@ -77,19 +76,18 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 //        });
     }
 
-    public void fixSize() {
-        FlowPane board = this;
-
-        for (Iterator<Node> it = board.getChildren().iterator(); it.hasNext();) {
-            FlowPane serie = (FlowPane) it.next();
-            if (serie.getChildren().isEmpty()) {
-                it.remove();
-            } else if (this.getChildren().indexOf(serie) > 0) {
-                setSize(serie);
-            }
-        }
-    }
-
+//    public void fixSize() {
+//        FlowPane board = this;
+//
+//        for (Iterator<Node> it = board.getChildren().iterator(); it.hasNext();) {
+//            FlowPane serie = (FlowPane) it.next();
+//            if (serie.getChildren().isEmpty()) {
+//                it.remove();
+//            } else if (this.getChildren().indexOf(serie) > 0) {
+//                serie.setSize();
+//            }
+//        }
+//    }
 //    public FlowPane createSerie() {
 //        //final Label cell = new Label();
 //        final FlowPane series = new FlowPane();
@@ -191,14 +189,11 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
             boolean success = false;
             if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
                 AnimatedSeriePane newSerie = new AnimatedSeriePane();
-                newSerie.getChildren().addListener(new ListChangeListener<Node>() {
-                    @Override
-                    public void onChanged(ListChangeListener.Change<? extends Node> c) {
-                        if (newSerie.getChildren().isEmpty()) {
-                            removeEmptySerie(newSerie);
-                        } else {
-                            setSize(newSerie);
-                        }
+                newSerie.getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
+                    if (newSerie.getChildren().isEmpty()) {
+                        removeEmptySerie(newSerie);
+                    } else {
+                        newSerie.setSize();
                     }
                 });
 //              int index = this.getChildren().indexOf(newSeries);
@@ -213,6 +208,7 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
             event.setDropCompleted(success);
             event.consume();
         });
+    }
 
 //        newSeries.setOnDragDropped((event) -> {
 //            Dragboard db = event.getDragboard();
@@ -232,7 +228,6 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 //            event.setDropCompleted(success);
 //            event.consume();
 //        });
-    }
     @Override
     public void resetScreen() {
         this.getChildren().clear();
@@ -241,13 +236,22 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 
     public void removeEmptySerie(FlowPane holdingSerie) {
         this.getChildren().remove(holdingSerie);
+        updateSeriesSourceLocation();
+        //update
     }
-
-    private void setSize(FlowPane serie) {
-        serie.setMinWidth(serie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
-        serie.setPrefWidth(serie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
+    public void updateSeriesSourceLocation(){
+        for (Node serie : this.getChildren()) {
+            ((AnimatedSeriePane)serie).updateSerieTilesSource();
+        }
     }
+//    public void setSize(FlowPane serie) {
+//        serie.setMinWidth(serie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
+//        serie.setPrefWidth(serie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
+//    }
 
+    public AnimatedSeriePane getSerie(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
 
 //************************Test Zone*****************************//
