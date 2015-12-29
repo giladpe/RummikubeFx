@@ -5,6 +5,7 @@
  */
 package rummikub.view.viewObjects;
 
+import java.awt.Point;
 import java.util.Iterator;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -19,6 +20,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
+import rummikub.gameLogic.controller.rummikub.SingleMove;
 import rummikub.view.ResetableScreen;
 import static rummikub.view.viewObjects.AnimatedTilePane.TILE_WIDTH;
 
@@ -186,23 +188,34 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 
         newSerieAddingArea.setOnDragDropped((DragEvent event) -> {
             Dragboard db = event.getDragboard();
+            AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
+
             boolean success = false;
             if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
                 AnimatedSeriePane newSerie = new AnimatedSeriePane();
                 newSerie.getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
-                    if (newSerie.getChildren().isEmpty()) {
-                        removeEmptySerie(newSerie);
-                    } else {
-                        newSerie.setSize();
-                    }
+                    onAddingAndRemovingSerie(newSerie);
                 });
+                
+                //int xTarget = this.getChildren().isEmpty()? 0 : this.getChildren().size()-1;
+                int xTarget = currTile.
+                int yTarget = 0;
+                Point pTarget = new Point(xTarget, yTarget);
+                FlowPane hand = ((FlowPane) currTile.getParent());
+                int ySource =  hand.getChildren().indexOf(currTile);
+                SingleMove singleMove = new SingleMove(pTarget, ySource, SingleMove.MoveType.HAND_TO_BOARD);
+
+                //SingleMove singleMove = new SingleMove(pSource, SingleMove.MoveType.HAND_TO_BOARD);
+                System.out.println(currTile.getIsLegalMove());
+                currTile.setSingleMove(singleMove);
+                System.out.println(currTile.getIsLegalMove());
 //              int index = this.getChildren().indexOf(newSeries);
 //                FlowPane serie = createSerie();
-                newSerie.getChildren().add((AnimatedTilePane) db.getContent(DataFormat.RTF));
-                this.getChildren().add(newSerie);
+//                newSerie.getChildren().add((AnimatedTilePane) db.getContent(DataFormat.RTF));
+//                this.getChildren().add(newSerie);
                 //this.updateSeriesSourceLocation();
                 //newSerieAddingArea (0),next(1)
-                success = true;
+                success = currTile.getIsLegalMove();
             }
 ////////////////////////////////            fixSize();
             event.setDropCompleted(success);
@@ -257,6 +270,15 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 //    public AnimatedSeriePane getSerie(int i) {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 //    }
+
+    private void onAddingAndRemovingSerie(AnimatedSeriePane newSerie) {
+        if (newSerie.getChildren().isEmpty()) {
+            removeEmptySerie(newSerie);
+        }
+        else {
+          newSerie.setSize();
+        }
+    }
 }
 
 //************************Test Zone*****************************//

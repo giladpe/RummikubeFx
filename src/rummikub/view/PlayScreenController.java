@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -61,7 +62,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     @FXML
     private Label errorMsg;
     @FXML
-    BorderPane board;
+    private BorderPane board;
     @FXML
     private Button menu;
     @FXML
@@ -210,11 +211,25 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         this.handTile.setOnDragDropped((event) -> {
             Dragboard db = event.getDragboard();
             AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
-
+            AnimatedSeriePane holdingSerie = (AnimatedSeriePane)currTile.getParent();
             boolean success = false;
             if (event.getTransferMode() == TransferMode.MOVE) {
-                currTile.setIsTileDroppedInHand(true);
-                success = true;
+                int ySource = holdingSerie.getChildren().isEmpty()? 0 : holdingSerie.getChildren().size()-1;
+                int xSource = this.centerPane.getSe(holdingSerie);
+                Point pSource = new Point(xSource, ySource);
+                SingleMove singleMove = new SingleMove(pSource, SingleMove.MoveType.BOARD_TO_HAND);
+
+                //SingleMove singleMove = new SingleMove(pSource, SingleMove.MoveType.HAND_TO_BOARD);
+                System.out.println(currTile.getIsLegalMove());
+                currTile.setSingleMove(singleMove);
+                System.out.println(currTile.getIsLegalMove());
+//              int index = this.getChildren().indexOf(newSeries);
+//                FlowPane serie = createSerie();
+//                newSerie.getChildren().add((AnimatedTilePane) db.getContent(DataFormat.RTF));
+//                this.getChildren().add(newSerie);
+                //this.updateSeriesSourceLocation();
+                //newSerieAddingArea (0),next(1)
+                success = currTile.getIsLegalMove();
             }
 
             event.setDropCompleted(success);
@@ -386,19 +401,41 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
         for (Tile currTile : handTiles) {
             AnimatedTilePane viewTile = new AnimatedTilePane(currTile, !(AnimatedTilePane.TILE_BELONG_TO_BOARD));
+            
             viewTile.addSingleMoveListener((ObservableValue<? extends SingleMove> observable, SingleMove oldValue, SingleMove newValue) -> {
                 makeSingleMove(newValue);
             });
+            
             this.isLegalMove.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                 viewTile.onSingleMoveDone(newValue);
+            });
+            
+            viewTile.addIsMoveSuccesfulyCompletedListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                onSuccesfulyCompletedMove(newValue);
             });
             this.handTile.getChildren().add(viewTile);
         }
     }
 
     private void makeSingleMove(SingleMove singleMove) {
-        this.isLegalMove.set(dealWithSingleMoveResualt(singleMove));
+        boolean isLegal = dealWithSingleMoveResualt(singleMove);
+        this.isLegalMove.set(isLegal);
     }
+    
+    private void onSuccesfulyCompletedMove(boolean newVal) {
+        if (newVal) {
+//            Platform.runLater(() -> {
+//                initScreenComponentetWithoutBoard();
+//                showCurrentGameBoardAndCurrentPlayerHand();
+//            });
+
+        //initScreenComponentetWithoutBoard();
+        initCurrPlayerLabel();
+        this.isLegalMove.set(false);
+        showCurrentGameBoardAndCurrentPlayerHand();  
+        } 
+    }
+
     
 //    public void showBoard() {
 //        this.centerPane = new AnimatedFlowPane();
@@ -459,13 +496,19 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
                 ((AnimatedSeriePane) serieFlowPan).setSize();
             }
         });
+        
         for (Tile tile : serie.getSerieOfTiles()) {
             AnimatedTilePane viewTile = new AnimatedTilePane(tile, AnimatedTilePane.TILE_BELONG_TO_BOARD);
-            viewTile.addHandListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                setHandListenerEvent(viewTile);
+            viewTile.addSingleMoveListener((ObservableValue<? extends SingleMove> observable, SingleMove oldValue, SingleMove newValue) -> {
+                makeSingleMove(newValue);
             });
-            viewTile.addBoardListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                setBoardListenerEvent(newValue, viewTile);
+            
+            this.isLegalMove.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                viewTile.onSingleMoveDone(newValue);
+            });
+            
+            viewTile.addIsMoveSuccesfulyCompletedListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                onSuccesfulyCompletedMove(newValue);
             });
             serieFlowPan.getChildren().add(viewTile);
         }
@@ -473,6 +516,44 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         return serieFlowPan;
     }
 
+    
+//    private FlowPane createFlowPaneSerie(Serie serie) {
+//        FlowPane serieFlowPan = new AnimatedSeriePane();
+//        serieFlowPan.getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
+//            if (serieFlowPan.getChildren().isEmpty()) {
+//                centerPane.removeEmptySerie(serieFlowPan);
+//            } else {
+//                ((AnimatedSeriePane) serieFlowPan).setSize();
+//            }
+//        });
+//        
+//        for (Tile tile : serie.getSerieOfTiles()) {
+//            AnimatedTilePane viewTile = new AnimatedTilePane(tile, AnimatedTilePane.TILE_BELONG_TO_BOARD);
+//                        viewTile.addSingleMoveListener((ObservableValue<? extends SingleMove> observable, SingleMove oldValue, SingleMove newValue) -> {
+//                makeSingleMove(newValue);
+//            });
+//            
+//            this.isLegalMove.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//                viewTile.onSingleMoveDone(newValue);
+//            });
+//            
+//            viewTile.addIsMoveSuccesfulyCompletedListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//                onSuccesfulyCompletedMove(newValue);
+//            });
+//            
+//            viewTile.addHandListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//                setHandListenerEvent(viewTile);
+//            });
+//            viewTile.addBoardListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//                setBoardListenerEvent(newValue, viewTile);
+//            });
+//            serieFlowPan.getChildren().add(viewTile);
+//        }
+//        serieFlowPan.setMinWidth(serieFlowPan.getChildren().size() * 30);
+//        return serieFlowPan;
+//    }
+//    
+    
     //need to sigh tile events......
 //    private void showBoard(){
 //    ArrayList<Serie> serieList = this.rummikubLogic.getGameBoard().getListOfSerie();
@@ -754,5 +835,4 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         showCurrentPlayerBoard();
         showCurrentPlayerHand();
     }
-
 }
