@@ -47,7 +47,7 @@ public class ResultScreenController implements Initializable, ControlledScreen {
         PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
         gameScreen.createNewGame(gameScreen.getRummikubLogic().getGameSettings());
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, gameScreen);
-        gameScreen.show();
+        gameScreen.showGameBoardAndPlayerHand();
     }
 
     @Override

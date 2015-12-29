@@ -5,13 +5,10 @@
 package rummikub.view;
 
 import rummikub.Rummikub;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -147,8 +144,9 @@ public class GameParametersController implements Initializable, ControlledScreen
         this.gameSettings = new Settings(gameNameString,numOfPlayers, numOfComputerPlayers, sPlayersNames);
         gameScreen.createNewGame(gameSettings);
         
-        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,gameScreen);
-        gameScreen.show();
+        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,null);
+        gameScreen.showGameBoardAndPlayerHand();
+        
 //       resetScreen();
 
 

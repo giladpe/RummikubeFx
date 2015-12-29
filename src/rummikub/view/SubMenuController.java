@@ -55,8 +55,8 @@ public class SubMenuController implements Initializable, ControlledScreen {
         }
         
         if (!(gameScreen.getRummikubLogic().isGameOver() || gameScreen.getRummikubLogic().isOnlyOnePlayerLeft())){
-            gameScreen.show();
-            this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, gameScreen);
+            gameScreen.showGameBoardAndPlayerHand();
+            this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, ScreensController.NOT_RESETABLE);
         }
         else{
             ResultScreenController resultScreen = (ResultScreenController) this.myController.getControllerScreen(Rummikub.RESULT_SCREEN_ID);
@@ -73,14 +73,15 @@ public class SubMenuController implements Initializable, ControlledScreen {
         PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
         gameScreen.createNewGame(gameScreen.getRummikubLogic().getGameSettings());
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, gameScreen);
-        gameScreen.show();
+        gameScreen.showGameBoard();
     }
 
     //TODO: after loading the file we need to start a game with that file
     @FXML
     private void handleResumeGameButtonAction(ActionEvent event) {
+        PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
+        gameScreen.showCurrentGameBoardAndCurrentPlayerHand();
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, ScreensController.NOT_RESETABLE);
-
     }
 
     @FXML

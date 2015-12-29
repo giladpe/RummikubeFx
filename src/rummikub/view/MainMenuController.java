@@ -125,8 +125,7 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
                 
                 this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,null);
                 gameScreen.initCurrentPlayerMove();
-                gameScreen.show();
-                gameScreen.showGameBoard();
+                gameScreen.showGameBoardAndPlayerHand();
                 resetScreen();
                
             }

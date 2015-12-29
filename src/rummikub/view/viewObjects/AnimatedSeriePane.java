@@ -81,10 +81,11 @@ public class AnimatedSeriePane extends FlowPane {
     ////////////test
     
 public void updateSerieTilesSource(){
-for (Node tile : this.getChildren()) {
+    for (Node tile : this.getChildren()) {
+        if (tile.getClass() == AnimatedTilePane.class) {
             ((AnimatedTilePane) tile).setSourceLocation();
-            //((AnimatedTilePane)tile).tile
         }
+    }
 }
     Timeline timeline = new Timeline();
     private KeyValue originalWidth;
