@@ -633,43 +633,16 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         }
     }
 
-            if (isTileDroppedInBoard) {
-                //make singleMove From Hand To Board
-                currTile.setIsTileDroppedInHand(false);
-                pTarget = new Point(currTile.getIndexOfMySerieInBorad(event), currTile.getIndexOfMeInSerie(event));
-                if (!this.isTileMovedFromHandToBoard.get()) {
-                    this.targetLocation.setLocation(pTarget);
-                    this.move = SingleMove.MoveType.HAND_TO_BOARD;
-                    this.isTileMovedFromHandToBoard.set(TILE_MOVED_TO_BOARD);
-                    this.isTileMovedFromBoardToBoard.set(!BOARD_TO_BOARD);
-                } else {
-                    //make singleMove From Board To Board
-                    this.targetLocation.setLocation(pTarget);
-                    this.move = SingleMove.MoveType.BOARD_TO_BOARD;
-                    this.isTileMovedFromBoardToBoard.set(BOARD_TO_BOARD);
-// this.singleMove = new SingleMove(pTarget, pSource, SingleMove.MoveType.BOARD_TO_BOARD);
-
-                }
-            } else if (isTileDroppedInHandFromBoard) {
-                //make singleMove From Board To Hand
-                currTile.setIsTileDroppedInHand(true);
-                pSource = new Point(currTile.getIndexOfMySerieInBorad(event), currTile.getIndexOfMeInSerie(event));
-                //this.singleMove = new SingleMove(pSource, SingleMove.MoveType.BOARD_TO_HAND);
-                this.sourceLocation.setLocation(pSource);
-                this.move = SingleMove.MoveType.BOARD_TO_HAND;
-                this.isTileMovedFromHandToBoard.set(!TILE_MOVED_TO_BOARD);
-                this.isTileMovedFromBoardToBoard.set(!BOARD_TO_BOARD);
-                dealWithMovedTile(event);
-            }
     private void cancelLastMove(AnimatedTilePane currTile) {
-        Point pTarget;
-        Point pTmp=new Point();
+//        Point pTarget;
+ //       Point pTmp=new Point();
         switch (currTile.getMove()) {
             case HAND_TO_BOARD: {
                 //make singleMove From Hand To Board
-                currTile.setIsTileDroppedInHand(false);
-                  centerPane.getSerie((int)(currTile.getTargetLocation().getX())).removeTileFromSerie((int)(currTile.getTargetLocation().getY()));     
-                  updateHand();
+                //currTile.setIsTileDroppedInHand(false);
+                showCurrentPlayerBoard();
+                //centerPane.getSerie((int)(currTile.getTargetLocation().getX())).removeTileFromSerie((int)(currTile.getTargetLocation().getY()));     
+                updateHand();
 //                  this.targetLocation.setLocation(pTarget);
 //                    this.move = SingleMove.MoveType.HAND_TO_BOARD;
 //                    this.isTileMovedFromHandToBoard.set(TILE_MOVED_TO_BOARD);
@@ -688,9 +661,10 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //                    this.isTileMovedFromBoardToBoard.set(BOARD_TO_BOARD);
                 break;
             }
-            case BOARD_TO_HAND: 
-                
+            case BOARD_TO_HAND:     
             default:
+                showCurrentPlayerBoard();
+                updateHand();
                 break;
 
         }
