@@ -200,7 +200,7 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 //                FlowPane serie = createSerie();
                 newSerie.getChildren().add((AnimatedTilePane) db.getContent(DataFormat.RTF));
                 this.getChildren().add(newSerie);
-
+                //this.updateSeriesSourceLocation();
                 //newSerieAddingArea (0),next(1)
                 success = true;
             }
@@ -235,15 +235,18 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
     }
 
     public void removeEmptySerie(FlowPane holdingSerie) {
+        //holdingSerie.getChildren().removeListener();
         this.getChildren().remove(holdingSerie);
-        updateSeriesSourceLocation();
+        //updateSeriesSourceLocation();
         //update
     }
     public void updateSeriesSourceLocation(){
+        int i=0;
         for (Node serie : this.getChildren()) {
-            if(serie.getClass()==AnimatedSeriePane.class){
+            if(i>0){
             ((AnimatedSeriePane)serie).updateSerieTilesSource();
             }
+            i++;
         }
     }
 //    public void setSize(FlowPane serie) {
@@ -251,9 +254,9 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 //        serie.setPrefWidth(serie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
 //    }
 
-    public AnimatedSeriePane getSerie(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+//    public AnimatedSeriePane getSerie(int i) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 }
 
 //************************Test Zone*****************************//
