@@ -333,6 +333,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private void setHandListenerEvent(AnimatedTilePane viewTile) {
         if (dealWithSingleMoveResualt(viewTile.test())) {
             updateHand();
+            /////////////////////////////////////////////////////////////////test
+            this.centerPane.updateSeriesSourceLocation();
         } else {
             cancelLastMove(viewTile);
         }
@@ -340,7 +342,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private void setBoardListenerEvent(boolean newValue, AnimatedTilePane viewTile) {
         if (newValue) {
-            if (dealWithSingleMoveResualt(viewTile.test())) {
+            if (dealWithSingleMoveResualt(viewTile.getSingleMove())) {
                 updateBoard(viewTile);
             } else {
                 cancelLastMove(viewTile);
@@ -470,7 +472,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     private void updateBoard(AnimatedTilePane viewTile) {
         //dealWithSingleMoveResualt(viewTile.test());
-        viewTile.updateSource();
+        //viewTile.updateSource();
+        centerPane.updateSeriesSourceLocation();
     }
 
     public void initCurrentPlayerMove() {

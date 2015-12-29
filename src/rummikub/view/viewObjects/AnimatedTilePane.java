@@ -369,7 +369,7 @@ public class AnimatedTilePane extends HBox {
         FlowPane parent = (FlowPane) this.getParent();
         int xLocation = 0;
         int yLocation = parent.getChildren().indexOf(this);
-        if (parent.getClass() == AnimatedSeriePane.class) {
+        if (/*parent.getClass()!=null &&*/parent.getClass() == AnimatedSeriePane.class) {
             xLocation = ((AnimatedFlowPane) parent.getParent()).getChildren().indexOf(parent) - AnimatedFlowPane.INDEX_OF_NEW_SERIE_ADDING_ARREA;
         }
         this.sourceLocation.setLocation(xLocation, yLocation);
