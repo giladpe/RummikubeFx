@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import rummikub.gameLogic.model.logic.Settings;
 import rummikubFX.Rummikub;
 import rummikub.gameLogic.view.ioui.Utils;
 
@@ -34,7 +35,7 @@ public class ResultScreenController implements Initializable, ControlledScreen {
     @FXML
     private void handleRestartGameButtonAction(ActionEvent event) {
         PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
-        gameScreen.createNewGame(gameScreen.getRummikubLogic().getGameSettings());
+        gameScreen.createNewGame(new Settings(gameScreen.getRummikubLogic().getGameOriginalInputedSettings()));
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, gameScreen);
         Platform.runLater(gameScreen::initAllGameComponents);
         //gameScreen.initAllGameComponents();

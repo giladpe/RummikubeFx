@@ -41,7 +41,7 @@ public class AnimatedTilePane extends HBox {
     public static final double BOTTOM = 0;
     public static final double LEFT = 0;
     public static final double RIGHT = 0;
-    
+    final boolean  moveSuccesfulyCompleted= true;
     //Private members
     private Label tileLabel;
     private boolean isLegalMove;
@@ -131,7 +131,7 @@ public class AnimatedTilePane extends HBox {
     }
 
     private void onDragDone(DragEvent event) {
-        final boolean  moveSuccesfulyCompleted= true;
+        
         //Dragboard db = event.getDragboard();
         //AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
         if (event.getTransferMode() == TransferMode.MOVE) {

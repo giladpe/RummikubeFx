@@ -239,6 +239,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
         initCurrPlayerLabel();
         this.isLegalMove.set(!LEGAL_MOVE);
+        ////////////there is problem here!!!!!
         showCurrentGameBoardAndCurrentPlayerHand();  
         } 
     }
@@ -631,7 +632,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     public void createNewGame(Settings gameSetting) {
         this.rummikubLogic.setGameSettings(gameSetting);
-        this.rummikubLogic.setGameOriginalInputedSettings(new Settings(gameSetting));
+        this.rummikubLogic.setGameOriginalInputedSettings(/*new*/gameSetting);
         this.rummikubLogic.initGameFromUserSettings();
         initCurrentPlayerMove();
     }

@@ -33,9 +33,7 @@ public class Settings {
         this.NumOfCpuPlayers = settings.getNumOfCpuPlayers();
         this.NumOfHumanPlayers = settings.getNumOfPlayers() - settings.getNumOfCpuPlayers();
         this.NumOfPlayers = settings.getNumOfPlayers();
-        settings.getHumanPlayersNames().stream().forEach((HumanPlayerName) -> { this.HumanPlayersNames.add(HumanPlayerName); }); 
-
-        //this.HumanPlayersNames = settings.getHumanPlayersNames();
+        this.HumanPlayersNames = settings.getHumanPlayersNames();
     }
 
     // Setters
