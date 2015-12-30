@@ -37,49 +37,17 @@ public class AnimatedTilePane extends HBox {
     public boolean getIsLegalMove() {
         return isLegalMove;
     }
-
-//    public Point getSourceLocation() {
-//        return sourceLocation;
-//    }
-
-//    public Point getTargetLocation() {
-//        return targetLocation;
-//    }
-//
-//    public SingleMove.MoveType getMove() {
-//        return move;
-//    }
-
     public static final boolean TILE_BELONG_TO_BOARD = true;
     public static final double TILE_WIDTH = 30;
     public static final double TILE_SPACING = 1.5;
     public static final double TILE_TOTAL_WIDTH = TILE_SPACING + TILE_WIDTH;
-    private static final boolean TILE_MOVED_TO_BOARD = true;
     private Label tileLabel;
-    private Tile tile;
-    //public SingleMove singleMove;
-    //private Timeline timeline = new Timeline();
-    //private KeyValue originalWidth;
-    //private Duration duration = Duration.seconds(0.2);
-    //private boolean isTileDroppedInHand;
-    //private SimpleBooleanProperty isTileMovedFromHandToBoard;
-    //private SimpleBooleanProperty isTileMovedFromBoardToBoard;
-    
     private boolean isLegalMove;
     private SimpleObjectProperty<SingleMove> singleMove;
     private SimpleBooleanProperty isMoveSuccesfulyCompleted;
 
-    
-    //private Point sourceLocation;
-    //private Point targetLocation;
-    //int move;
-    //private SingleMove.MoveType move;
-    //private static final boolean BOARD_TO_BOARD = true;
-
     public AnimatedTilePane(Tile currTile) {
         super();
-        //setOnDragEntered(this::onDragEnter);
-        //setOnDragExited(this::onDragLeave);
         initTile(currTile);
     }
 
@@ -173,7 +141,7 @@ public class AnimatedTilePane extends HBox {
     private void onDragDropped(DragEvent event) {
         Dragboard db = event.getDragboard();
         boolean success = db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class;
-        boolean isDroppedOnSerie = this.getParent().getClass() == AnimatedSeriePane.class;
+        boolean isDroppedOnSerie = this.isTileParentIsSerie();
         int yTarget, xTarget, ySource , xSource= 0;
         Point pSource, pTarget;
         SingleMove singleMove;
@@ -187,7 +155,8 @@ public class AnimatedTilePane extends HBox {
             yTarget = checkIfToAddTileBeforeOrAfterTheDroppedOnTile(holdingSerie.getChildren().indexOf(this), holdingSerie);
             xTarget = getSerieIndexFromTile(this);
             pTarget = new Point(xTarget, yTarget);
-            if (currTile.getParent().getClass() == AnimatedSeriePane.class) {
+            //if (currTile.getParent().getClass() == AnimatedSeriePane.class) {
+            if (currTile.isTileParentIsSerie()) {
                 ///board to board
                 ySource = getIndexOfTileInSerie(currTile);
                 xSource = getSerieIndexFromTile(currTile);
@@ -241,7 +210,6 @@ public class AnimatedTilePane extends HBox {
         getChildren().add(tileLabel);
 
         //A
-        this.tile = currTile;
         this.singleMove=new SimpleObjectProperty<>();
         this.isLegalMove=false;
         this.isMoveSuccesfulyCompleted = new SimpleBooleanProperty(false);
@@ -286,7 +254,9 @@ public class AnimatedTilePane extends HBox {
         }
         return index;
     }
-
+    public boolean isTileParentIsSerie() {
+        return this.getParent().getClass()==AnimatedSeriePane.class;
+    }
    
     ////////////test
 //    Timeline timeline = new Timeline();

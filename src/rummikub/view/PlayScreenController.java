@@ -206,7 +206,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
             AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
             boolean success = false;
             
-            if (event.getTransferMode() == TransferMode.MOVE&&isTileParentIsSerie(currTile)) {
+            if (event.getTransferMode() == TransferMode.MOVE&&currTile.isTileParentIsSerie()) {
                 int ySource = currTile.getIndexOfTileInSerie(currTile);
                 int xSource = currTile.getSerieIndexFromTile(currTile);
                 Point pSource = new Point(xSource, ySource);
@@ -607,7 +607,5 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         showCurrentPlayerHand();
     }
 
-    private boolean isTileParentIsSerie(AnimatedTilePane currTile) {
-        return currTile.getParent().getClass()==AnimatedSeriePane.class;
-    }
+    
 }

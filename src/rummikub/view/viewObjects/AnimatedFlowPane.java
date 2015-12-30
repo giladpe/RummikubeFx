@@ -98,17 +98,15 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
                 int xTarget = this.getChildren().isEmpty() ? 0 : this.getChildren().size() - 1;
                 int yTarget = 0;
                 Point pTarget = new Point(xTarget, yTarget);
-                FlowPane flowPane = ((FlowPane) currTile.getParent());
-
-                if (flowPane.getClass() == AnimatedSeriePane.class) {
+                //FlowPane tileHolder = ((FlowPane) currTile.getParent());
+                //if (tileHolder.getClass() == AnimatedSeriePane.class) {
+                if (currTile.isTileParentIsSerie()) {
                     //board to new serie in board
-                    int xSource = currTile.getSerieIndexFromTile(currTile);
-                    int ySource = currTile.getIndexOfTileInSerie(currTile);
-                    Point pSource=new Point(xSource, ySource);
+                    Point pSource=new Point(currTile.getSerieIndexFromTile(currTile), currTile.getIndexOfTileInSerie(currTile));
                     singleMove = new SingleMove(pTarget, pSource, SingleMove.MoveType.BOARD_TO_BOARD);
                 } else {
-                    int ySource = currTile.getIndexOfTileInHand(currTile);
-                    singleMove = new SingleMove(pTarget, ySource, SingleMove.MoveType.HAND_TO_BOARD);
+                    //int ySource = currTile.getIndexOfTileInHand(currTile);
+                    singleMove = new SingleMove(pTarget, currTile.getIndexOfTileInHand(currTile), SingleMove.MoveType.HAND_TO_BOARD);
                 }
                 currTile.setSingleMove(singleMove);
                 success = currTile.getIsLegalMove();
