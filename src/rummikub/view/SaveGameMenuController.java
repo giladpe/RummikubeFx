@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * this class controlles the save game menu
  */
 package rummikub.view;
 
@@ -18,55 +16,41 @@ import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 import javax.xml.bind.JAXBException;
 import org.xml.sax.SAXException;
-import rummikub.Rummikub;
+import rummikubFX.Rummikub;
 import rummikub.gameLogic.model.logic.GameLogic;
 import rummikub.gameLogic.view.ioui.JaxBXmlParser;
 
-/**
- * FXML Controller class
- *
- * @author Arthur
- */
 public class SaveGameMenuController implements Initializable, ControlledScreen, ResetableScreen {
-
-    @FXML
-    private Button save;
-    @FXML
-    private Button saveAs;
-    @FXML
-    private Button backToPrevMenu;
-    private ScreensController myController;
-    @FXML
-    private Label msg;
-
+    //Constants
     private final String SAVED = "Game was saved!";
     private final String NOT_SAVED = "Error game was not saved!";
+    private final boolean HIDE_MSG = false;
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }
+    //Private FXML members
+    @FXML private Button save;
+    @FXML private Button saveAs;
+    @FXML private Button backToPrevMenu;
+    @FXML private Label msg;
 
+    //Private members
+    private ScreensController myController;
+
+    //Private FXML methods
+    
     @FXML
     protected void handleBackToPrevMenuButtonAction(ActionEvent event) {
         this.myController.setScreen(Rummikub.SUBMENU_SCREEN_ID, ScreensController.NOT_RESETABLE);
     }
 
-    //TODO: save the running game and back to the play screen
     @FXML
     protected void handleSaveGameButtonAction(ActionEvent event) {
         saveGame();
-        //      resetScreen();
+        //resetScreen();
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, ScreensController.NOT_RESETABLE);
     }
 
-    //TODO: save as the running game and back to the play screen
     @FXML
     protected void handleSaveAsButtonAction(ActionEvent event) {
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         FileChooser.ExtensionFilter extFilterXML = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.XML");
@@ -74,23 +58,36 @@ public class SaveGameMenuController implements Initializable, ControlledScreen, 
         File file = fileChooser.showSaveDialog(((Button) event.getSource()).getContextMenu());
 
         if (file != null) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    saveAsGame(file.getPath());
-                }
+            Platform.runLater(() -> {
+                saveAsGame(file.getPath());
             });
-
         }
-//        resetScreen();
-// not sure what to do with it or how exacly it works
+        //resetScreen();
     }
 
+    //Public methods
+    
+    @Override
+    public void initialize(URL url, ResourceBundle rb) { }
+    
     @Override
     public void setScreenParent(ScreensController parentScreen) {
         this.myController = parentScreen;
     }
+    
+    @Override
+    public void resetScreen() {
+        PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
+        boolean canSave, canSaveAs;
+        
+        canSaveAs = !gameScreen.getIsUserMadeFirstMoveInGame();
+        canSave = isGameSavedBefor() && canSaveAs;
+        this.save.setDisable(!canSave);
+        this.saveAs.setDisable(!canSaveAs);
+        msg.setVisible(HIDE_MSG);
+    }
 
+    //Private methods
     private void saveAsGame(String filePath) {
         PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
         boolean succedSavingFile = false;
@@ -112,46 +109,41 @@ public class SaveGameMenuController implements Initializable, ControlledScreen, 
         PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
         boolean succedSavingFile = false;
         GameLogic rummikubLogic = gameScreen.getRummikubLogic();
+        
         try {
-
             succedSavingFile = JaxBXmlParser.saveSettingsToXml(rummikubLogic.getPlayers(),
-                    rummikubLogic.getGameBoard(),
-                    rummikubLogic.getGameSettings().getGamesName(),
-                    rummikubLogic.getCurrentPlayer().getName());
+                                                               rummikubLogic.getGameBoard(),
+                                                               rummikubLogic.getGameSettings().getGamesName(),
+                                                               rummikubLogic.getCurrentPlayer().getName());
 
         } catch (SAXException | JAXBException | IOException ex) {
             succedSavingFile = false;
         } finally {
             handleMsg(succedSavingFile);
-
         }
+    }
+    
+    //does it works???
+    private boolean isGameSavedBefor() {
+        boolean savedBefore;
+    
+        savedBefore = JaxBXmlParser.getLastPathSaved() != null; 
+        
+        return savedBefore;
     }
 
     private void handleMsg(boolean succedSavingFile) {
         resetScreen();
+        
         if (!succedSavingFile) {
             msg.setText(this.NOT_SAVED);
             msg.setStyle("-fx-text-fill: #ff0000");
             msg.setVisible(true);
-        } else {
+        } 
+        else {
             msg.setText(this.SAVED);
             msg.setStyle("-fx-text-fill: blue");
             msg.setVisible(true);
         }
     }
-
-    @Override
-    public void resetScreen() {
-        this.save.setDisable(!isGameSavedBefor());
-        msg.setVisible(false);
-    }
-
-    private boolean isGameSavedBefor() {////////////////need to fix this !!!!!!!!!!!!!!!!!!!!
-        boolean savedBefor = false;
-        if (JaxBXmlParser.getLastPathSaved() != null) {
-            savedBefor = true;
-        }
-        return savedBefor;
-    }
-
 }

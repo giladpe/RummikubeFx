@@ -1,7 +1,7 @@
 /*
  * this class responsible for starting the application of rummikub game
  */
-package rummikub;
+package rummikubFX;
 
 import javafx.application.Application;
 import javafx.scene.Group;

@@ -63,18 +63,6 @@ public class ScreensController extends StackPane {
         return keyFrameEffect;
     }
     
-    
-//    private KeyFrame makeKeyFrameEffect(final String name,Consumer action) {
-//        KeyFrame keyFrameEffect = new KeyFrame(this.durationOfEffect, (ActionEvent event) -> {
-//            action.accept(this);
-//            getChildren().remove(FIRST_CHILD_LOCATION);
-//            getChildren().add(FIRST_CHILD_LOCATION, gameScreens.get(name));
-//            this.fadeInEffect.play();
-//        },this.ZeroValueOpacity);
-//                
-//        return keyFrameEffect;
-//    }
-    
     //Public methods:
     public void addScreen(String name, Node screen) {
         this.gameScreens.put(name, screen);
@@ -114,7 +102,10 @@ public class ScreensController extends StackPane {
             this.fadeInEffect.play();
         }
     }
-    
+}
+
+//************************Test Zone*****************************//
+
 //        public void setScreen(final String name,Consumer action) {
 //        
 //        if (!getChildren().isEmpty()) {
@@ -128,9 +119,18 @@ public class ScreensController extends StackPane {
 //        }
 //    }
 
-
-}
-//************************Test Zone*****************************//
+    
+//    private KeyFrame makeKeyFrameEffect(final String name,Consumer action) {
+//        KeyFrame keyFrameEffect = new KeyFrame(this.durationOfEffect, (ActionEvent event) -> {
+//            action.accept(this);
+//            getChildren().remove(FIRST_CHILD_LOCATION);
+//            getChildren().add(FIRST_CHILD_LOCATION, gameScreens.get(name));
+//            this.fadeInEffect.play();
+//        },this.ZeroValueOpacity);
+//                
+//        return keyFrameEffect;
+//    }
+    
 //OLD COPPY OF THE CLASS (COPPY FROM INTERNET):
 
 

@@ -1,31 +1,28 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * this class represents the serie in game
  */
 package rummikub.view.viewObjects;
 
 import javafx.geometry.Orientation;
-import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
-import static rummikub.view.viewObjects.AnimatedFlowPane.TILE_SPACING;
-import static rummikub.view.viewObjects.AnimatedTilePane.TILE_WIDTH;
 
-/**
- *
- * @author giladPe
- */
 public class AnimatedSeriePane extends FlowPane {
 
+    //Constants
+    public final static double PREF_HIFGT = 40;
+    private final static String CONSTRACTOR_STYLE = "-fx-border-color: gray; -fx-border-width: 1";
+    
+    //Constractor
     public AnimatedSeriePane() {
-        setPrefHeight(40);
+        setPrefHeight(PREF_HIFGT);
         setOrientation(Orientation.VERTICAL);
-        setHgap(TILE_SPACING);
-        setStyle("-fx-border-color: gray; -fx-border-width: 1");
-    }
-        public void setSize() {
-        this.setMinWidth(this.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
-        this.setPrefWidth(this.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
+        setHgap(AnimatedTilePane.TILE_SPACING);
+        setStyle(CONSTRACTOR_STYLE);
     }
     
+    //Public methods
+    public void setSize() {
+        this.setMinWidth(this.getChildren().size() * (AnimatedTilePane.TILE_WIDTH + AnimatedGameBoardPane.TILE_SPACING));
+        this.setPrefWidth(this.getChildren().size() * (AnimatedTilePane.TILE_WIDTH + AnimatedGameBoardPane.TILE_SPACING));
+    }
 }

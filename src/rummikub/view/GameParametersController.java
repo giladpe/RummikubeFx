@@ -4,11 +4,11 @@
 
 package rummikub.view;
 
-import rummikub.Rummikub;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,6 +23,7 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import rummikub.gameLogic.model.logic.Settings;
+import rummikubFX.Rummikub;
 
 public class GameParametersController implements Initializable, ControlledScreen, ResetableScreen {
 
@@ -34,11 +35,16 @@ public class GameParametersController implements Initializable, ControlledScreen
     public static final int PLAYER2 = 1;
     public static final int PLAYER3 = 2;
     public static final int PLAYER4 = 3;
-    private final String DUP_NAME_MSG = "Name is already exict!";
-    private final String INVALID_GAME_NAME_MSG = "Invalid game name!";
-    private final String NO_HUMAN_MSG = "Chose atleast one human player!";
-    private final String EMPTY_STRING="";
-    private final String CONTAINS_WHITE_SPACES_MSG="Name can not statr with whitespaces!";
+    private static final String DUP_NAME_MSG = "Name is already exict!";
+    private static final String INVALID_GAME_NAME_MSG = "Invalid game name!";
+    private static final String NO_HUMAN_MSG = "Chose atleast one human player!";
+    private static final String EMPTY_STRING="";
+    private static final String CONTAINS_WHITE_SPACES_MSG="Name can not statr with whitespaces!";
+    private static final String DEFUALT_GAME_NAME = "name";
+    private static final boolean SELECTED = true;    
+    private static final boolean ENABLED = true;    
+
+
     // FXML private members:
     @FXML private Button StartPlayingButton;
     @FXML private Label errorMsg;
@@ -93,9 +99,9 @@ public class GameParametersController implements Initializable, ControlledScreen
 
         if (((CheckBox) event.getSource()).isSelected()) {
             checkBoxTextField.setText(EMPTY_STRING);
-            checkBoxTextField.setDisable(true);
+            checkBoxTextField.setDisable(ENABLED);
         } else {
-            checkBoxTextField.setDisable(false);
+            checkBoxTextField.setDisable(!ENABLED);
         }
     }
 
@@ -133,7 +139,6 @@ public class GameParametersController implements Initializable, ControlledScreen
         return atleastOnePlayerIsHuman() && isLegalConditions;
     }
     
-    //TODO: finish wrting methods to work with scene
     @FXML
     protected void handleStartPlayingButtonAction(ActionEvent event) {
         String gameNameString = this.gameName.getText();
@@ -144,19 +149,18 @@ public class GameParametersController implements Initializable, ControlledScreen
         this.gameSettings = new Settings(gameNameString,numOfPlayers, numOfComputerPlayers, sPlayersNames);
         gameScreen.createNewGame(gameSettings);
         
-        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,null);
-        gameScreen.showGameBoardAndPlayerHand();
+        this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,ScreensController.NOT_RESETABLE);
+        Platform.runLater(gameScreen::initAllGameComponents);
+        //gameScreen.initAllGameComponents();
         
-//       resetScreen();
-
-
+        //resetScreen();
     }
     
     // Private methods:
     private void resetPlayerField(int index) {
-        this.checkBoxList.get(index).setSelected(false);
+        this.checkBoxList.get(index).setSelected(!SELECTED);
         this.playersNames.get(index).setText(EMPTY_STRING);
-        this.playersNames.get(index).setDisable(false);
+        this.playersNames.get(index).setDisable(!ENABLED);
     }
 
     private void initPlayersField() {
@@ -193,7 +197,6 @@ public class GameParametersController implements Initializable, ControlledScreen
         return result;
     }
 
-    /////////adding error msg !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     private boolean isValidTextField(String str) {
         return !(str.trim().isEmpty() || isInvalidFirstChar(str));
     }
@@ -228,7 +231,7 @@ public class GameParametersController implements Initializable, ControlledScreen
                 return true;
             }
         }
-        this.errorMsg.setText(this.INVALID_GAME_NAME_MSG);
+        this.errorMsg.setText(INVALID_GAME_NAME_MSG);
         return false;
     }
 
@@ -260,11 +263,11 @@ public class GameParametersController implements Initializable, ControlledScreen
     
     private void setVisableFildsAfterRadioButtonSelection(int numOfFildsToSetVisable) {
         for (int i = 0; i < numOfFildsToSetVisable; i++) {
-            this.hBoxList.get(i).setVisible(true);
+            this.hBoxList.get(i).setVisible(ENABLED);
         }
         
         for (int i = numOfFildsToSetVisable; i < this.hBoxList.size(); i++) {
-            this.hBoxList.get(i).setVisible(false);
+            this.hBoxList.get(i).setVisible(!ENABLED);
         }
     }
 
@@ -324,23 +327,14 @@ public class GameParametersController implements Initializable, ControlledScreen
     @Override
     public void resetScreen() {
         this.errorMsg.setText(EMPTY_STRING);
-//        resetFeilds(this.playersNames, (Consumer) (Object playerName) -> {
-//            ((TextField)playerName).setText(EMPTY_STRING);
-//            ((TextField)playerName).setDisable(false);
-//        });
-        //resetFeilds(this.hBoxList, (Consumer)(Object hBox) -> {((HBox)hBox).setVisible(false);});
-        //resetFeilds(this.radioButtonGroup.getToggles(), (Consumer)(Object rButton) -> {((RadioButton)rButton).setSelected(false);});
-        //resetFeilds(this.checkBoxList, (Consumer)(Object cBox) -> {((CheckBox)cBox).setSelected(false);});
         B2.setSelected(true);
         handleTwoPlayersButton();
         
-        this.gameName.setText("name");       
+        this.gameName.setText(DEFUALT_GAME_NAME);       
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-                
         initPlayersField();
         
         this.checkBoxList.stream().forEach((cb) -> {
@@ -376,7 +370,25 @@ public class GameParametersController implements Initializable, ControlledScreen
     }
 }
 
+
 //************************Test Zone*****************************//
+//    @Override
+//    public void resetScreen() {
+//        this.errorMsg.setText(EMPTY_STRING);
+////        resetFeilds(this.playersNames, (Consumer) (Object playerName) -> {
+////            ((TextField)playerName).setText(EMPTY_STRING);
+////            ((TextField)playerName).setDisable(false);
+////        });
+//        //resetFeilds(this.hBoxList, (Consumer)(Object hBox) -> {((HBox)hBox).setVisible(false);});
+//        //resetFeilds(this.radioButtonGroup.getToggles(), (Consumer)(Object rButton) -> {((RadioButton)rButton).setSelected(false);});
+//        //resetFeilds(this.checkBoxList, (Consumer)(Object cBox) -> {((CheckBox)cBox).setSelected(false);});
+//        B2.setSelected(true);
+//        handleTwoPlayersButton();
+//        
+//        this.gameName.setText("name");       
+//    }
+
+
 
 //    private int getNumOfComputerPlayers() {
 //        int numOfComputerPlayers = 0;

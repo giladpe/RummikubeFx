@@ -54,7 +54,7 @@ public class JaxBXmlParser {
     public static String getLastPathSaved() {
         return lastPathSaved;
     }
-    
+
     public static ArrayList<Player> getPlayerArray() {
         return playerArray;
     }

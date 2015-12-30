@@ -13,7 +13,7 @@ import rummikub.gameLogic.model.gameobjects.Tile;
 public class ComputerSingleMoveGenerator {
 
     //Constants
-    private static final long SLEEP_TIME_IN_MILLISECOUNDS = 1000;
+    private static final long SLEEP_TIME_IN_MILLISECOUNDS = 0;
     private static final int NOT_FOUND = -1;
     
     //Members
@@ -88,7 +88,9 @@ public class ComputerSingleMoveGenerator {
         this.isTurnSkipped = (this.moveCounter == 0 && singleMove == null);
         
         try {
-            Thread.sleep(SLEEP_TIME_IN_MILLISECOUNDS);
+            if (SLEEP_TIME_IN_MILLISECOUNDS > 0) {
+                Thread.sleep(SLEEP_TIME_IN_MILLISECOUNDS);
+            }
         }
         catch (InterruptedException ex) {
         }

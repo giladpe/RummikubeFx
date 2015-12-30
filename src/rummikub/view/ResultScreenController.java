@@ -1,42 +1,31 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * this class controlls therusalt screen
  */
+
 package rummikub.view;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import rummikub.Rummikub;
+import rummikubFX.Rummikub;
 import rummikub.gameLogic.view.ioui.Utils;
 
-/**
- * FXML Controller class
- *
- * @author giladPe
- */
 public class ResultScreenController implements Initializable, ControlledScreen {
 
-    @FXML
-    private Button mainMenu;
-    @FXML
-    private Button restartGame;
-    @FXML
-    private Label resultMsg;
+    //FXML members
+    @FXML private Button mainMenu;
+    @FXML private Button restartGame;
+    @FXML private Label resultMsg;
+    
+    //Private members
     private ScreensController myController;
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }
 
+    //FXML methods
     @FXML
     private void handleMainMenuButtonAction(ActionEvent event) {
          this.myController.setScreen(Rummikub.MAINMENU_SCREEN_ID,(PlayScreenController)myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID));
@@ -47,24 +36,30 @@ public class ResultScreenController implements Initializable, ControlledScreen {
         PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
         gameScreen.createNewGame(gameScreen.getRummikubLogic().getGameSettings());
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, gameScreen);
-        gameScreen.showGameBoardAndPlayerHand();
+        Platform.runLater(gameScreen::initAllGameComponents);
+        //gameScreen.initAllGameComponents();
     }
 
-    @Override
-    public void setScreenParent(ScreensController parentScreen) {
-        this.myController = parentScreen;
-    }
-    
+    //Public methods
+
     public void updatedGameResultMsg() {
         PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
         
         if(gameScreen.getRummikubLogic().isGameOver() && !gameScreen.getRummikubLogic().isTie()) {
             this.resultMsg.setText(Utils.Constants.QuestionsAndMessagesToUser.WINNER_IS + 
-                                   Utils.Constants.END_LINE + gameScreen.getRummikubLogic().getWinner().getName() );
+                                   Utils.Constants.END_LINE + gameScreen.getRummikubLogic().getWinner().getName());
         }
         else {
             this.resultMsg.setText(Utils.Constants.QuestionsAndMessagesToUser.TIE);
         }
     }
 
+    @Override
+    public void setScreenParent(ScreensController parentScreen) {
+        this.myController = parentScreen;
+    }
+        
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+    }
 }

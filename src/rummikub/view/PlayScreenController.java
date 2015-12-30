@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * this class responsible to control the game screen
  */
 package rummikub.view;
 
@@ -9,12 +7,13 @@ import java.awt.Point;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -38,7 +37,7 @@ import rummikub.gameLogic.model.gameobjects.Tile;
 import rummikub.gameLogic.model.logic.GameLogic;
 import rummikub.gameLogic.model.logic.Settings;
 import rummikub.gameLogic.model.player.Player;
-import rummikub.Rummikub;
+import rummikubFX.Rummikub;
 import rummikub.gameLogic.controller.rummikub.SingleMove;
 import rummikub.gameLogic.model.gameobjects.Board;
 import rummikub.gameLogic.model.gameobjects.Serie;
@@ -46,7 +45,7 @@ import rummikub.gameLogic.model.logic.PlayersMove;
 import rummikub.gameLogic.model.logic.SeriesGenerator;
 import rummikub.gameLogic.model.player.ComputerSingleMoveGenerator;
 import rummikub.gameLogic.view.ioui.Utils;
-import rummikub.view.viewObjects.AnimatedFlowPane;
+import rummikub.view.viewObjects.AnimatedGameBoardPane;
 import rummikub.view.viewObjects.AnimatedSeriePane;
 import rummikub.view.viewObjects.AnimatedTilePane;
 
@@ -57,64 +56,55 @@ import rummikub.view.viewObjects.AnimatedTilePane;
  */
 public class PlayScreenController implements Initializable, ResetableScreen, ControlledScreen {
 
+    //Constatns
     private static final String styleWhite = "-fx-text-fill: white";
     private static final String styleBlue = "-fx-text-fill: green";
-    private SimpleBooleanProperty isNormalMoveDone;// may be need for save game 
+    private static final boolean CAN_SAVE_THE_GAME = false;
+    private static final int MAX_NUM_OF_PLAYERS = 4;
+    private static final boolean VISABLE = true;
+    private static final boolean LEGAL_MOVE = true;
+    private static final boolean ENABLE_BUTTON = true;
+    private static final boolean DISABLE_DRAG_AND_DROP = true;
+
+
+    //FXML Private filds
+    @FXML private Label errorMsg;
+    @FXML private BorderPane board;
+    @FXML private Button menu;
+    @FXML private FlowPane handTile;
+    @FXML private Button endTrun;
+    @FXML private Button withdrawCard;
+    @FXML private Label heapTile;
+    @FXML private Label firstMoveMsg;
+    @FXML private Label player1;
+    @FXML private Label player2;
+    @FXML private Label player3;
+    @FXML private Label player4;
+    @FXML private HBox barPlayer1;
+    @FXML private Label numTileP1;
+    @FXML private HBox barPlayer3;
+    @FXML private Label numTileP3;
+    @FXML private HBox barPlayer2;
+    @FXML private Label numTileP2;
+    @FXML private HBox barPlayer4;
+    @FXML private Label numTileP4;
     
-    @FXML
-    private Label errorMsg;
-    @FXML
-    private BorderPane board;
-    @FXML
-    private Button menu;
-    @FXML
-    private FlowPane handTile;
-    @FXML
-    private Button endTrun;
-    @FXML
-    private Button withdrawCard;
-    @FXML
-    private Label firstMoveMsg;
-    @FXML
-    private Label player1;
-    @FXML
-    private Label player2;
-    @FXML
-    private Label player3;
-    @FXML
-    private Label player4;
-    private ArrayList<Label> playersLabels = new ArrayList<>(4);
+    //Private members
+    private final ArrayList<Label> playersLabelsList = new ArrayList<>();
     private ScreensController myController;
     private GameLogic rummikubLogic = new GameLogic();
     private SeriesGenerator serieGenerator;
     private ComputerSingleMoveGenerator newMoveGenerator;
     private SimpleBooleanProperty isLegalMove ; 
     private Timeline swapTurnTimeLineDelay;
-    private AnimatedFlowPane centerPane;
+    private AnimatedGameBoardPane centerPane;
     private PlayersMove currentPlayerMove;
-    @FXML
-    private HBox barPlayer1;
-    @FXML
-    private Label numTileP1;
-    @FXML
-    private HBox barPlayer3;
-    @FXML
-    private Label numTileP3;
-    @FXML
-    private HBox barPlayer2;
-    @FXML
-    private Label numTileP2;
-    @FXML
-    private HBox barPlayer4;
-    @FXML
-    private Label numTileP4;
-    private ArrayList<HBox> playersBar = new ArrayList<>(4);
-    private ArrayList<Label> numOfTileInHand = new ArrayList<>(4);
+    private final ArrayList<HBox> playersBarList = new ArrayList<>(MAX_NUM_OF_PLAYERS);
+    private final ArrayList<Label> labelOfNumOfTileInHandList = new ArrayList<>(MAX_NUM_OF_PLAYERS);
+    private final ArrayList<Button> buttonsList = new ArrayList<>();
+    private boolean isUserMadeFirstMoveInGame;
 
-    @FXML
-    private Label heapTile;
-    private Timeline withDrawTile;
-
+    //Private FXML methods
     @FXML
     private void handleMenuButtonAction(ActionEvent event) {
         this.myController.setScreen(Rummikub.SUBMENU_SCREEN_ID, ScreensController.NOT_RESETABLE);
@@ -122,20 +112,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     @FXML
     private void handleEndTrunAction(ActionEvent event) {
-        if (swapTurnTimeLineDelay.getStatus() == Animation.Status.STOPPED) {
-
-            //check the player move
-            rummikubLogic.playSingleTurn(currentPlayerMove);
-
-            // Swap players
-            if (rummikubLogic.isGameOver()) {
-                ResultScreenController resultScreen = (ResultScreenController) this.myController.getControllerScreen(Rummikub.RESULT_SCREEN_ID);
-                resultScreen.updatedGameResultMsg();
-                this.myController.setScreen(Rummikub.RESULT_SCREEN_ID, ScreensController.NOT_RESETABLE);
-            } else {
-                swapTurnTimeLineDelay.play();
-            }
-        }
+        onEndTurnAcions(event);
     }
 
     @FXML
@@ -146,155 +123,102 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
             this.currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
             this.rummikubLogic.playSingleTurn(currentPlayerMove);
 
-            if (rummikubLogic.isGameOver() || rummikubLogic.isOnlyOnePlayerLeft()) {
-                ResultScreenController resultScreen = (ResultScreenController) this.myController.getControllerScreen(Rummikub.RESULT_SCREEN_ID);
-                resultScreen.updatedGameResultMsg();
-                this.myController.setScreen(Rummikub.RESULT_SCREEN_ID, ScreensController.NOT_RESETABLE);
+            if (rummikubLogic.isGameOver() || rummikubLogic.isOnlyOnePlayerLeft()) { 
+                onGameFinished();
             } else {
-                swapTurnTimeLineDelay.play();
+                //swapTurnTimeLineDelay.play(); the version below is a test wth threads
+                if (this.rummikubLogic.getCurrentPlayer().getIsHuman()) {
+                    swapTurnTimeLineDelay.play();
+                }
+                else {
+                    swapTurns();
+                }
             }
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        //this.hand.setSpacing(5);
-        initPlayers();
-        this.centerPane = new AnimatedFlowPane();
-        this.serieGenerator = new SeriesGenerator();
-        this.newMoveGenerator = new ComputerSingleMoveGenerator();
-        //sighn for CenterPane events
-//        centerPane.addListener(new ChangeListener<Boolean>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-//                fdd
-//            }
-//        });
-        this.board.setCenter(centerPane);
-            this.withDrawTile = new Timeline(new KeyFrame(Duration.millis(800), (ActionEvent event1) -> {
-            showCurrentPlayerHand();
-        }));
-        this.swapTurnTimeLineDelay = new Timeline(new KeyFrame(Duration.millis(800), (ActionEvent event1) -> {
-            swapTurns();
-        }));
-
-        setHandEvents();
-        isLegalMove=new SimpleBooleanProperty(false);
-        //not good - what about loading file?????
-        //Game.Settings gameSetting = ((GameParametersController)myController.getControllerScreen(Rummikub.GAME_PARAMETERS_SCREEN_ID)).getGameSettings();
-        //this.gameLogic = new Game(gameSetting);
-    }
-
+    //Private methods
     private void setHandEvents() {
-
-        this.handTile.setOnDragOver((event) -> {
-//            Timeline animation;
-//            animation = new Timeline(new KeyFrame(Duration.millis(200),(ActionEvent event1) -> { styleOfHandWhenEnter(); }));
-//            animation.play();
-            AnimatedTilePane currTile = (AnimatedTilePane) event.getDragboard().getContent(DataFormat.RTF);
-            if (currTile.getClass() == AnimatedTilePane.class/* && currTile.getIsTileMovedFromHandToBoard()*/) {
-                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                //event.acceptTransferModes(TransferMode.ANY);
-            }
-//            animation = new Timeline(new KeyFrame(Duration.millis(200),(ActionEvent event1) -> { styleOfHandWhenExit(); }));
-//            animation.play();
-            event.consume();
-        });
-
-        this.handTile.setOnDragDropped((event) -> {
-            Dragboard db = event.getDragboard();
-            AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
-            boolean success = false;
-            
-            if (event.getTransferMode() == TransferMode.MOVE&&currTile.isTileParentIsSerie()) {
-                int ySource = currTile.getIndexOfTileInSerie(currTile);
-                int xSource = currTile.getSerieIndexFromTile(currTile);
-                Point pSource = new Point(xSource, ySource);
-                SingleMove singleMove = new SingleMove(pSource, SingleMove.MoveType.BOARD_TO_HAND);
-                currTile.setSingleMove(singleMove);
-                success = currTile.getIsLegalMove();
-            }
-
-            event.setDropCompleted(success);
-            event.consume();
-        });
-
-        this.handTile.setOnDragDone((DragEvent event) -> {
-            if (event.getTransferMode() == TransferMode.MOVE) {
-            }
-            event.consume();
-        });
-
+        this.handTile.setOnDragOver(this::onDragOverOfHandTilePane);
+        this.handTile.setOnDragDropped(this::onDragDroppedOfHandTilePane);
+        this.handTile.setOnDragDone(this::onDragDoneOfHandTilePane);
     }
-
-    private void initPlayers() {
-        this.playersBar.add(barPlayer1);
-        this.playersBar.add(barPlayer2);
-        this.playersBar.add(barPlayer3);
-        this.playersBar.add(barPlayer4);
-        this.playersLabels.add(player1);
-        this.playersLabels.add(player2);
-        this.playersLabels.add(player3);
-        this.playersLabels.add(player4);
-        this.numOfTileInHand.add(numTileP1);
-        this.numOfTileInHand.add(numTileP2);
-        this.numOfTileInHand.add(numTileP3);
-        this.numOfTileInHand.add(numTileP4);
+    
+    private void onDragDoneOfHandTilePane(DragEvent event) {
+        if (event.getTransferMode() == TransferMode.MOVE) { }
+        event.consume();        
     }
+        
+    private void onDragDroppedOfHandTilePane(DragEvent event) {
+        Dragboard db = event.getDragboard();
+        AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
+        boolean success = event.getTransferMode() == TransferMode.MOVE && currTile.isTileParentIsSerie();
 
-    public void createNewGame(Settings gameSetting) {
-        this.rummikubLogic.setGameSettings(gameSetting);
-        this.rummikubLogic.setGameOriginalInputedSettings(rummikubLogic.getGameSettings());
-        this.rummikubLogic.initGameFromUserSettings();
-        initCurrentPlayerMove();
-    }
-
-    //TODO:
-    @Override
-    public void resetScreen() {
-        //((AnimatedFlowPane) this.board.getCenter()).resetScreen();
-        resetPlayersBar();
-        setPlayersBar();
-        handTile.getChildren().clear();
-        withdrawCard.setStyle("-fx-font-size: 24px; -fx-font-weight: bold");
-        withdrawCard.setText("+");
-        withdrawCard.setDisable(false);
-        this.errorMsg.setText(Utils.Constants.EMPTY_STRING);
-        //show();
-    }
-
-    public void resetPlayersBar() {
-        for (HBox playerBar : this.playersBar) {
-            playerBar.setVisible(false);
+        if (success) {
+            int ySource = currTile.getIndexOfTileInSerie(currTile);
+            int xSource = currTile.getSerieIndexFromTile(currTile);
+            Point pSource = new Point(xSource, ySource);
+            SingleMove singleMove = new SingleMove(pSource, SingleMove.MoveType.BOARD_TO_HAND);
+            currTile.setSingleMove(singleMove);
+            success = currTile.getIsLegalMove();
         }
+
+        event.setDropCompleted(success);
+        event.consume();
+    }
+        
+    private void onDragOverOfHandTilePane(DragEvent event) {
+        AnimatedTilePane currTile = (AnimatedTilePane) event.getDragboard().getContent(DataFormat.RTF);
+    
+        if (currTile.getClass() == AnimatedTilePane.class/* && currTile.getIsTileMovedFromHandToBoard()*/) {
+            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+        }
+
+        event.consume();
     }
 
-    @Override
-    public void setScreenParent(ScreensController parentScreen) {
-        this.myController = parentScreen;
+    private void initPlayerAndButtonComponents() {
+    
+        //init the list Of players bar
+        this.playersBarList.add(this.barPlayer1);
+        this.playersBarList.add(this.barPlayer2);
+        this.playersBarList.add(this.barPlayer3);
+        this.playersBarList.add(this.barPlayer4);
+        this.playersLabelsList.add(this.player1);
+        this.playersLabelsList.add(this.player2);
+        this.playersLabelsList.add(this.player3);
+        this.playersLabelsList.add(this.player4);
+        this.labelOfNumOfTileInHandList.add(this.numTileP1);
+        this.labelOfNumOfTileInHandList.add(this.numTileP2);
+        this.labelOfNumOfTileInHandList.add(this.numTileP3);
+        this.labelOfNumOfTileInHandList.add(this.numTileP4);
+        this.buttonsList.add(this.endTrun);
+        this.buttonsList.add(this.menu);
+        this.buttonsList.add(this.withdrawCard);
+
     }
 
     private void initScreenComponentetWithoutBoard() {
         setPlayersBar();
         showPlayerHand();
-        //need to debub it
         initCurrPlayerLabel();
         initAboveHeapLabel();
         initHeapButton();
     }
 
     private void setLabel(Player player, int index) {
-        Label currentPlayer = this.playersLabels.get(index);
-        playersBar.get(index).setVisible(true);
+        Label currentPlayer = this.playersLabelsList.get(index);
+
+        playersBarList.get(index).setVisible(true);
         currentPlayer.setVisible(true);
         currentPlayer.setText(" " + player.getName() + "  ");
-
         currentPlayer.setAlignment(Pos.CENTER);
         currentPlayer.setTextAlignment(TextAlignment.JUSTIFY);
 
         if (player.getIsHuman()) {
             currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.HUMAN_PLAYER_LOGO));
-        } else {
+        }
+        else {
             currentPlayer.setGraphic(ImageUtils.getImageView(ImageUtils.COMPUTER_PLAYER_LOGO));
         }
     }
@@ -312,23 +236,15 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
         for (Tile currTile : handTiles) {
             AnimatedTilePane viewTile = new AnimatedTilePane(currTile);
-            
-            viewTile.addSingleMoveListener((ObservableValue<? extends SingleMove> observable, SingleMove oldValue, SingleMove newValue) -> {
-                makeSingleMove(newValue);
-            });
-            
-            this.isLegalMove.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                viewTile.onSingleMoveDone(newValue);
-            });
-            
-            viewTile.addIsMoveSuccesfulyCompletedListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                onSuccesfulyCompletedMove(newValue);
-            });
+            initTileListeners(viewTile);
             this.handTile.getChildren().add(viewTile);
         }
     }
 
-    private void makeSingleMove(SingleMove singleMove) {
+    private void onMakeSingleMove(SingleMove singleMove) {
+        if (!this.isUserMadeFirstMoveInGame) {
+            this.isUserMadeFirstMoveInGame = !CAN_SAVE_THE_GAME;
+        }
         boolean isLegal = dealWithSingleMoveResualt(singleMove);
         this.isLegalMove.set(isLegal);
     }
@@ -340,19 +256,320 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //                showCurrentGameBoardAndCurrentPlayerHand();
 //            });
 
-        //initScreenComponentetWithoutBoard();
         initCurrPlayerLabel();
-        this.isLegalMove.set(false);
+        this.isLegalMove.set(!LEGAL_MOVE);
         showCurrentGameBoardAndCurrentPlayerHand();  
         } 
     }
-
     
-    public void showGameBoardAndPlayerHand() {
+    private void setBoard(ArrayList<Serie> serieList) {
+        centerPane.resetScreen();
+        ArrayList<FlowPane> flowPaneSeriesList = new ArrayList<>();
+    
+        for (Serie serie : serieList) {
+            flowPaneSeriesList.add(createFlowPaneSerie(serie));
+        }
+        
+        centerPane.getChildren().addAll(flowPaneSeriesList);
+    }
+
+    private FlowPane createFlowPaneSerie(Serie serie) {
+        FlowPane serieFlowPane = new AnimatedSeriePane();
+        
+        serieFlowPane.getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
+            onChangeOfSerieContent(serieFlowPane);
+        });
+        
+        for (Tile tile : serie.getSerieOfTiles()) {
+            AnimatedTilePane viewTile = new AnimatedTilePane(tile);
+            initTileListeners(viewTile);
+            serieFlowPane.getChildren().add(viewTile);
+        }
+        
+        serieFlowPane.setMinWidth(serieFlowPane.getChildren().size() * 30);
+        
+        return serieFlowPane;
+    }    
+
+    private void initCurrPlayerLabel() {
+        int index = 0;
+
+        for (HBox barPlayer : playersBarList) {
+            for (Node child : barPlayer.getChildren()) {
+                child.setStyle(styleWhite);
+            }
+        }
+
+        for (Player player : rummikubLogic.getPlayers()) {
+            this.labelOfNumOfTileInHandList.get(index).setText(String.valueOf(player.getListPlayerTiles().size()));
+            index++;
+        }
+        
+        updateCurrPlayerBar();
+    }
+
+    private void initAboveHeapLabel() {
+        this.heapTile.setStyle(styleWhite);
+        this.heapTile.setText("Tile Left:" + rummikubLogic.getHeap().getTileList().size());
+    }
+
+    private void initHeapButton() {
+        if (rummikubLogic.getHeap().isEmptyHeap()) {
+            this.withdrawCard.setFont(new Font(14));
+            this.withdrawCard.setText("Empy Deck");
+            this.withdrawCard.setDisable(true);
+        }
+    }
+
+    private void setPlayersBar() {
+        int i = 0;
+
+        this.playersBarList.stream().forEach((playersLabelBar) -> {
+            playersLabelBar.setVisible(!VISABLE);
+
+        });
+
+        for (Player player : this.rummikubLogic.getPlayers()) {
+            setLabel(player, this.rummikubLogic.getPlayers().indexOf(player));
+            this.playersBarList.get(i).setVisible(true);
+            i++;
+        }
+    }
+
+    private boolean dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/SingleMove singleMove) {
+        SingleMove.SingleMoveResult singleMoveResualt;
+        singleMoveResualt = this.currentPlayerMove.implementSingleMove(singleMove);
+        boolean isLegalMoveDone = false;
+        switch (singleMoveResualt) {
+            case TILE_NOT_BELONG_HAND: {
+                //show message on the scene
+                this.errorMsg.setText(Utils.Constants.ErrorMessages.ILEGAL_TILE_IS_NOT_BELONG_TO_HAND);
+                //InputOutputParser.printTileNotBelongToTheHand();
+                break;
+            }
+            case NOT_IN_THE_RIGHT_ORDER: {
+                //show message on the scene
+                this.errorMsg.setText(Utils.Constants.ErrorMessages.ILEGAL_TILE_INSERTED_NOT_IN_RIGHT_ORDER);
+                //InputOutputParser.printTileInsertedNotInRightOrder();
+                break;
+            }
+            case CAN_NOT_TOUCH_BOARD_IN_FIRST_MOVE: {
+                //show message on the scene
+                this.errorMsg.setText(Utils.Constants.ErrorMessages.ILEGAL_CANT_TUCH_BOARD_IN_FIRST_MOVE);
+                //InputOutputParser.printCantTuchBoardInFirstMove();
+                break;
+            }
+            case LEGAL_MOVE:
+            default:
+                this.errorMsg.setText(Utils.Constants.QuestionsAndMessagesToUser.SUCCSESSFUL_MOVE);
+                isLegalMoveDone = true;
+                break;
+
+        }
+        return isLegalMoveDone;
+    }
+
+    // Deals with the computer player and allows him to makes his inputs
+    private SingleMove dealWithComputerPlayer () {
+        SingleMove singleMove;
+        Serie serie;
+
+        if (newMoveGenerator.isFinishedGeneratingLastSerie()) {
+            serie = this.serieGenerator.generateSerieMove(currentPlayerMove.getHandAfterMove(), currentPlayerMove.getIsFirstMoveDone());
+            this.newMoveGenerator.setSerieToPlaceOnBoard(serie);
+
+            if (serie != null) {
+                this.newMoveGenerator.setBoardSizeBeforeMove(currentPlayerMove.getBoardAfterMove().boardSize());
+            }
+        }
+
+        singleMove = newMoveGenerator.generateSingleMove(currentPlayerMove.getHandAfterMove(), currentPlayerMove.getBoardAfterMove());
+
+        if (this.newMoveGenerator.isTurnSkipped()) {
+            currentPlayerMove.setIsTurnSkipped(this.newMoveGenerator.isTurnSkipped());
+        }
+
+        return singleMove;
+    }
+
+    private void ImplementComputerPlayerTurn(SingleMove singleMove) {
+        if (singleMove != null) {
+            try {
+                dealWithSingleMoveResualt(singleMove);
+            } catch (Exception ex) {
+                currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
+            }
+        }
+    }
+
+    private void updateCurrPlayerBar() {
+        int index = rummikubLogic.getPlayers().indexOf(rummikubLogic.getCurrentPlayer());
+        for (Node child : this.playersBarList.get(index).getChildren()) {
+            child.setStyle(styleBlue);
+            this.labelOfNumOfTileInHandList.get(index).setText(String.valueOf(this.currentPlayerMove.getHandAfterMove().size()));
+
+        }
+        
+        if(rummikubLogic.getCurrentPlayer().isFirstMoveDone()){
+            this.firstMoveMsg.setStyle(styleWhite);
+            this.firstMoveMsg.setVisible(true);
+        }
+        else{
+            this.firstMoveMsg.setVisible(!VISABLE);
+        }
+    }
+
+    private void onGameFinished() {
+        ResultScreenController resultScreen = (ResultScreenController) this.myController.getControllerScreen(Rummikub.RESULT_SCREEN_ID);
+        resultScreen.updatedGameResultMsg();
+        this.myController.setScreen(Rummikub.RESULT_SCREEN_ID, ScreensController.NOT_RESETABLE);
+    }
+
+    private void initTileListeners(AnimatedTilePane viewTile) {
+        if (this.rummikubLogic.getCurrentPlayer().getIsHuman()) {
+            viewTile.addSingleMoveListener((ObservableValue<? extends SingleMove> observable, SingleMove oldValue, SingleMove newValue) -> {
+                onMakeSingleMove(newValue);
+            });
+
+            this.isLegalMove.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                viewTile.onSingleMoveDone(newValue);
+            });
+
+            viewTile.addIsMoveSuccesfulyCompletedListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                onSuccesfulyCompletedMove(newValue);
+            });            
+        } 
+        else {
+            viewTile.dragTilesOption(DISABLE_DRAG_AND_DROP);
+        }
+        
+    }
+
+    private void onChangeOfSerieContent(FlowPane serieFlowPane) {
+        if (serieFlowPane.getChildren().isEmpty()) {
+            centerPane.removeEmptySerie(serieFlowPane);
+        } 
+        else {
+            ((AnimatedSeriePane) serieFlowPane).setSize();
+        }
+    }
+    
+    private void showGameBoardAndPlayerHand() {
         initScreenComponentetWithoutBoard();
         showGameBoard();
     }
+    
+    private void defineIfTheTurnOfHumanOrComputer() {
+        Platform.runLater(() -> {
+            boolean isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
+            boolean disableButtons = isComputerPlayer;
+            
+            buttonsList.stream().forEach((controllButton) -> { controllButton.setDisable(disableButtons); });
+            
+            while (isComputerPlayer) {
+                    SingleMove singleMove = dealWithComputerPlayer();
+                    
+                    if (currentPlayerMove.getIsTurnSkipped()) {
+                        ImplementComputerPlayerTurn(singleMove);
+                    }
+                    else {
+                        onEndTurnAcions(null);
+                    }
+                    try {
+                        Thread.sleep(1000);
+                        showCurrentGameBoardAndCurrentPlayerHand();
+                        //Platform.runLater(this::showCurrentGameBoardAndCurrentPlayerHand);
+                        isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
+                    } catch (InterruptedException ex) { }
+            }
+        });
+        
 
+        
+        
+        
+//        Timeline test = new Timeline(new KeyFrame(Duration.millis(500), (ActionEvent event1) -> {
+//            showCurrentGameBoardAndCurrentPlayerHand();
+//       //     try {
+//      //          Thread.sleep(500);
+//     //       } catch (InterruptedException ex) {}
+//        }));
+//        
+//        while (isComputerPlayer) {
+//            if (test.getStatus() == Animation.Status.STOPPED) {
+//                SingleMove singleMove = dealWithComputerPlayer();
+//
+//                if (currentPlayerMove.getIsTurnSkipped()) {
+//                    ImplementComputerPlayerTurn(singleMove);
+//                }
+//                else {
+//                    onEndTurnAcions(null);            
+//                }
+//                test.play();
+//
+//                //showCurrentGameBoardAndCurrentPlayerHand();
+//                //Platform.runLater(this::showCurrentGameBoardAndCurrentPlayerHand);
+//                isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();    
+//            }
+//        }
+        
+//        while (isComputerPlayer) {
+//            SingleMove singleMove = dealWithComputerPlayer();
+//    
+//            if (currentPlayerMove.getIsTurnSkipped()) {
+//                ImplementComputerPlayerTurn(singleMove);
+//            }
+//            else {
+//                onEndTurnAcions(null);            
+//            }
+//            
+//            showCurrentGameBoardAndCurrentPlayerHand();
+//            //Platform.runLater(this::showCurrentGameBoardAndCurrentPlayerHand);
+//            isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
+//        }
+    }
+    
+    private void onEndTurnAcions(ActionEvent event) {
+        if (swapTurnTimeLineDelay.getStatus() == Animation.Status.STOPPED) {
+
+            //check the player move
+            rummikubLogic.playSingleTurn(currentPlayerMove);
+
+            // Swap players
+            if (rummikubLogic.isGameOver()) {
+                onGameFinished();
+            } else {
+                //swapTurnTimeLineDelay.play(); the version below is a test wth threads
+                if (this.rummikubLogic.getCurrentPlayer().getIsHuman()) {
+                    swapTurnTimeLineDelay.play();
+                }
+                else {
+                    swapTurns();
+                }
+            }
+        }
+    }
+        
+    //Public methods
+    public void resetPlayersBar() {
+        for (HBox playerBar : this.playersBarList) {
+            playerBar.setVisible(!VISABLE);
+        }
+    }
+
+    public void createNewGame(Settings gameSetting) {
+        this.rummikubLogic.setGameSettings(gameSetting);
+        this.rummikubLogic.setGameOriginalInputedSettings(rummikubLogic.getGameSettings());
+        this.rummikubLogic.initGameFromUserSettings();
+        initCurrentPlayerMove();
+    }
+
+    public void initAllGameComponents() {
+        initScreenComponentetWithoutBoard();
+        showGameBoard();
+        defineIfTheTurnOfHumanOrComputer();
+    }
+    
     public void showGameBoard() {
         setBoard(this.rummikubLogic.getGameBoard().getListOfSerie());
     }
@@ -360,62 +577,21 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     public void showCurrentPlayerBoard() {
         setBoard(this.currentPlayerMove.getBoardAfterMove().getListOfSerie());
     }
-
-    private void setBoard(ArrayList<Serie> serieList) {
-        centerPane.resetScreen();
-        ArrayList<FlowPane> flowPaneSeriesList = new ArrayList<>();
-        for (Serie serie : serieList) {
-            flowPaneSeriesList.add(createFlowPaneSerie(serie));
-        }
-        centerPane.getChildren().addAll(flowPaneSeriesList);
+    
+    public boolean getIsUserMadeFirstMoveInGame() {
+        return isUserMadeFirstMoveInGame;
     }
-
-    private FlowPane createFlowPaneSerie(Serie serie) {
-        FlowPane serieFlowPan = new AnimatedSeriePane();
-        serieFlowPan.getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
-            if (serieFlowPan.getChildren().isEmpty()) {
-                centerPane.removeEmptySerie(serieFlowPan);
-            } else {
-                ((AnimatedSeriePane) serieFlowPan).setSize();
-            }
-        });
-        
-        for (Tile tile : serie.getSerieOfTiles()) {
-            AnimatedTilePane viewTile = new AnimatedTilePane(tile);
-            viewTile.addSingleMoveListener((ObservableValue<? extends SingleMove> observable, SingleMove oldValue, SingleMove newValue) -> {
-                makeSingleMove(newValue);
-            });
-            
-            this.isLegalMove.addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                viewTile.onSingleMoveDone(newValue);
-            });
-            
-            viewTile.addIsMoveSuccesfulyCompletedListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                onSuccesfulyCompletedMove(newValue);
-            });
-            serieFlowPan.getChildren().add(viewTile);
-        }
-        serieFlowPan.setMinWidth(serieFlowPan.getChildren().size() * 30);
-        return serieFlowPan;
-    }    
-//    private void updateHand() {
-//        showCurrentPlayerHand();
-//        updateCurrPlayerBar();
-//    }
-
+    
     public void initCurrentPlayerMove() {
-
         //init variables in the statrt of the turn
         Board printableBoard = new Board(new ArrayList<>(rummikubLogic.getGameBoard().getListOfSerie()));
         boolean isFirstMoveDone = rummikubLogic.getCurrentPlayer().isFirstMoveDone();
         Player printablePlayer = rummikubLogic.getCurrentPlayer().clonePlayer();
         this.currentPlayerMove = new PlayersMove(printablePlayer.getListPlayerTiles(), printableBoard, isFirstMoveDone);
-        //need it for java fx?
-        //ArrayList<Player> printablePlayersList = new ArrayList<>(rummikubLogic.getPlayers());
-        //printablePlayersList.remove(rummikubLogic.getCurrentPlayer());
-        //printablePlayersList.add(printablePlayer);
+        this.isUserMadeFirstMoveInGame = CAN_SAVE_THE_GAME;
     }
 
+    
     public GameLogic getRummikubLogic() {
         return rummikubLogic;
     }
@@ -426,58 +602,57 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     public void swapTurns() {
         rummikubLogic.swapTurns();
-        //this.handTile.getChildren().clear();
-        //this.showPlayerHand(this.rummikubLogic.getCurrentPlayer());
         initCurrentPlayerMove();
-        showGameBoardAndPlayerHand();
         initCurrPlayerLabel();
-    }
 
-    private void initCurrPlayerLabel() {
-        int index = 0;
-
-        for (HBox barPlayer : playersBar) {
-            for (Node child : barPlayer.getChildren()) {
-                child.setStyle(styleWhite);
-            }
+        //test
+        if (this.rummikubLogic.getCurrentPlayer().getIsHuman()) {
+            showGameBoardAndPlayerHand();
         }
-
-        for (Player player : rummikubLogic.getPlayers()) {
-            this.numOfTileInHand.get(index).setText(String.valueOf(player.getListPlayerTiles().size()));
-            index++;
-        }
-        updateCurrPlayerBar();
-    }
-
-    private void initAboveHeapLabel() {
-        this.heapTile.setStyle(styleWhite);
-        this.heapTile.setText("Tile Left:" + rummikubLogic.getHeap().getTileList().size());
-    }
-
-    private void initHeapButton(/*ActionEvent event*/) {
-
-        if (rummikubLogic.getHeap().isEmptyHeap()) {
-            this.withdrawCard.setFont(new Font(14));
-            this.withdrawCard.setText("Empy Deck");
-            this.withdrawCard.setDisable(true);
-            //if the code above maks problems then need to use this one and pass the event to here
+        else {
+            defineIfTheTurnOfHumanOrComputer();
         }
     }
 
-    private void setPlayersBar() {
-        int i = 0;
-
-        this.playersBar.stream().forEach((playersLabelBar) -> {
-            playersLabelBar.setVisible(false);
-        });
-
-        for (Player player : this.rummikubLogic.getPlayers()) {
-            setLabel(player, this.rummikubLogic.getPlayers().indexOf(player));
-            this.playersBar.get(i).setVisible(true);
-            i++;
-        }
-        
+    public void showCurrentGameBoardAndCurrentPlayerHand() {
+        showCurrentPlayerBoard();
+        showCurrentPlayerHand();
     }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        initPlayerAndButtonComponents();
+        this.centerPane = new AnimatedGameBoardPane();
+        this.serieGenerator = new SeriesGenerator();
+        this.newMoveGenerator = new ComputerSingleMoveGenerator();
+        this.board.setCenter(centerPane);
+        this.swapTurnTimeLineDelay = new Timeline(new KeyFrame(Duration.millis(800), (ActionEvent event1) -> {swapTurns();}));
+        this.isLegalMove = new SimpleBooleanProperty(false);
+        this.isUserMadeFirstMoveInGame = CAN_SAVE_THE_GAME; 
+
+        setHandEvents();
+    }
+
+    @Override
+    public void resetScreen() {
+        //((AnimatedGameBoardPane) this.board.getCenter()).resetScreen();
+        resetPlayersBar();
+        setPlayersBar();
+        handTile.getChildren().clear();
+        withdrawCard.setStyle("-fx-font-size: 24px; -fx-font-weight: bold");
+        withdrawCard.setText("+");
+        withdrawCard.setDisable(!ENABLE_BUTTON);
+        this.errorMsg.setText(Utils.Constants.EMPTY_STRING);
+        //show();
+    }
+
+    @Override
+    public void setScreenParent(ScreensController parentScreen) {
+        this.myController = parentScreen;
+    }
+}
+
+
 
 //    
     //test
@@ -519,93 +694,3 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //        
 //        return turnResult;
 //    }
-    private boolean dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/SingleMove singleMove) {
-        SingleMove.SingleMoveResult singleMoveResualt;
-        //if (turnResult == Utils.TurnMenuResult.CONTINUE) {
-        singleMoveResualt = this.currentPlayerMove.implementSingleMove(singleMove);
-        boolean isLegalMove = false;
-        switch (singleMoveResualt) {
-            case TILE_NOT_BELONG_HAND: {
-                //show message on the scene
-                this.errorMsg.setText(Utils.Constants.ErrorMessages.ILEGAL_TILE_IS_NOT_BELONG_TO_HAND);
-                //InputOutputParser.printTileNotBelongToTheHand();
-                break;
-            }
-            case NOT_IN_THE_RIGHT_ORDER: {
-                //show message on the scene
-                this.errorMsg.setText(Utils.Constants.ErrorMessages.ILEGAL_TILE_INSERTED_NOT_IN_RIGHT_ORDER);
-                //InputOutputParser.printTileInsertedNotInRightOrder();
-                break;
-            }
-            case CAN_NOT_TOUCH_BOARD_IN_FIRST_MOVE: {
-                //show message on the scene
-                this.errorMsg.setText(Utils.Constants.ErrorMessages.ILEGAL_CANT_TUCH_BOARD_IN_FIRST_MOVE);
-                //InputOutputParser.printCantTuchBoardInFirstMove();
-                break;
-            }
-            case LEGAL_MOVE:
-            default:
-                this.errorMsg.setText(Utils.Constants.QuestionsAndMessagesToUser.SUCCSESSFUL_MOVE);
-                isLegalMove = true;
-                break;
-
-        }
-        return isLegalMove;
-    }
-
-//        // Deals with the computer player and allows him to makes his inputs
-    private SingleMove dealWithComputerPlayer(PlayersMove currentPlayerMove, boolean isTurnSkipped) {
-        SingleMove singleMove;
-        Serie serie;
-
-        if (newMoveGenerator.isFinishedGeneratingLastSerie()) {
-            serie = this.serieGenerator.generateSerieMove(currentPlayerMove.getHandAfterMove(), isTurnSkipped);
-            this.newMoveGenerator.setSerieToPlaceOnBoard(serie);
-
-            if (serie != null) {
-                this.newMoveGenerator.setBoardSizeBeforeMove(currentPlayerMove.getBoardAfterMove().boardSize());
-            }
-        }
-
-        singleMove = newMoveGenerator.generateSingleMove(currentPlayerMove.getHandAfterMove(), currentPlayerMove.getBoardAfterMove());
-
-        if (this.newMoveGenerator.isTurnSkipped()) {
-            currentPlayerMove.setIsTurnSkipped(this.newMoveGenerator.isTurnSkipped());
-        }
-
-        return singleMove;
-    }
-
-    private void ImplementComputerPlayerTurn(SingleMove singleMove) {
-        if (singleMove != null) {
-            try {
-                dealWithSingleMoveResualt(singleMove);
-            } catch (Exception ex) {
-                currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
-            }
-        }
-    }
-
-    private void updateCurrPlayerBar() {
-        int index = rummikubLogic.getPlayers().indexOf(rummikubLogic.getCurrentPlayer());
-        for (Node child : this.playersBar.get(index).getChildren()) {
-            child.setStyle(styleBlue);
-            this.numOfTileInHand.get(index).setText(String.valueOf(this.currentPlayerMove.getHandAfterMove().size()));
-
-        }
-        if(rummikubLogic.getCurrentPlayer().isFirstMoveDone()){
-            this.firstMoveMsg.setStyle(styleWhite);
-            this.firstMoveMsg.setVisible(true);
-        }else{
-            this.firstMoveMsg.setVisible(false);
-        }
-        
-    }
-
-    void showCurrentGameBoardAndCurrentPlayerHand() {
-        showCurrentPlayerBoard();
-        showCurrentPlayerHand();
-    }
-
-    
-}
