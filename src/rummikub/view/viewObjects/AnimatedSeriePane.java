@@ -27,23 +27,5 @@ public class AnimatedSeriePane extends FlowPane {
         this.setMinWidth(this.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
         this.setPrefWidth(this.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
     }
-
-    ////////////test
     
-public void updateSerieTilesSource(){
-    for (Node tile : this.getChildren()) {
-        
-        if (tile.getClass() == AnimatedTilePane.class) {
-            ((AnimatedTilePane) tile).setSourceLocation();
-        }
-    }
-}
-
-//    public void removeTileFromSerie(int i) {
-//        this.getChildren().remove(i);
-//        if(!this.getChildren().isEmpty()){
-//            this.updateSerieTilesSource();
-//        }
-        
-//    }
 }

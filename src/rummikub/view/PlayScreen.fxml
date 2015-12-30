@@ -94,15 +94,16 @@
                      </padding></FlowPane>
                </children>
             </GridPane>
-            <Button fx:id="endTrun" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleEndTrunAction" prefHeight="41.0" prefWidth="85.0" text="End Turn" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </Button>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
                <children>
                   <Label fx:id="heapTile" prefHeight="20.0" prefWidth="89.0" />
                   <Button id="withdrawCard" fx:id="withdrawCard" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleWithdrawCardAction" prefHeight="41.0" prefWidth="85.0" styleClass="withdrawCard" text="+" textAlignment="CENTER" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label fx:id="firstMoveMsg" text="First Move Done" visible="false" />
+                  <Button fx:id="endTrun" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleEndTrunAction" prefHeight="41.0" prefWidth="85.0" text="End Turn" />
                </children>
             </VBox>
          </children>

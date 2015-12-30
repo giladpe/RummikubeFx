@@ -128,15 +128,6 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
         this.getChildren().remove(holdingSerie);
     }
 
-    public void updateSeriesSourceLocation() {
-        int i = 0;
-        for (Node serie : this.getChildren()) {
-            if (i > 0) {
-                ((AnimatedSeriePane) serie).updateSerieTilesSource();
-            }
-            i++;
-        }
-    }
     private void onAddingAndRemovingSerie(AnimatedSeriePane newSerie) {
         if (newSerie.getChildren().isEmpty()) {
             removeEmptySerie(newSerie);

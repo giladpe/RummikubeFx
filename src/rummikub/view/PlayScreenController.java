@@ -58,7 +58,9 @@ import rummikub.view.viewObjects.AnimatedTilePane;
 public class PlayScreenController implements Initializable, ResetableScreen, ControlledScreen {
 
     private static final String styleWhite = "-fx-text-fill: white";
-    private static final String styleBlue = "-fx-text-fill: blue";
+    private static final String styleBlue = "-fx-text-fill: green";
+    private SimpleBooleanProperty isNormalMoveDone;// may be need for save game 
+    
     @FXML
     private Label errorMsg;
     @FXML
@@ -71,7 +73,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private Button endTrun;
     @FXML
     private Button withdrawCard;
-
+    @FXML
+    private Label firstMoveMsg;
     @FXML
     private Label player1;
     @FXML
@@ -110,6 +113,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     @FXML
     private Label heapTile;
+    private Timeline withDrawTile;
 
     @FXML
     private void handleMenuButtonAction(ActionEvent event) {
@@ -167,7 +171,9 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //            }
 //        });
         this.board.setCenter(centerPane);
-
+            this.withDrawTile = new Timeline(new KeyFrame(Duration.millis(800), (ActionEvent event1) -> {
+            showCurrentPlayerHand();
+        }));
         this.swapTurnTimeLineDelay = new Timeline(new KeyFrame(Duration.millis(800), (ActionEvent event1) -> {
             swapTurns();
         }));
@@ -186,7 +192,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 //            animation = new Timeline(new KeyFrame(Duration.millis(200),(ActionEvent event1) -> { styleOfHandWhenEnter(); }));
 //            animation.play();
             AnimatedTilePane currTile = (AnimatedTilePane) event.getDragboard().getContent(DataFormat.RTF);
-            if (currTile.getClass() == AnimatedTilePane.class && currTile.getIsTileMovedFromHandToBoard()) {
+            if (currTile.getClass() == AnimatedTilePane.class/* && currTile.getIsTileMovedFromHandToBoard()*/) {
                 event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                 //event.acceptTransferModes(TransferMode.ANY);
             }
@@ -304,7 +310,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         this.handTile.getChildren().clear();
 
         for (Tile currTile : handTiles) {
-            AnimatedTilePane viewTile = new AnimatedTilePane(currTile, !(AnimatedTilePane.TILE_BELONG_TO_BOARD));
+            AnimatedTilePane viewTile = new AnimatedTilePane(currTile);
             
             viewTile.addSingleMoveListener((ObservableValue<? extends SingleMove> observable, SingleMove oldValue, SingleMove newValue) -> {
                 makeSingleMove(newValue);
@@ -374,7 +380,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         });
         
         for (Tile tile : serie.getSerieOfTiles()) {
-            AnimatedTilePane viewTile = new AnimatedTilePane(tile, AnimatedTilePane.TILE_BELONG_TO_BOARD);
+            AnimatedTilePane viewTile = new AnimatedTilePane(tile);
             viewTile.addSingleMoveListener((ObservableValue<? extends SingleMove> observable, SingleMove oldValue, SingleMove newValue) -> {
                 makeSingleMove(newValue);
             });
@@ -391,10 +397,10 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         serieFlowPan.setMinWidth(serieFlowPan.getChildren().size() * 30);
         return serieFlowPan;
     }    
-    private void updateHand() {
-        showCurrentPlayerHand();
-        updateCurrPlayerBar();
-    }
+//    private void updateHand() {
+//        showCurrentPlayerHand();
+//        updateCurrPlayerBar();
+//    }
 
     public void initCurrentPlayerMove() {
 
@@ -469,7 +475,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
             this.playersBar.get(i).setVisible(true);
             i++;
         }
-
+        
     }
 
 //    
@@ -586,6 +592,13 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
             this.numOfTileInHand.get(index).setText(String.valueOf(this.currentPlayerMove.getHandAfterMove().size()));
 
         }
+        if(rummikubLogic.getCurrentPlayer().isFirstMoveDone()){
+            this.firstMoveMsg.setStyle(styleWhite);
+            this.firstMoveMsg.setVisible(true);
+        }else{
+            this.firstMoveMsg.setVisible(false);
+        }
+        
     }
 
     void showCurrentGameBoardAndCurrentPlayerHand() {
