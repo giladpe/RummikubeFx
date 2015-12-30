@@ -32,8 +32,6 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
 
     static int INDEX_OF_NEW_SERIE_ADDING_ARREA = 1;
 
-    //private SimpleBooleanProperty isMoveDone;
-    //private static final int BOARD_SIZE = 5;
     public static final double TILE_SPACING = 1.5;
 
     public AnimatedFlowPane() {
@@ -41,113 +39,13 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
         createFlowPane();
     }
 
-//    public void addListener(ChangeListener<Boolean> newListener) {
-//        this.isMoveDone.addListener(newListener);
-//    }
     private void createFlowPane() {
         this.setMinSize(300, 300);
-//        isMoveDone = new SimpleBooleanProperty(false);
-        //pane.setPrefWidth(300);
-        //pane.setPrefHeight(300);
         this.setHgap(30);
         this.setVgap(20);
         this.setAlignment(Pos.CENTER);
         this.setPadding(new Insets(25));
-
         createNewSerieAddinArea();
-
-        //Node cell = createCell();
-        //this.getChildren().add(cell);
-//
-//        this.setOnDragDropped((DragEvent event) -> {
-//            Dragboard db = event.getDragboard();
-//            boolean success = false;
-//            if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-//                FlowPane cell1 = (FlowPane)createCell();
-//                cell1.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
-//                //cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
-//                this.getChildren().add(cell1);
-//                //cell.setBackground(new Background(new BackgroundImage(db.getDragView(), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-//                //cell.setText(db.getString());
-//                success = true;
-//                
-//                //cell.getChildren().add();
-//            }
-//            event.setDropCompleted(success);
-//            event.consume();
-//        });
-    }
-
-//    public void fixSize() {
-//        FlowPane board = this;
-//
-//        for (Iterator<Node> it = board.getChildren().iterator(); it.hasNext();) {
-//            FlowPane serie = (FlowPane) it.next();
-//            if (serie.getChildren().isEmpty()) {
-//                it.remove();
-//            } else if (this.getChildren().indexOf(serie) > 0) {
-//                serie.setSize();
-//            }
-//        }
-//    }
-//    public FlowPane createSerie() {
-//        //final Label cell = new Label();
-//        final FlowPane series = new FlowPane();
-//        //cell.setMinSize(30, 40);
-//        //cell.setMaxSize(30, 40);
-//        series.setPrefHeight(40);
-//        series.setOrientation(Orientation.VERTICAL);
-//        series.setHgap(TILE_SPACING);
-////series.set
-//        //series.setHgap(5);
-//       // series.setAlignment(Pos.CENTER_LEFT);
-//        series.setStyle("-fx-border-color: gray; -fx-border-width: 1");
-//        setSerieEvents(series);
-//        return series;
-//      }
-    private void setSerieEvents(FlowPane series) {
-//        series.setOnDragOver((event) -> {
-//            if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class ) {
-//                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-//            }
-//            event.consume();
-//        });
-
-        series.setOnDragEntered((event) -> {
-            if (series.getChildren().isEmpty()) {
-                if (event.getDragboard().getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-                    series.setStyle("-fx-border-color: blue; -fx-border-width: 3");
-                }
-            }
-
-            event.consume();
-        });
-
-        series.setOnDragExited((event) -> {
-            series.setStyle("-fx-border-color: gray; -fx-border-width: 1");
-            event.consume();
-        });
-
-//        series.setOnDragDropped((event) -> {
-//            Dragboard db = event.getDragboard();
-//            boolean success = false;
-//            if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-//                //int index = series.getChildren().isEmpty()? 0 : series.getChildren().indexOf(db.getContent(DataFormat.RTF));
-//                //int index = cell.getChildren().indexOf(db.getContent(DataFormat.RTF));
-//                int index = series.getChildren().indexOf();
-//
-//                series.getChildren().add(index, (AnimatedTilePane)db.getContent(DataFormat.RTF));
-//                //cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
-//                
-//                //cell.setBackground(new Background(new BackgroundImage(db.getDragView(), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-//              //cell.setText(db.getString());
-//              success = true;
-//              
-//              //cell.getChildren().add();
-//            }
-//            event.setDropCompleted(success);
-//            event.consume();
-//        });
     }
 
     private void createNewSerieAddinArea() {
@@ -189,58 +87,37 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
         newSerieAddingArea.setOnDragDropped((DragEvent event) -> {
             Dragboard db = event.getDragboard();
             AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
-
+            SingleMove singleMove;
             boolean success = false;
             if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
                 AnimatedSeriePane newSerie = new AnimatedSeriePane();
                 newSerie.getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
                     onAddingAndRemovingSerie(newSerie);
                 });
-                
-                //int xTarget = this.getChildren().isEmpty()? 0 : this.getChildren().size()-1;
-                int xTarget = currTile.
+
+                int xTarget = this.getChildren().isEmpty() ? 0 : this.getChildren().size() - 1;
                 int yTarget = 0;
                 Point pTarget = new Point(xTarget, yTarget);
-                FlowPane hand = ((FlowPane) currTile.getParent());
-                int ySource =  hand.getChildren().indexOf(currTile);
-                SingleMove singleMove = new SingleMove(pTarget, ySource, SingleMove.MoveType.HAND_TO_BOARD);
+                FlowPane flowPane = ((FlowPane) currTile.getParent());
 
-                //SingleMove singleMove = new SingleMove(pSource, SingleMove.MoveType.HAND_TO_BOARD);
-                System.out.println(currTile.getIsLegalMove());
+                if (flowPane.getClass() == AnimatedSeriePane.class) {
+                    //board to new serie in board
+                    int xSource = currTile.getSerieIndexFromTile(currTile);
+                    int ySource = currTile.getIndexOfTileInSerie(currTile);
+                    Point pSource=new Point(xSource, ySource);
+                    singleMove = new SingleMove(pTarget, pSource, SingleMove.MoveType.BOARD_TO_BOARD);
+                } else {
+                    int ySource = currTile.getIndexOfTileInHand(currTile);
+                    singleMove = new SingleMove(pTarget, ySource, SingleMove.MoveType.HAND_TO_BOARD);
+                }
                 currTile.setSingleMove(singleMove);
-                System.out.println(currTile.getIsLegalMove());
-//              int index = this.getChildren().indexOf(newSeries);
-//                FlowPane serie = createSerie();
-//                newSerie.getChildren().add((AnimatedTilePane) db.getContent(DataFormat.RTF));
-//                this.getChildren().add(newSerie);
-                //this.updateSeriesSourceLocation();
-                //newSerieAddingArea (0),next(1)
                 success = currTile.getIsLegalMove();
             }
-////////////////////////////////            fixSize();
             event.setDropCompleted(success);
             event.consume();
         });
     }
 
-//        newSeries.setOnDragDropped((event) -> {
-//            Dragboard db = event.getDragboard();
-//            boolean success = false;
-//            if (db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class) {
-//                int index = newSeries.getChildren().isEmpty()? 0 : newSeries.getChildren().indexOf(db.getContent(DataFormat.RTF));
-//                //int index = cell.getChildren().indexOf(db.getContent(DataFormat.RTF));
-//                newSeries.getChildren().add(index, (AnimatedTilePane)db.getContent(DataFormat.RTF));
-//                //cell.getChildren().add((AnimatedTilePane)db.getContent(DataFormat.RTF));
-//                
-//                //cell.setBackground(new Background(new BackgroundImage(db.getDragView(), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-//              //cell.setText(db.getString());
-//              success = true;
-//              
-//              //cell.getChildren().add();
-//            }
-//            event.setDropCompleted(success);
-//            event.consume();
-//        });
     @Override
     public void resetScreen() {
         this.getChildren().clear();
@@ -248,35 +125,23 @@ public class AnimatedFlowPane extends FlowPane implements ResetableScreen {
     }
 
     public void removeEmptySerie(FlowPane holdingSerie) {
-        //holdingSerie.getChildren().removeListener();
         this.getChildren().remove(holdingSerie);
-        //updateSeriesSourceLocation();
-        //update
     }
-    public void updateSeriesSourceLocation(){
-        int i=0;
+
+    public void updateSeriesSourceLocation() {
+        int i = 0;
         for (Node serie : this.getChildren()) {
-            if(i>0){
-            ((AnimatedSeriePane)serie).updateSerieTilesSource();
+            if (i > 0) {
+                ((AnimatedSeriePane) serie).updateSerieTilesSource();
             }
             i++;
         }
     }
-//    public void setSize(FlowPane serie) {
-//        serie.setMinWidth(serie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
-//        serie.setPrefWidth(serie.getChildren().size() * (TILE_WIDTH + AnimatedFlowPane.TILE_SPACING));
-//    }
-
-//    public AnimatedSeriePane getSerie(int i) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-
     private void onAddingAndRemovingSerie(AnimatedSeriePane newSerie) {
         if (newSerie.getChildren().isEmpty()) {
             removeEmptySerie(newSerie);
-        }
-        else {
-          newSerie.setSize();
+        } else {
+            newSerie.setSize();
         }
     }
 }
