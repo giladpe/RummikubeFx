@@ -7,6 +7,10 @@ package rummikub.view.viewObjects;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -25,6 +29,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 import rummikub.gameLogic.controller.rummikub.SingleMove;
 import rummikub.gameLogic.model.gameobjects.Tile;
 
@@ -142,7 +147,7 @@ public class AnimatedTilePane extends HBox {
         Dragboard db = event.getDragboard();
         boolean success = db.getContent(DataFormat.RTF).getClass() == AnimatedTilePane.class;
         boolean isDroppedOnSerie = this.isTileParentIsSerie();
-        int yTarget, xTarget, ySource , xSource= 0;
+        int yTarget, xTarget, ySource, xSource = 0;
         Point pSource, pTarget;
         SingleMove singleMove;
         FlowPane holdingSerie = ((FlowPane) this.getParent());
@@ -161,12 +166,12 @@ public class AnimatedTilePane extends HBox {
                 ySource = getIndexOfTileInSerie(currTile);
                 xSource = getSerieIndexFromTile(currTile);
                 pSource = new Point(xSource, ySource);
-                
-               // currTile.sourceLocation.setLocation(pSource);
-               // currTile.targetLocation.setLocation(pTarget);
-               // currTile.move = SingleMove.MoveType.BOARD_TO_BOARD;
+
+                // currTile.sourceLocation.setLocation(pSource);
+                // currTile.targetLocation.setLocation(pTarget);
+                // currTile.move = SingleMove.MoveType.BOARD_TO_BOARD;
                 //currTile.isTileMovedFromBoardToBoard.set(BOARD_TO_BOARD);
-                currTile.singleMove.set(currTile.getSingleMove(pSource,pTarget,SingleMove.MoveType.BOARD_TO_BOARD));
+                currTile.singleMove.set(currTile.getSingleMove(pSource, pTarget, SingleMove.MoveType.BOARD_TO_BOARD));
             } else {
                 //hand to board
                 ySource = getIndexOfTileInHand(currTile);
@@ -176,25 +181,25 @@ public class AnimatedTilePane extends HBox {
                 //currTile.move = SingleMove.MoveType.HAND_TO_BOARD;
                 //this.isTileMovedFromHandToBoard.set(TILE_MOVED_TO_BOARD);
                 //this.isTileMovedFromBoardToBoard.set(!BOARD_TO_BOARD);
-                currTile.singleMove.set(currTile.getSingleMove(pSource,pTarget,SingleMove.MoveType.HAND_TO_BOARD));
+                currTile.singleMove.set(currTile.getSingleMove(pSource, pTarget, SingleMove.MoveType.HAND_TO_BOARD));
             }
-            success=currTile.isLegalMove;
+            success = currTile.isLegalMove;
         }
         event.setDropCompleted(success);
         event.consume();
     }
+
     private void OnDragDone(DragEvent event) {
         //Dragboard db = event.getDragboard();
         //AnimatedTilePane currTile = (AnimatedTilePane) db.getContent(DataFormat.RTF);
         if (event.getTransferMode() == TransferMode.MOVE) {
             this.isMoveSuccesfulyCompleted.set(true);
-        }
-        else {
+        } else {
             this.isMoveSuccesfulyCompleted.set(false);
         }
         event.consume();
     }
-   
+
     private void initTile(Tile currTile) {
         getStyleClass().add("tile");
         String style = "-fx-text-fill: " + currTile.getTileColor().getAnsiColor();
@@ -210,36 +215,36 @@ public class AnimatedTilePane extends HBox {
         getChildren().add(tileLabel);
 
         //A
-        this.singleMove=new SimpleObjectProperty<>();
-        this.isLegalMove=false;
+        this.singleMove = new SimpleObjectProperty<>();
+        this.isLegalMove = false;
         this.isMoveSuccesfulyCompleted = new SimpleBooleanProperty(false);
     }
 
     public void addSingleMoveListener(ChangeListener<SingleMove> newListener) {
         this.singleMove.addListener(newListener);
     }
-    
+
     public void addIsMoveSuccesfulyCompletedListener(ChangeListener<Boolean> newListener) {
         this.isMoveSuccesfulyCompleted.addListener(newListener);
     }
 
-    public SingleMove getSingleMove(Point sourceLocation,Point targetLocation,SingleMove.MoveType moveType ) {
-        SingleMove single=null;
-        if (null != moveType) switch (moveType) {
-            case HAND_TO_BOARD:
-                single = new SingleMove(targetLocation, (int) sourceLocation.getY(), SingleMove.MoveType.HAND_TO_BOARD);
-                break;
-            case BOARD_TO_HAND:
-                single = new SingleMove(sourceLocation, SingleMove.MoveType.BOARD_TO_HAND);
-                break;
-            default:
-                single = new SingleMove(targetLocation, sourceLocation, SingleMove.MoveType.BOARD_TO_BOARD);
-                break;
+    public SingleMove getSingleMove(Point sourceLocation, Point targetLocation, SingleMove.MoveType moveType) {
+        SingleMove single = null;
+        if (null != moveType) {
+            switch (moveType) {
+                case HAND_TO_BOARD:
+                    single = new SingleMove(targetLocation, (int) sourceLocation.getY(), SingleMove.MoveType.HAND_TO_BOARD);
+                    break;
+                case BOARD_TO_HAND:
+                    single = new SingleMove(sourceLocation, SingleMove.MoveType.BOARD_TO_HAND);
+                    break;
+                default:
+                    single = new SingleMove(targetLocation, sourceLocation, SingleMove.MoveType.BOARD_TO_BOARD);
+                    break;
+            }
         }
         return single;
     }
-
-    
 
     private int checkIfToAddTileBeforeOrAfterTheDroppedOnTile(int index, FlowPane holdingSerie) {
         int whereToDrop = MouseInfo.getPointerInfo().getLocation().x;
@@ -254,11 +259,93 @@ public class AnimatedTilePane extends HBox {
         }
         return index;
     }
+
     public boolean isTileParentIsSerie() {
-        return this.getParent().getClass()==AnimatedSeriePane.class;
+        return this.getParent().getClass() == AnimatedSeriePane.class;
     }
-   
-    ////////////test
+
+    public int getSerieIndexFromTile(AnimatedTilePane tile) {
+        return getSerieIndex((AnimatedSeriePane) (tile.getParent()));
+    }
+
+    public int getSerieIndex(AnimatedSeriePane serie) {
+        AnimatedFlowPane board = (AnimatedFlowPane) serie.getParent();
+        return board.getChildren().indexOf(serie) - 1;
+    }
+
+    public int getIndexOfTileInSerie(AnimatedTilePane currTile) {
+        AnimatedSeriePane serie = (AnimatedSeriePane) (currTile.getParent());
+        return serie.getChildren().indexOf(currTile);
+    }
+
+    public int getIndexOfTileInHand(AnimatedTilePane currTile) {
+        FlowPane hand = ((FlowPane) currTile.getParent());
+        return hand.getChildren().indexOf(currTile);
+    }
+
+    public void onSingleMoveDone(boolean isLegalMove) {
+        this.isLegalMove = isLegalMove;
+    }
+
+    public void setSingleMove(SingleMove singleMove) {
+        this.singleMove.set(singleMove);
+    }
+    ///////////test zone
+    public final static DataFormat OBJCET_DATA_FORMAT = new DataFormat("object.data.format");
+
+    Duration duration = Duration.seconds(0.2);
+    private double gap = 30.0;
+
+//    class AnimatedConainer extends HBox {
+    Timeline timeline = new Timeline();
+    private KeyValue originalWidth;
+
+    //      public AnimatedConainer() {
+    //        super();
+//                Rectangle rec=new Rectangle();
+//                rec.setFill(Color.TRANSPARENT);
+    private void onDragEnter(DragEvent event) {
+        if (timeline.getStatus() == Animation.Status.RUNNING) {
+            timeline.stop();
+        }
+        double targetWidth = Double.parseDouble(event.getDragboard().getString()) + 2;
+        growNode(targetWidth);
+        event.consume();
+    }
+
+    private void onDragLeave(DragEvent event) {
+        if (timeline.getStatus() == Animation.Status.RUNNING) {
+            timeline.stop();
+        }
+        shrinkNode();
+        event.consume();
+    }
+
+    private void growNode(double targetWidth) {
+        timeline.getKeyFrames().clear();
+
+        if (originalWidth == null) {
+            originalWidth = new KeyValue(prefWidthProperty(), getWidth());
+        }
+        KeyFrame fromKeyFrame = new KeyFrame(Duration.ZERO, originalWidth);
+
+        KeyFrame toKeyFrame = new KeyFrame(duration, new KeyValue(prefWidthProperty(), targetWidth));
+        timeline.getKeyFrames().addAll(fromKeyFrame, toKeyFrame);
+        timeline.play();
+    }
+
+    private void shrinkNode() {
+        timeline.getKeyFrames().clear();
+
+        KeyFrame fromKeyFrame = new KeyFrame(Duration.ZERO, new KeyValue(prefWidthProperty(), getWidth()));
+        KeyFrame toKeyFrame = new KeyFrame(duration, originalWidth);
+        timeline.getKeyFrames().addAll(fromKeyFrame, toKeyFrame);
+        timeline.play();
+    }
+}
+
+
+        //////////test
 //    Timeline timeline = new Timeline();
 //    private KeyValue originalWidth;
 //
@@ -303,31 +390,3 @@ public class AnimatedTilePane extends HBox {
 //        timeline.play();
 //    }
 
-    public int getSerieIndexFromTile(AnimatedTilePane tile) {
-        return getSerieIndex((AnimatedSeriePane) (tile.getParent()));
-    }
-
-    public int getSerieIndex(AnimatedSeriePane serie) {
-        AnimatedFlowPane board = (AnimatedFlowPane) serie.getParent();
-        return board.getChildren().indexOf(serie)-1;
-    }
-
-    public int getIndexOfTileInSerie(AnimatedTilePane currTile) {
-        AnimatedSeriePane serie = (AnimatedSeriePane) (currTile.getParent());
-        return serie.getChildren().indexOf(currTile);
-    }
-
-    public int getIndexOfTileInHand(AnimatedTilePane currTile) {
-        FlowPane hand = ((FlowPane) currTile.getParent());
-        return hand.getChildren().indexOf(currTile);
-    }
-
-    public void onSingleMoveDone(boolean isLegalMove) {
-        this.isLegalMove = isLegalMove;
-    }
-
-    public void setSingleMove(SingleMove singleMove) {
-        this.singleMove.set(singleMove);
-    }
-
-}
