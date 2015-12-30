@@ -239,7 +239,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
         initCurrPlayerLabel();
         this.isLegalMove.set(!LEGAL_MOVE);
-        ////////////there is problem here!!!!!
+
         showCurrentGameBoardAndCurrentPlayerHand();  
         } 
     }
