@@ -71,6 +71,10 @@ public class GameLogic {
         return gameHeap;
     }
     
+    public Settings getGameOriginalInputedSettings() {
+        return gameOriginalInputedSettings;
+    }
+    
     // Private Methods
     private boolean isAtleastOnePlayerMoved() {
         boolean isAtleastOneMoved = false;
@@ -275,5 +279,16 @@ public class GameLogic {
         this.isGameOver = this.isTie = false;
         initGameSettingsFromFile(gameName);
         initHeapFromFile();
+    }
+
+    public boolean isHumanPlayerLeftInGame() {
+        boolean foundHuman = false;
+        
+        for (Iterator<Player> iterator = this.players.iterator(); !foundHuman && iterator.hasNext();) {
+            Player player = iterator.next();
+            foundHuman = player.getIsHuman();
+        }
+        
+        return foundHuman;
     }
 }

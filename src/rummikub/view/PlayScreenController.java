@@ -7,8 +7,6 @@ import java.awt.Point;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -65,7 +63,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     private static final boolean LEGAL_MOVE = true;
     private static final boolean ENABLE_BUTTON = true;
     private static final boolean DISABLE_DRAG_AND_DROP = true;
-
+    private static final long SLEEP_TIME_IN_MILLISECOUNDS = 1000;
 
     //FXML Private filds
     @FXML private Label errorMsg;
@@ -117,24 +115,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     @FXML
     private void handleWithdrawCardAction(ActionEvent event) {
-
-        if (swapTurnTimeLineDelay.getStatus() == Animation.Status.STOPPED) {
-
-            this.currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
-            this.rummikubLogic.playSingleTurn(currentPlayerMove);
-
-            if (rummikubLogic.isGameOver() || rummikubLogic.isOnlyOnePlayerLeft()) { 
-                onGameFinished();
-            } else {
-                //swapTurnTimeLineDelay.play(); the version below is a test wth threads
-                if (this.rummikubLogic.getCurrentPlayer().getIsHuman()) {
-                    swapTurnTimeLineDelay.play();
-                }
-                else {
-                    swapTurns();
-                }
-            }
-        }
+        onWithdrawCardAndSkipTurnAction(event);
     }
 
     //Private methods
@@ -459,97 +440,188 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         showGameBoard();
     }
     
-    private void defineIfTheTurnOfHumanOrComputer() {
-        Platform.runLater(() -> {
+    private synchronized void defineIfTheTurnOfHumanOrComputer() {
             boolean isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
             boolean disableButtons = isComputerPlayer;
             
-            buttonsList.stream().forEach((controllButton) -> { controllButton.setDisable(disableButtons); });
+            Platform.runLater(() -> {
+                buttonsList.stream().forEach((controllButton) -> { controllButton.setDisable(disableButtons); });
+            });
             
-            while (isComputerPlayer) {
+            if (isComputerPlayer) {
+
+                while (isComputerPlayer) {
                     SingleMove singleMove = dealWithComputerPlayer();
                     
-                    if (currentPlayerMove.getIsTurnSkipped()) {
+                    Platform.runLater(() -> {
                         ImplementComputerPlayerTurn(singleMove);
-                    }
-                    else {
-                        onEndTurnAcions(null);
-                    }
-                    try {
-                        Thread.sleep(1000);
-                        showCurrentGameBoardAndCurrentPlayerHand();
-                        //Platform.runLater(this::showCurrentGameBoardAndCurrentPlayerHand);
-                        isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
-                    } catch (InterruptedException ex) { }
-            }
-        });
-        
+                    });
 
-        
-        
-        
-//        Timeline test = new Timeline(new KeyFrame(Duration.millis(500), (ActionEvent event1) -> {
-//            showCurrentGameBoardAndCurrentPlayerHand();
-//       //     try {
-//      //          Thread.sleep(500);
-//     //       } catch (InterruptedException ex) {}
-//        }));
-//        
-//        while (isComputerPlayer) {
-//            if (test.getStatus() == Animation.Status.STOPPED) {
-//                SingleMove singleMove = dealWithComputerPlayer();
-//
-//                if (currentPlayerMove.getIsTurnSkipped()) {
-//                    ImplementComputerPlayerTurn(singleMove);
-//                }
-//                else {
-//                    onEndTurnAcions(null);            
-//                }
-//                test.play();
-//
-//                //showCurrentGameBoardAndCurrentPlayerHand();
-//                //Platform.runLater(this::showCurrentGameBoardAndCurrentPlayerHand);
-//                isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();    
-//            }
-//        }
-        
-//        while (isComputerPlayer) {
-//            SingleMove singleMove = dealWithComputerPlayer();
-//    
-//            if (currentPlayerMove.getIsTurnSkipped()) {
-//                ImplementComputerPlayerTurn(singleMove);
-//            }
-//            else {
-//                onEndTurnAcions(null);            
-//            }
-//            
-//            showCurrentGameBoardAndCurrentPlayerHand();
-//            //Platform.runLater(this::showCurrentGameBoardAndCurrentPlayerHand);
-//            isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
-//        }
+                    try {
+                        Thread.sleep(SLEEP_TIME_IN_MILLISECOUNDS);
+                        Platform.runLater(() -> {
+                            //ImplementComputerPlayerTurn(singleMove);
+                            showCurrentGameBoardAndCurrentPlayerHand();
+                        });
+                    } catch (InterruptedException ex) { }
+                    
+                    if (currentPlayerMove.getIsTurnSkipped() || this.newMoveGenerator.isTurnFinnised()) {
+                        this.newMoveGenerator.initComputerSingleMoveGenerator();
+                        Platform.runLater(() -> {
+                            onEndTurnAcions(null);
+                        });
+                        Thread.currentThread().stop();
+                    }
+                    
+                    isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
+                }   
+            } 
+            else {
+                Platform.runLater(() -> {
+                    //showGameBoardAndPlayerHand();
+                    showCurrentGameBoardAndCurrentPlayerHand();
+                });
+            }            
     }
+    
+//    private void defineIfTheTurnOfHumanOrComputer() {
+//        Platform.runLater(() -> {
+//            boolean isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
+//            boolean disableButtons = isComputerPlayer;
+//            
+//            buttonsList.stream().forEach((controllButton) -> { controllButton.setDisable(disableButtons); });
+//            
+//            if (isComputerPlayer) {
+//
+//            
+//                while (isComputerPlayer) {
+//                    SingleMove singleMove = dealWithComputerPlayer();
+//                    ImplementComputerPlayerTurn(singleMove);
+//
+//                    try {
+//                        Platform.runLater(() -> {
+//                            showCurrentGameBoardAndCurrentPlayerHand();
+//                        });
+//                        Thread.sleep(500);
+//                    } catch (InterruptedException ex) { }
+//                    
+//                    if (currentPlayerMove.getIsTurnSkipped() || this.newMoveGenerator.isTurnFinnised()) {
+//                        this.newMoveGenerator.initComputerSingleMoveGenerator();
+//                        onEndTurnAcions(null);
+//                    }
+//                    
+//                    isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
+//
+//
+//    //                    if(this.newMoveGenerator.isTurnFinnised()) {
+//    //                        this.newMoveGenerator.initComputerSingleMoveGenerator();
+//    //                    }
+//
+//
+//                    //try {
+//                    //    Thread.sleep(1000);
+//                    //} catch (InterruptedException ex) { }
+//
+//                    //showCurrentGameBoardAndCurrentPlayerHand();
+//                     //Platform.runLater(this::showCurrentGameBoardAndCurrentPlayerHand);
+//                }   
+//            } 
+//            else {
+//                
+//                Platform.runLater(() -> {
+//                    showCurrentGameBoardAndCurrentPlayerHand();
+//                });
+//                //showCurrentGameBoardAndCurrentPlayerHand();
+//                //showGameBoardAndPlayerHand();
+//            }            
+//        });
+//        
+//
+//        
+//        
+//        
+////        Timeline test = new Timeline(new KeyFrame(Duration.millis(500), (ActionEvent event1) -> {
+////            showCurrentGameBoardAndCurrentPlayerHand();
+////       //     try {
+////      //          Thread.sleep(500);
+////     //       } catch (InterruptedException ex) {}
+////        }));
+////        
+////        while (isComputerPlayer) {
+////            if (test.getStatus() == Animation.Status.STOPPED) {
+////                SingleMove singleMove = dealWithComputerPlayer();
+////
+////                if (currentPlayerMove.getIsTurnSkipped()) {
+////                    ImplementComputerPlayerTurn(singleMove);
+////                }
+////                else {
+////                    onEndTurnAcions(null);            
+////                }
+////                test.play();
+////
+////                //showCurrentGameBoardAndCurrentPlayerHand();
+////                //Platform.runLater(this::showCurrentGameBoardAndCurrentPlayerHand);
+////                isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();    
+////            }
+////        }
+//        
+////        while (isComputerPlayer) {
+////            SingleMove singleMove = dealWithComputerPlayer();
+////    
+////            if (currentPlayerMove.getIsTurnSkipped()) {
+////                ImplementComputerPlayerTurn(singleMove);
+////            }
+////            else {
+////                onEndTurnAcions(null);            
+////            }
+////            
+////            showCurrentGameBoardAndCurrentPlayerHand();
+////            //Platform.runLater(this::showCurrentGameBoardAndCurrentPlayerHand);
+////            isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
+////        }
+//    }
     
     private void onEndTurnAcions(ActionEvent event) {
         if (swapTurnTimeLineDelay.getStatus() == Animation.Status.STOPPED) {
-
             //check the player move
             rummikubLogic.playSingleTurn(currentPlayerMove);
 
             // Swap players
             if (rummikubLogic.isGameOver()) {
                 onGameFinished();
-            } else {
-                //swapTurnTimeLineDelay.play(); the version below is a test wth threads
-                if (this.rummikubLogic.getCurrentPlayer().getIsHuman()) {
-                    swapTurnTimeLineDelay.play();
-                }
-                else {
-                    swapTurns();
-                }
+            } 
+            else {
+                swapTurnTimeLineDelay.play(); 
+//                if (this.rummikubLogic.getCurrentPlayer().getIsHuman()) {
+//                    swapTurnTimeLineDelay.play();
+//                }
+//                else {
+//                    swapTurns();
+//                }
             }
         }
     }
         
+    private void onWithdrawCardAndSkipTurnAction(ActionEvent event) {
+        if (swapTurnTimeLineDelay.getStatus() == Animation.Status.STOPPED) {
+
+            this.currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
+            this.rummikubLogic.playSingleTurn(currentPlayerMove);
+
+            if (rummikubLogic.isGameOver() || rummikubLogic.isOnlyOnePlayerLeft()) { 
+                onGameFinished();
+            } 
+            else {
+                swapTurnTimeLineDelay.play();
+//                if (this.rummikubLogic.getCurrentPlayer().getIsHuman()) {
+//                    swapTurnTimeLineDelay.play();
+//                }
+//                else {
+//                    swapTurns();
+//                }
+            }
+        }
+    }
     //Public methods
     public void resetPlayersBar() {
         for (HBox playerBar : this.playersBarList) {
@@ -559,15 +631,21 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
 
     public void createNewGame(Settings gameSetting) {
         this.rummikubLogic.setGameSettings(gameSetting);
-        this.rummikubLogic.setGameOriginalInputedSettings(rummikubLogic.getGameSettings());
+        this.rummikubLogic.setGameOriginalInputedSettings(new Settings(gameSetting));
         this.rummikubLogic.initGameFromUserSettings();
         initCurrentPlayerMove();
     }
 
     public void initAllGameComponents() {
+
         initScreenComponentetWithoutBoard();
-        showGameBoard();
-        defineIfTheTurnOfHumanOrComputer();
+        new Thread(() -> { defineIfTheTurnOfHumanOrComputer(); }).start();
+
+
+//        Thread thread = new Thread(() -> { defineIfTheTurnOfHumanOrComputer(); });
+//        thread.setDaemon(true);
+//        thread.start();
+        
     }
     
     public void showGameBoard() {
@@ -604,14 +682,20 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         rummikubLogic.swapTurns();
         initCurrentPlayerMove();
         initCurrPlayerLabel();
-
+        
+//        Thread thread = new Thread(() -> { defineIfTheTurnOfHumanOrComputer(); });
+//        thread.setDaemon(true);
+//        thread.start();
+        new Thread(() -> { defineIfTheTurnOfHumanOrComputer(); }).start();
+        
+        //defineIfTheTurnOfHumanOrComputer();
         //test
-        if (this.rummikubLogic.getCurrentPlayer().getIsHuman()) {
-            showGameBoardAndPlayerHand();
-        }
-        else {
-            defineIfTheTurnOfHumanOrComputer();
-        }
+//        if (this.rummikubLogic.getCurrentPlayer().getIsHuman()) {
+//            showGameBoardAndPlayerHand();
+//        }
+//        else {
+//            defineIfTheTurnOfHumanOrComputer();
+//        }
     }
 
     public void showCurrentGameBoardAndCurrentPlayerHand() {

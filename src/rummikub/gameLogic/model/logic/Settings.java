@@ -4,7 +4,6 @@
 package rummikub.gameLogic.model.logic;
 
 import java.util.ArrayList;
-import rummikub.gameLogic.view.ioui.Utils;
 import static rummikub.gameLogic.view.ioui.Utils.Constants.ControlersPattern.COMPUTER_NAME;
 
 public class Settings {
@@ -27,6 +26,16 @@ public class Settings {
         this.NumOfHumanPlayers = totalNumPlayer - computerPlayersNumber;
         this.NumOfPlayers = totalNumPlayer;
         this.HumanPlayersNames = listOfPlayerNames;
+    }
+    
+    public Settings(Settings settings) {
+        this.GamesName = settings.getGamesName();
+        this.NumOfCpuPlayers = settings.getNumOfCpuPlayers();
+        this.NumOfHumanPlayers = settings.getNumOfPlayers() - settings.getNumOfCpuPlayers();
+        this.NumOfPlayers = settings.getNumOfPlayers();
+        settings.getHumanPlayersNames().stream().forEach((HumanPlayerName) -> { this.HumanPlayersNames.add(HumanPlayerName); }); 
+
+        //this.HumanPlayersNames = settings.getHumanPlayersNames();
     }
 
     // Setters

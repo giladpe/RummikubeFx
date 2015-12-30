@@ -152,7 +152,8 @@ public class GameParametersController implements Initializable, ControlledScreen
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID,ScreensController.NOT_RESETABLE);
         Platform.runLater(gameScreen::initAllGameComponents);
         //gameScreen.initAllGameComponents();
-        
+        //showGameBoardAndPlayerHand();
+    
         //resetScreen();
     }
     

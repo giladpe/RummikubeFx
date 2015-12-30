@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import rummikub.gameLogic.model.logic.Settings;
 import rummikubFX.Rummikub;
 
 public class SubMenuController implements Initializable, ControlledScreen {
@@ -40,7 +41,7 @@ public class SubMenuController implements Initializable, ControlledScreen {
             gameScreen.swapTurns();
         }
         
-        if (!(gameScreen.getRummikubLogic().isGameOver() || gameScreen.getRummikubLogic().isOnlyOnePlayerLeft())) {
+        if (isGameOver(gameScreen)) {
             //gameScreen.initAllGameComponents();
             Platform.runLater(gameScreen::initAllGameComponents);
             this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, ScreensController.NOT_RESETABLE);
@@ -55,7 +56,7 @@ public class SubMenuController implements Initializable, ControlledScreen {
     @FXML
     private void handleRestartGameButtonAction(ActionEvent event) {
         PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
-        gameScreen.createNewGame(gameScreen.getRummikubLogic().getGameSettings());
+        gameScreen.createNewGame( new Settings(gameScreen.getRummikubLogic().getGameOriginalInputedSettings()));
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, ScreensController.NOT_RESETABLE);
         Platform.runLater(gameScreen::initAllGameComponents);
         //gameScreen.initAllGameComponents();
@@ -71,6 +72,12 @@ public class SubMenuController implements Initializable, ControlledScreen {
     @FXML
     private void handleExitToMainMenuButtonAction(ActionEvent event) {
         this.myController.setScreen(Rummikub.MAINMENU_SCREEN_ID, (PlayScreenController) myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID));
+    }
+    
+    //private methods
+    
+    private boolean isGameOver(PlayScreenController gameScreen) {
+        return !(gameScreen.getRummikubLogic().isGameOver() || gameScreen.getRummikubLogic().isOnlyOnePlayerLeft() || gameScreen.getRummikubLogic().isHumanPlayerLeftInGame());
     }
     
     //Public methods

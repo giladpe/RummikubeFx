@@ -13,7 +13,7 @@ import rummikub.gameLogic.model.gameobjects.Tile;
 public class ComputerSingleMoveGenerator {
 
     //Constants
-    private static final long SLEEP_TIME_IN_MILLISECOUNDS = 0;
+    public static final long SLEEP_TIME_IN_MILLISECOUNDS = 0;
     private static final int NOT_FOUND = -1;
     
     //Members
