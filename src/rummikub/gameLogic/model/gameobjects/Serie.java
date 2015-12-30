@@ -188,15 +188,14 @@ public class Serie {
         if (!(currTile.isJocker() || tileToAdd.isJocker())) {
             isValid = currTile.isAcendingTiles(tileToAdd);
         }
-                        
         return isValid;
     }
      
     //cheacks increasing order with previous tile
     private boolean cheackIncreasingOrderPreviousTile(Tile tileToAdd) {
         boolean isValid = true;
-        Tile prevTile = this.serieOfTiles.get(this.serieOfTiles.size()-1);
         
+        Tile prevTile = this.serieOfTiles.get(this.serieOfTiles.size()-1);
         if (!prevTile.isJocker()&& !tileToAdd.isJocker()) {
             isValid = tileToAdd.isAcendingTiles(prevTile);
         }
@@ -214,7 +213,7 @@ public class Serie {
             isValid = tileToAdd.isAcendingTiles(prevTile);
         }
         
-        if (!nextTile.isJocker()) {
+        if (isValid&&!nextTile.isJocker()) {
             isValid = nextTile.isAcendingTiles(tileToAdd);
         }
                         
@@ -393,7 +392,7 @@ public class Serie {
                 isValid = cheackIncreasingOrderBetweenTile(tileToAdd, index);
             }
         }
-
+       
         return isValid;
     }
     
