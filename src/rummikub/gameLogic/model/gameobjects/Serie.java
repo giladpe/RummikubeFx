@@ -73,6 +73,10 @@ public class Serie {
     public int getSizeOfSerie() {
         return this.serieOfTiles.size();
     }
+    
+    public SerieType getTypeOfTheSerie() {
+        return this.typeOfTheSerie;
+    }
 
     // Private methods
     // validates an increasing serie

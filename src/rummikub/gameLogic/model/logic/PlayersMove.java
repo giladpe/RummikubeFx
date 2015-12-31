@@ -292,9 +292,9 @@ public class PlayersMove {
         int fromLine = (int)move.getpSource().getX(), whatTileInFromLine = (int)move.getpSource().getY();
         int toLine = (int)move.getpTarget().getX(), whatTileInToLine = (int)move.getpTarget().getY();
         Tile tileToMove = this.boardAfterMove.getSpecificTile(fromLine, whatTileInFromLine);
-
+        Serie serie = this.boardAfterMove.getSeries(toLine);
         
-        if (fromLine == toLine) {
+        if (fromLine == toLine && serie.getTypeOfTheSerie() == Serie.SerieType.SAME_TYPE_SERIES) {
             if (whatTileInFromLine > whatTileInToLine) {
                 this.boardAfterMove.setSpecificTile(tileToMove, toLine, whatTileInToLine);	
                 whatTileInFromLine++;
