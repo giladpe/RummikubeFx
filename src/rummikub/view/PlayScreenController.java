@@ -683,6 +683,7 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         rummikubLogic.swapTurns();
         initCurrentPlayerMove();
         initCurrPlayerLabel();
+        initAboveHeapLabel(); // newly added line cuze didnt worked before 01:47 31.12.2015
         
 //        Thread thread = new Thread(() -> { defineIfTheTurnOfHumanOrComputer(); });
 //        thread.setDaemon(true);

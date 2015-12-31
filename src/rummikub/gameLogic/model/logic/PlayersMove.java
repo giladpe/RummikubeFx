@@ -220,14 +220,7 @@ public class PlayersMove {
         }
         else {
             checkIfToAddNewSeriesToBoard(move);
-            if (fromLine == toLine && whatTileInFromLine > whatTileInToLine) {
-                ArrayList<Tile> currSerie = this.boardAfterMove.getSeries(toLine).getSerieOfTiles();
-                Collections.swap(currSerie, whatTileInFromLine, whatTileInToLine);
-            }
-            else {
-                this.boardAfterMove.setSpecificTile(tileToMove, toLine, whatTileInToLine);
-                this.boardAfterMove.removeSpecificTile(fromLine, whatTileInFromLine);
-            }
+            setTilesAfterChange(move);		
         }
         
         return result;
@@ -273,7 +266,7 @@ public class PlayersMove {
                index <= this.numOfLinesInBoardBeforeMove + this.indexPlayerUsedForFirstMove.size();
     }
     
-    // Public Methods
+    
     private SingleMoveResult implementBoardToHandMove(SingleMove move) {
         boolean isValid;
         SingleMoveResult result = SingleMoveResult.LEGAL_MOVE;
@@ -294,6 +287,40 @@ public class PlayersMove {
         
         return result;
     }
+    
+    private void setTilesAfterChange(SingleMove move) {
+        int fromLine = (int)move.getpSource().getX(), whatTileInFromLine = (int)move.getpSource().getY();
+        int toLine = (int)move.getpTarget().getX(), whatTileInToLine = (int)move.getpTarget().getY();
+        Tile tileToMove = this.boardAfterMove.getSpecificTile(fromLine, whatTileInFromLine);
+
+        
+        if (fromLine == toLine) {
+            if (whatTileInFromLine > whatTileInToLine) {
+                this.boardAfterMove.setSpecificTile(tileToMove, toLine, whatTileInToLine);	
+                whatTileInFromLine++;
+                this.boardAfterMove.removeSpecificTile(fromLine, whatTileInFromLine);
+            }
+            else {
+                if (whatTileInToLine == this.boardAfterMove.getSeries(toLine).getSizeOfSerie()) {
+                    this.boardAfterMove.getSeries(toLine).addSpecificTileToSerie(tileToMove);
+                    this.boardAfterMove.removeSpecificTile(toLine, whatTileInFromLine);
+                }
+                else {
+                    if (whatTileInToLine != this.boardAfterMove.getSeries(toLine).getSizeOfSerie()-1) {
+                        whatTileInToLine++;
+                    }
+                    this.boardAfterMove.setSpecificTile(tileToMove, toLine, whatTileInToLine);
+                    this.boardAfterMove.removeSpecificTile(fromLine, whatTileInFromLine);
+                }
+            }
+        }
+        else {
+            this.boardAfterMove.setSpecificTile(tileToMove, toLine, whatTileInToLine);	
+            this.boardAfterMove.removeSpecificTile(fromLine, whatTileInFromLine);
+        }
+    }
+    
+    // Public Methods
     
     // Takes user single move and moves the tile acordong to i
     // @param move - the move given by player
