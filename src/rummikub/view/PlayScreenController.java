@@ -341,27 +341,21 @@ public static void showGameMsg(Label label,String msg){
         timeline.play();  
     }
 
-private boolean dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/SingleMove singleMove) {
+    private boolean dealWithSingleMoveResualt(SingleMove singleMove) {
         SingleMove.SingleMoveResult singleMoveResualt;
         singleMoveResualt = this.currentPlayerMove.implementSingleMove(singleMove);
         boolean isLegalMoveDone = false;
         switch (singleMoveResualt) {
             case TILE_NOT_BELONG_HAND: {
-                //show message on the scene
                 showGameMsg(this.errorMsg,Utils.Constants.ErrorMessages.ILEGAL_TILE_IS_NOT_BELONG_TO_HAND);
-                //InputOutputParser.printTileNotBelongToTheHand();
                 break;
             }
             case NOT_IN_THE_RIGHT_ORDER: {
-                //show message on the scene
                 showGameMsg(this.errorMsg,Utils.Constants.ErrorMessages.ILEGAL_TILE_INSERTED_NOT_IN_RIGHT_ORDER);
-                //InputOutputParser.printTileInsertedNotInRightOrder();
                 break;
             }
             case CAN_NOT_TOUCH_BOARD_IN_FIRST_MOVE: {
-                //show message on the scene
                 showGameMsg(this.errorMsg,Utils.Constants.ErrorMessages.ILEGAL_CANT_TUCH_BOARD_IN_FIRST_MOVE);
-                //InputOutputParser.printCantTuchBoardInFirstMove();
                 break;
             }
             case LEGAL_MOVE:
@@ -369,7 +363,6 @@ private boolean dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/Si
                 showGameMsg(this.errorMsg,Utils.Constants.QuestionsAndMessagesToUser.SUCCSESSFUL_MOVE);
                 isLegalMoveDone = true;
                 break;
-
         }
         return isLegalMoveDone;
     }
