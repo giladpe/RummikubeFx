@@ -77,7 +77,7 @@ public class SubMenuController implements Initializable, ControlledScreen {
     //private methods
     
     private boolean isGameOver(PlayScreenController gameScreen) {
-        return !(gameScreen.getRummikubLogic().isGameOver() || gameScreen.getRummikubLogic().isOnlyOnePlayerLeft() || gameScreen.getRummikubLogic().isHumanPlayerLeftInGame());
+        return !(gameScreen.getRummikubLogic().isGameOver() || gameScreen.getRummikubLogic().isOnlyOnePlayerLeft() || !gameScreen.getRummikubLogic().isHumanPlayerLeftInGame());
     }
     
     //Public methods
