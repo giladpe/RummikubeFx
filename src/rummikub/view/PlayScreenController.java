@@ -482,7 +482,6 @@ public static void showGameMsg(Label label,String msg){
                 try {
                     Thread.sleep(SLEEP_TIME_IN_MILLISECOUNDS);
                     Platform.runLater(() -> {
-                        //ImplementComputerPlayerTurn(singleMove);
                         showCurrentGameBoardAndCurrentPlayerHand();
                     });
                 } catch (InterruptedException ex) { }
