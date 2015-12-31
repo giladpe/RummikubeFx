@@ -7,7 +7,6 @@ package rummikub.gameLogic.model.logic;
 import rummikub.gameLogic.controller.rummikub.SingleMove;
 import rummikub.gameLogic.controller.rummikub.SingleMove.SingleMoveResult;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import rummikub.gameLogic.model.gameobjects.Board;
 import rummikub.gameLogic.model.gameobjects.Serie;
@@ -18,7 +17,7 @@ public class PlayersMove {
     public static final boolean USER_WANT_SKIP_TRUN = true;
     private static final int AT_LEAST_ONE_TILE_DROPPED_FROM_HAND = 1;
     private static final int MIN_SCORE_FOR_STARTING_PLAYING = 30;  
-
+    private static final int INDEX_NORMALIZATION = 1;
     
     // Data Members
     private final int sizeOfHandBeforeMove;
@@ -266,13 +265,27 @@ public class PlayersMove {
         return result;
     }
     
+    private Tile getTileToSwap(int toLine, int whatTileInToLine) {
+        Tile tileToSwap;
+        Serie serieTarget = this.boardAfterMove.getSeries(toLine);
+
+        if (serieTarget.getSizeOfSerie() == whatTileInToLine) {
+            tileToSwap = this.boardAfterMove.getSpecificTile(toLine, serieTarget.getSizeOfSerie()-INDEX_NORMALIZATION);
+        } 
+        else {
+            tileToSwap = this.boardAfterMove.getSpecificTile(toLine, whatTileInToLine);
+        }
+        
+        return tileToSwap;
+    }
+    
     private void setTilesAfterChange(SingleMove move) {
         int fromLine = (int)move.getpSource().getX(), whatTileInFromLine = (int)move.getpSource().getY();
         int toLine = (int)move.getpTarget().getX(), whatTileInToLine = (int)move.getpTarget().getY();
         Tile tileToMove = this.boardAfterMove.getSpecificTile(fromLine, whatTileInFromLine);
-        Serie serie = this.boardAfterMove.getSeries(toLine);
-        
-        if (fromLine == toLine && serie.getTypeOfTheSerie() == Serie.SerieType.SAME_TYPE_SERIES) {
+        Tile tileToSwap = getTileToSwap(toLine, whatTileInToLine);
+
+        if (fromLine == toLine && tileToSwap.isEqualTiles(tileToMove)) {
             if (whatTileInFromLine > whatTileInToLine) {
                 this.boardAfterMove.setSpecificTile(tileToMove, toLine, whatTileInToLine);	
                 whatTileInFromLine++;
@@ -284,7 +297,7 @@ public class PlayersMove {
                     this.boardAfterMove.removeSpecificTile(toLine, whatTileInFromLine);
                 }
                 else {
-                    if (whatTileInToLine != this.boardAfterMove.getSeries(toLine).getSizeOfSerie()-1) {
+                    if (whatTileInToLine != this.boardAfterMove.getSeries(toLine).getSizeOfSerie()-INDEX_NORMALIZATION) {
                         whatTileInToLine++;
                     }
                     this.boardAfterMove.setSpecificTile(tileToMove, toLine, whatTileInToLine);
