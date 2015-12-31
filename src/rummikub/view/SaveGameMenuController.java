@@ -6,6 +6,7 @@ package rummikub.view;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -25,12 +26,18 @@ public class SaveGameMenuController implements Initializable, ControlledScreen, 
     private final String SAVED = "Game was saved!";
     private final String NOT_SAVED = "Error game was not saved!";
     private final boolean HIDE_MSG = false;
+    private static final boolean ENABLED = false;
+
 
     //Private FXML members
     @FXML private Button save;
     @FXML private Button saveAs;
     @FXML private Button backToPrevMenu;
     @FXML private Label msg;
+    
+    //Private members
+    private final ArrayList<Button> buttonsList = new ArrayList<>();
+
 
     //Private members
     private ScreensController myController;
@@ -44,8 +51,9 @@ public class SaveGameMenuController implements Initializable, ControlledScreen, 
 
     @FXML
     protected void handleSaveGameButtonAction(ActionEvent event) {
-        saveGame();
-        //resetScreen();
+        Platform.runLater(() -> { enableOrDisableButtonsControls(!ENABLED); });
+        new Thread(() -> { saveGame(); }).start();
+        Platform.runLater(() -> { enableOrDisableButtonsControls(ENABLED); });
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, ScreensController.NOT_RESETABLE);
     }
 
@@ -55,20 +63,24 @@ public class SaveGameMenuController implements Initializable, ControlledScreen, 
         fileChooser.setTitle("Open Resource File");
         FileChooser.ExtensionFilter extFilterXML = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.XML");
         fileChooser.getExtensionFilters().add(extFilterXML);
+        
+        Platform.runLater(() -> { enableOrDisableButtonsControls(!ENABLED); });
         File file = fileChooser.showSaveDialog(((Button) event.getSource()).getContextMenu());
 
         if (file != null) {
-            Platform.runLater(() -> {
-                saveAsGame(file.getPath());
-            });
+            new Thread(() -> { saveAsGame(file.getPath()); }).start();
         }
-        //resetScreen();
+        Platform.runLater(() -> { enableOrDisableButtonsControls(ENABLED); });
     }
 
     //Public methods
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) { }
+    public void initialize(URL url, ResourceBundle rb) {
+        this.buttonsList.add(this.backToPrevMenu);
+        this.buttonsList.add(this.save);
+        this.buttonsList.add(this.saveAs);
+    }
     
     @Override
     public void setScreenParent(ScreensController parentScreen) {
@@ -92,16 +104,19 @@ public class SaveGameMenuController implements Initializable, ControlledScreen, 
         PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
         boolean succedSavingFile = false;
         GameLogic rummikubLogic = gameScreen.getRummikubLogic();
-        try {
 
+        try {
             succedSavingFile = JaxBXmlParser.saveAsSettingsToXml(filePath, rummikubLogic.getPlayers(),
                     rummikubLogic.getGameBoard(),
                     rummikubLogic.getGameSettings().getGamesName(),
                     rummikubLogic.getCurrentPlayer().getName());
-        } catch (SAXException | JAXBException | IOException ex) {
+        } 
+        catch (SAXException | JAXBException | IOException ex) {
             succedSavingFile = false;
-        } finally {
-            handleMsg(succedSavingFile);
+        } 
+        finally {
+            final boolean saveResult = succedSavingFile;
+            Platform.runLater(() -> { handleMsg(saveResult); });
         }
     }
 
@@ -109,7 +124,7 @@ public class SaveGameMenuController implements Initializable, ControlledScreen, 
         PlayScreenController gameScreen = (PlayScreenController) this.myController.getControllerScreen(Rummikub.PLAY_SCREEN_ID);
         boolean succedSavingFile = false;
         GameLogic rummikubLogic = gameScreen.getRummikubLogic();
-        
+                
         try {
             succedSavingFile = JaxBXmlParser.saveSettingsToXml(rummikubLogic.getPlayers(),
                                                                rummikubLogic.getGameBoard(),
@@ -118,12 +133,18 @@ public class SaveGameMenuController implements Initializable, ControlledScreen, 
 
         } catch (SAXException | JAXBException | IOException ex) {
             succedSavingFile = false;
-        } finally {
-            handleMsg(succedSavingFile);
+        } 
+        finally {
+            final boolean saveResult = succedSavingFile;
+            Platform.runLater(() -> { handleMsg(saveResult); });
+            Thread.currentThread().stop();
         }
     }
     
-    //does it works???
+    private void enableOrDisableButtonsControls(boolean state) {
+        this.buttonsList.stream().forEach((button) -> { button.setDisable(state); });
+    }
+    
     private boolean isGameSavedBefor() {
         boolean savedBefore;
     
@@ -138,12 +159,12 @@ public class SaveGameMenuController implements Initializable, ControlledScreen, 
         if (!succedSavingFile) {
             msg.setText(this.NOT_SAVED);
             msg.setStyle("-fx-text-fill: #ff0000");
-            msg.setVisible(true);
         } 
         else {
             msg.setText(this.SAVED);
             msg.setStyle("-fx-text-fill: blue");
-            msg.setVisible(true);
         }
+        msg.setVisible(!HIDE_MSG);
+
     }
 }

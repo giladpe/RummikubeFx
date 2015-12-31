@@ -183,29 +183,7 @@ public class PlayersMove {
         
         return result;
     }
-    
-    //test
-//    private SingleMoveResult implementBoardToBoardMove(SingleMove move) {
-//        boolean isValid;
-//        int fromLine = (int)move.getpSource().getX(), whatTileInFromLine = (int)move.getpSource().getY();
-//        int toLine = (int)move.getpTarget().getX(), whatTileInToLine = (int)move.getpTarget().getY();
-//        SingleMoveResult result = SingleMoveResult.LEGAL_MOVE;
-//        Tile tileToMove = this.boardAfterMove.getSpecificTile(fromLine, whatTileInFromLine);
-//
-//        isValid = this.boardAfterMove.getSeries(toLine).isLegalPlaceOfTile(tileToMove, whatTileInToLine);
-//        
-//        if(!isValid) {
-//            result = SingleMoveResult.NOT_IN_THE_RIGHT_ORDER;
-//        }
-//        else {
-//            checkIfToAddNewSeriesToBoard(move);
-//            this.boardAfterMove.setSpecificTile(tileToMove, toLine, whatTileInToLine);
-//            this.boardAfterMove.removeSpecificTile(fromLine, whatTileInFromLine);
-//        }
-//        
-//        return result;
-//    }
-    
+        
     private SingleMoveResult implementBoardToBoardMove(SingleMove move) {
         boolean isValid;
         int fromLine = (int)move.getpSource().getX(), whatTileInFromLine = (int)move.getpSource().getY();
@@ -388,3 +366,26 @@ public class PlayersMove {
         return this.handAfterMove.size();
     }
 }
+
+
+    //Old Version
+//    private SingleMoveResult implementBoardToBoardMove(SingleMove move) {
+//        boolean isValid;
+//        int fromLine = (int)move.getpSource().getX(), whatTileInFromLine = (int)move.getpSource().getY();
+//        int toLine = (int)move.getpTarget().getX(), whatTileInToLine = (int)move.getpTarget().getY();
+//        SingleMoveResult result = SingleMoveResult.LEGAL_MOVE;
+//        Tile tileToMove = this.boardAfterMove.getSpecificTile(fromLine, whatTileInFromLine);
+//
+//        isValid = this.boardAfterMove.getSeries(toLine).isLegalPlaceOfTile(tileToMove, whatTileInToLine);
+//        
+//        if(!isValid) {
+//            result = SingleMoveResult.NOT_IN_THE_RIGHT_ORDER;
+//        }
+//        else {
+//            checkIfToAddNewSeriesToBoard(move);
+//            this.boardAfterMove.setSpecificTile(tileToMove, toLine, whatTileInToLine);
+//            this.boardAfterMove.removeSpecificTile(fromLine, whatTileInFromLine);
+//        }
+//        
+//        return result;
+//    }
