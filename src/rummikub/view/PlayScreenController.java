@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -15,6 +16,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -318,32 +320,53 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         }
     }
 
-    private boolean dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/SingleMove singleMove) {
+    public static void disappearAnimation(Node node) {
+        FadeTransition animation = new FadeTransition();
+        animation.setNode(node);
+        animation.setDuration(Duration.seconds(3));
+        animation.setFromValue(1.0);
+        animation.setToValue(0.0);
+        animation.play();
+    }
+public static void showGameMsg(Label label,String msg){
+        label.setText(msg);
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.5), new EventHandler<ActionEvent>() {  
+        @Override  
+        public void handle(ActionEvent event) {  
+            
+            disappearAnimation(label);
+            }  
+        }));  
+        timeline.setCycleCount(1);  
+        timeline.play();  
+    }
+
+private boolean dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/SingleMove singleMove) {
         SingleMove.SingleMoveResult singleMoveResualt;
         singleMoveResualt = this.currentPlayerMove.implementSingleMove(singleMove);
         boolean isLegalMoveDone = false;
         switch (singleMoveResualt) {
             case TILE_NOT_BELONG_HAND: {
                 //show message on the scene
-                this.errorMsg.setText(Utils.Constants.ErrorMessages.ILEGAL_TILE_IS_NOT_BELONG_TO_HAND);
+                showGameMsg(this.errorMsg,Utils.Constants.ErrorMessages.ILEGAL_TILE_IS_NOT_BELONG_TO_HAND);
                 //InputOutputParser.printTileNotBelongToTheHand();
                 break;
             }
             case NOT_IN_THE_RIGHT_ORDER: {
                 //show message on the scene
-                this.errorMsg.setText(Utils.Constants.ErrorMessages.ILEGAL_TILE_INSERTED_NOT_IN_RIGHT_ORDER);
+                showGameMsg(this.errorMsg,Utils.Constants.ErrorMessages.ILEGAL_TILE_INSERTED_NOT_IN_RIGHT_ORDER);
                 //InputOutputParser.printTileInsertedNotInRightOrder();
                 break;
             }
             case CAN_NOT_TOUCH_BOARD_IN_FIRST_MOVE: {
                 //show message on the scene
-                this.errorMsg.setText(Utils.Constants.ErrorMessages.ILEGAL_CANT_TUCH_BOARD_IN_FIRST_MOVE);
+                showGameMsg(this.errorMsg,Utils.Constants.ErrorMessages.ILEGAL_CANT_TUCH_BOARD_IN_FIRST_MOVE);
                 //InputOutputParser.printCantTuchBoardInFirstMove();
                 break;
             }
             case LEGAL_MOVE:
             default:
-                this.errorMsg.setText(Utils.Constants.QuestionsAndMessagesToUser.SUCCSESSFUL_MOVE);
+                showGameMsg(this.errorMsg,Utils.Constants.QuestionsAndMessagesToUser.SUCCSESSFUL_MOVE);
                 isLegalMoveDone = true;
                 break;
 

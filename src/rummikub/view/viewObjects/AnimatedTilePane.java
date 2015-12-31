@@ -256,7 +256,6 @@ public class AnimatedTilePane extends HBox {
     }
 }
 //    ///////////test zone
-//    public final static DataFormat OBJCET_DATA_FORMAT = new DataFormat("object.data.format");
 //
 //    Duration duration = Duration.seconds(0.2);
 //    private double gap = 30.0;
