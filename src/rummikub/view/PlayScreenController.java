@@ -235,7 +235,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
         }
         catch (Exception ex) {
             isLegal = false;
-            //showGameBoardAndPlayerHand();
+            initCurrentPlayerMove();
+            showGameBoardAndPlayerHand();
         }
         this.isLegalMove.set(isLegal);
     }
