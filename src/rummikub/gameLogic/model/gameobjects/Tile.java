@@ -134,7 +134,13 @@ public class Tile implements Comparable<Tile> {
     }
 
     public boolean isEqualTiles(Tile prevTile) {
-        return this.enumTileNumber.getTileNumberValue() - prevTile.getEnumTileNumber().getTileNumberValue() == 0;
+        boolean result = false;
+        
+        if (prevTile != null) {
+            result = this.enumTileNumber.getTileNumberValue() - prevTile.getEnumTileNumber().getTileNumberValue() == 0;
+        }
+        
+        return result;
     }
 
     public boolean isIncreasingAndSameColorTilesWithJocker(Tile prevTile, int numOfJockers) {
