@@ -225,10 +225,18 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
 
     private void onMakeSingleMove(SingleMove singleMove) {
+        boolean isLegal;
+        
         if (!this.isUserMadeFirstMoveInGame) {
             this.isUserMadeFirstMoveInGame = !CAN_SAVE_THE_GAME;
         }
-        boolean isLegal = dealWithSingleMoveResualt(singleMove);
+        try {
+            isLegal = dealWithSingleMoveResualt(singleMove);
+        }
+        catch (Exception ex) {
+            isLegal = false;
+            //showGameBoardAndPlayerHand();
+        }
         this.isLegalMove.set(isLegal);
     }
     
@@ -330,12 +338,8 @@ public class PlayScreenController implements Initializable, ResetableScreen, Con
     }
 public static void showGameMsg(Label label,String msg){
         label.setText(msg);
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.5), new EventHandler<ActionEvent>() {  
-        @Override  
-        public void handle(ActionEvent event) {  
-            
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.5), (ActionEvent event) -> {
             disappearAnimation(label);
-            }  
         }));  
         timeline.setCycleCount(1);  
         timeline.play();  
@@ -546,7 +550,12 @@ public static void showGameMsg(Label label,String msg){
 
     public void initAllGameComponents() {
         initScreenComponentetWithoutBoard();
-        new Thread(() -> { defineIfTheTurnOfHumanOrComputer(); }).start();
+        try {
+            new Thread(() -> { defineIfTheTurnOfHumanOrComputer(); }).start();
+        }
+        catch(Exception ex) {
+            this.myController.setScreen(Rummikub.MAINMENU_SCREEN_ID, ScreensController.NOT_RESETABLE);
+        }
     }
     
     public void showGameBoard() {
@@ -583,8 +592,13 @@ public static void showGameMsg(Label label,String msg){
         rummikubLogic.swapTurns();
         initCurrentPlayerMove();
         initCurrPlayerLabel();
-        initAboveHeapLabel(); // newly added line cuze didnt worked before 01:47 31.12.2015
-        new Thread(() -> { defineIfTheTurnOfHumanOrComputer(); }).start();
+        initAboveHeapLabel(); 
+        try{
+            new Thread(() -> { defineIfTheTurnOfHumanOrComputer(); }).start();
+        }
+        catch(Exception ex) {
+            this.myController.setScreen(Rummikub.MAINMENU_SCREEN_ID, ScreensController.NOT_RESETABLE);
+        }
     }
 
     public void showCurrentGameBoardAndCurrentPlayerHand() {

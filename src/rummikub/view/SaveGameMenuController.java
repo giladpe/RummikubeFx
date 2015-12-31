@@ -52,7 +52,12 @@ public class SaveGameMenuController implements Initializable, ControlledScreen, 
     @FXML
     protected void handleSaveGameButtonAction(ActionEvent event) {
         Platform.runLater(() -> { enableOrDisableButtonsControls(!ENABLED); });
-        new Thread(() -> { saveGame(); }).start();
+        try {
+            new Thread(() -> { saveGame(); }).start();
+        }
+        catch (Exception ex) {
+            this.myController.setScreen(Rummikub.MAINMENU_SCREEN_ID, ScreensController.NOT_RESETABLE);
+        }
         Platform.runLater(() -> { enableOrDisableButtonsControls(ENABLED); });
         this.myController.setScreen(Rummikub.PLAY_SCREEN_ID, ScreensController.NOT_RESETABLE);
     }
@@ -68,7 +73,12 @@ public class SaveGameMenuController implements Initializable, ControlledScreen, 
         File file = fileChooser.showSaveDialog(((Button) event.getSource()).getContextMenu());
 
         if (file != null) {
-            new Thread(() -> { saveAsGame(file.getPath()); }).start();
+            try {
+                new Thread(() -> { saveAsGame(file.getPath()); }).start();
+            }
+            catch (Exception ex) {
+                this.myController.setScreen(Rummikub.MAINMENU_SCREEN_ID, ScreensController.NOT_RESETABLE);
+            }
         }
         Platform.runLater(() -> { enableOrDisableButtonsControls(ENABLED); });
     }

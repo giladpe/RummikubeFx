@@ -265,11 +265,11 @@ public class PlayersMove {
         return result;
     }
     
-    private Tile getTileToSwap(int toLine, int whatTileInToLine) {
+    private Tile getTileToSwap(int toLine, int fromLine, int whatTileInToLine) {
         Tile tileToSwap = null;
         Serie serieTarget;
         
-        if (toLine != this.boardAfterMove.boardSize() - INDEX_NORMALIZATION) {
+        if (fromLine == toLine || toLine != this.boardAfterMove.boardSize() - INDEX_NORMALIZATION) {
             serieTarget = this.boardAfterMove.getSeries(toLine);
 
             if (serieTarget.getSizeOfSerie() == whatTileInToLine) {
@@ -287,7 +287,7 @@ public class PlayersMove {
         int fromLine = (int)move.getpSource().getX(), whatTileInFromLine = (int)move.getpSource().getY();
         int toLine = (int)move.getpTarget().getX(), whatTileInToLine = (int)move.getpTarget().getY();
         Tile tileToMove = this.boardAfterMove.getSpecificTile(fromLine, whatTileInFromLine);
-        Tile tileToSwap = getTileToSwap(toLine, whatTileInToLine);
+        Tile tileToSwap = getTileToSwap(toLine, fromLine, whatTileInToLine);
 
         if (fromLine == toLine && tileToMove.isEqualTiles(tileToSwap)) {
             if (whatTileInFromLine > whatTileInToLine) {

@@ -63,7 +63,12 @@ public class MainMenuController implements Initializable, ControlledScreen, Rese
         File file = fileChooser.showOpenDialog(((Button) event.getSource()).getContextMenu());
 
         if (file != null) {
-            new Thread(() -> { loadGame(file); }).start();
+            try {
+                new Thread(() -> { loadGame(file); }).start();
+            }
+            catch (Exception ex) {
+                this.myController.setScreen(Rummikub.MAINMENU_SCREEN_ID, ScreensController.NOT_RESETABLE);
+            }
         }
         Platform.runLater(() -> { enableOrDisableButtonsControls(ENABLED); });
     }
