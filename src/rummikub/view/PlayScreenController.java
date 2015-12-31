@@ -463,47 +463,47 @@ public static void showGameMsg(Label label,String msg){
     }
     
     private synchronized void defineIfTheTurnOfHumanOrComputer() {
-            boolean isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
-            boolean disableButtons = isComputerPlayer;
-            
-            Platform.runLater(() -> {
-                buttonsList.stream().forEach((controllButton) -> { controllButton.setDisable(disableButtons); });
-            });
-            
-            if (isComputerPlayer) {
+        boolean isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
+        boolean disableButtons = isComputerPlayer;
 
-                while (isComputerPlayer) {
-                    SingleMove singleMove = dealWithComputerPlayer();
-                    
-                    Platform.runLater(() -> {
-                        ImplementComputerPlayerTurn(singleMove);
-                    });
+        Platform.runLater(() -> {
+            buttonsList.stream().forEach((controllButton) -> { controllButton.setDisable(disableButtons); });
+        });
 
-                    try {
-                        Thread.sleep(SLEEP_TIME_IN_MILLISECOUNDS);
-                        Platform.runLater(() -> {
-                            //ImplementComputerPlayerTurn(singleMove);
-                            showCurrentGameBoardAndCurrentPlayerHand();
-                        });
-                    } catch (InterruptedException ex) { }
-                    
-                    if (currentPlayerMove.getIsTurnSkipped() || this.newMoveGenerator.isTurnFinnised()) {
-                        this.newMoveGenerator.initComputerSingleMoveGenerator();
-                        Platform.runLater(() -> {
-                            onEndTurnAcions(null);
-                        });
-                        Thread.currentThread().stop();
-                    }
-                    
-                    isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
-                }   
-            } 
-            else {
+        if (isComputerPlayer) {
+
+            while (isComputerPlayer) {
+                SingleMove singleMove = dealWithComputerPlayer();
+
                 Platform.runLater(() -> {
-                    //showGameBoardAndPlayerHand();
-                    showCurrentGameBoardAndCurrentPlayerHand();
+                    ImplementComputerPlayerTurn(singleMove);
                 });
-            }            
+
+                try {
+                    Thread.sleep(SLEEP_TIME_IN_MILLISECOUNDS);
+                    Platform.runLater(() -> {
+                        //ImplementComputerPlayerTurn(singleMove);
+                        showCurrentGameBoardAndCurrentPlayerHand();
+                    });
+                } catch (InterruptedException ex) { }
+
+                if (currentPlayerMove.getIsTurnSkipped() || this.newMoveGenerator.isTurnFinnised()) {
+                    this.newMoveGenerator.initComputerSingleMoveGenerator();
+                    Platform.runLater(() -> {
+                        onEndTurnAcions(null);
+                    });
+                    Thread.currentThread().stop();
+                }
+
+                isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
+            }   
+        } 
+        else {
+            Platform.runLater(() -> {
+                //showGameBoardAndPlayerHand();
+                showCurrentGameBoardAndCurrentPlayerHand();
+            });
+        }            
     }
         
     private void onEndTurnAcions(ActionEvent event) {
