@@ -507,104 +507,7 @@ private boolean dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/Si
                 });
             }            
     }
-    
-//    private void defineIfTheTurnOfHumanOrComputer() {
-//        Platform.runLater(() -> {
-//            boolean isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
-//            boolean disableButtons = isComputerPlayer;
-//            
-//            buttonsList.stream().forEach((controllButton) -> { controllButton.setDisable(disableButtons); });
-//            
-//            if (isComputerPlayer) {
-//
-//            
-//                while (isComputerPlayer) {
-//                    SingleMove singleMove = dealWithComputerPlayer();
-//                    ImplementComputerPlayerTurn(singleMove);
-//
-//                    try {
-//                        Platform.runLater(() -> {
-//                            showCurrentGameBoardAndCurrentPlayerHand();
-//                        });
-//                        Thread.sleep(500);
-//                    } catch (InterruptedException ex) { }
-//                    
-//                    if (currentPlayerMove.getIsTurnSkipped() || this.newMoveGenerator.isTurnFinnised()) {
-//                        this.newMoveGenerator.initComputerSingleMoveGenerator();
-//                        onEndTurnAcions(null);
-//                    }
-//                    
-//                    isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
-//
-//
-//    //                    if(this.newMoveGenerator.isTurnFinnised()) {
-//    //                        this.newMoveGenerator.initComputerSingleMoveGenerator();
-//    //                    }
-//
-//
-//                    //try {
-//                    //    Thread.sleep(1000);
-//                    //} catch (InterruptedException ex) { }
-//
-//                    //showCurrentGameBoardAndCurrentPlayerHand();
-//                     //Platform.runLater(this::showCurrentGameBoardAndCurrentPlayerHand);
-//                }   
-//            } 
-//            else {
-//                
-//                Platform.runLater(() -> {
-//                    showCurrentGameBoardAndCurrentPlayerHand();
-//                });
-//                //showCurrentGameBoardAndCurrentPlayerHand();
-//                //showGameBoardAndPlayerHand();
-//            }            
-//        });
-//        
-//
-//        
-//        
-//        
-////        Timeline test = new Timeline(new KeyFrame(Duration.millis(500), (ActionEvent event1) -> {
-////            showCurrentGameBoardAndCurrentPlayerHand();
-////       //     try {
-////      //          Thread.sleep(500);
-////     //       } catch (InterruptedException ex) {}
-////        }));
-////        
-////        while (isComputerPlayer) {
-////            if (test.getStatus() == Animation.Status.STOPPED) {
-////                SingleMove singleMove = dealWithComputerPlayer();
-////
-////                if (currentPlayerMove.getIsTurnSkipped()) {
-////                    ImplementComputerPlayerTurn(singleMove);
-////                }
-////                else {
-////                    onEndTurnAcions(null);            
-////                }
-////                test.play();
-////
-////                //showCurrentGameBoardAndCurrentPlayerHand();
-////                //Platform.runLater(this::showCurrentGameBoardAndCurrentPlayerHand);
-////                isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();    
-////            }
-////        }
-//        
-////        while (isComputerPlayer) {
-////            SingleMove singleMove = dealWithComputerPlayer();
-////    
-////            if (currentPlayerMove.getIsTurnSkipped()) {
-////                ImplementComputerPlayerTurn(singleMove);
-////            }
-////            else {
-////                onEndTurnAcions(null);            
-////            }
-////            
-////            showCurrentGameBoardAndCurrentPlayerHand();
-////            //Platform.runLater(this::showCurrentGameBoardAndCurrentPlayerHand);
-////            isComputerPlayer = !rummikubLogic.getCurrentPlayer().getIsHuman();
-////        }
-//    }
-    
+        
     private void onEndTurnAcions(ActionEvent event) {
         if (swapTurnTimeLineDelay.getStatus() == Animation.Status.STOPPED) {
             //check the player move
@@ -616,12 +519,6 @@ private boolean dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/Si
             } 
             else {
                 swapTurnTimeLineDelay.play(); 
-//                if (this.rummikubLogic.getCurrentPlayer().getIsHuman()) {
-//                    swapTurnTimeLineDelay.play();
-//                }
-//                else {
-//                    swapTurns();
-//                }
             }
         }
     }
@@ -637,12 +534,6 @@ private boolean dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/Si
             } 
             else {
                 swapTurnTimeLineDelay.play();
-//                if (this.rummikubLogic.getCurrentPlayer().getIsHuman()) {
-//                    swapTurnTimeLineDelay.play();
-//                }
-//                else {
-//                    swapTurns();
-//                }
             }
         }
     }
@@ -661,15 +552,8 @@ private boolean dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/Si
     }
 
     public void initAllGameComponents() {
-
         initScreenComponentetWithoutBoard();
         new Thread(() -> { defineIfTheTurnOfHumanOrComputer(); }).start();
-
-
-//        Thread thread = new Thread(() -> { defineIfTheTurnOfHumanOrComputer(); });
-//        thread.setDaemon(true);
-//        thread.start();
-        
     }
     
     public void showGameBoard() {
@@ -707,20 +591,7 @@ private boolean dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/Si
         initCurrentPlayerMove();
         initCurrPlayerLabel();
         initAboveHeapLabel(); // newly added line cuze didnt worked before 01:47 31.12.2015
-        
-//        Thread thread = new Thread(() -> { defineIfTheTurnOfHumanOrComputer(); });
-//        thread.setDaemon(true);
-//        thread.start();
         new Thread(() -> { defineIfTheTurnOfHumanOrComputer(); }).start();
-        
-        //defineIfTheTurnOfHumanOrComputer();
-        //test
-//        if (this.rummikubLogic.getCurrentPlayer().getIsHuman()) {
-//            showGameBoardAndPlayerHand();
-//        }
-//        else {
-//            defineIfTheTurnOfHumanOrComputer();
-//        }
     }
 
     public void showCurrentGameBoardAndCurrentPlayerHand() {
@@ -762,44 +633,3 @@ private boolean dealWithSingleMoveResualt(/*Utils.TurnMenuResult turnResult,*/Si
 }
 
 
-
-//    
-    //test
-    // Deals with the basic inputs from the user about the game board and his hand
-//    private Utils.TurnMenuResult getMoveFromPlayer(PlayersMove currentPlayerMove, Player printablePlayer, ArrayList<Player> printablePlayersList) {
-//        Utils.TurnMenuResult turnResult = null;
-//        SingleMove singleMove;
-//        boolean keepPlaying, isTurnSkipped = false, isFirstMoveForPlayerInCurrTurn = true;
-//        
-//        do{
-//            if (rummikubLogic.getCurrentPlayer().getIsHuman()) {
-//                if(isFirstMoveForPlayerInCurrTurn){
-//                    turnResult = InputOutputParser.askTurnMenuWithSave();
-//                    isFirstMoveForPlayerInCurrTurn = false;
-//                }
-//                else {
-//                    turnResult = InputOutputParser.askTurnMenuWithoutSave();
-//                }
-//                singleMove = dealWithHumanPlayer(turnResult, currentPlayerMove, isTurnSkipped);
-//            }
-//            else {  
-//                singleMove = dealWithComputerPlayer(currentPlayerMove, isTurnSkipped); 
-//                turnResult = Utils.TurnMenuResult.CONTINUE;
-//            }
-//            keepPlaying = turnResult != Utils.TurnMenuResult.EXIT_GAME && !currentPlayerMove.getIsTurnSkipped();
-//            if(keepPlaying){
-//                if(singleMove != null) {
-//                    try {
-//                       dealWithSingleMoveResualt(turnResult,singleMove,currentPlayerMove);        
-//                       InputOutputParser.printGameScreen(printablePlayer, currentPlayerMove.getBoardAfterMove(), printablePlayersList);
-//                    }
-//                    catch (Exception ex) {
-//                         currentPlayerMove.setIsTurnSkipped(PlayersMove.USER_WANT_SKIP_TRUN);
-//                    }
-//                }
-//            }
-//            keepPlaying = keepPlaying && isPlayerWantsToContinueHisTurn(); 
-//        }while (keepPlaying); 
-//        
-//        return turnResult;
-//    }
